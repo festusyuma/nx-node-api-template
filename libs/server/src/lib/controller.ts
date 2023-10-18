@@ -4,13 +4,6 @@ import { Request } from 'express';
 import { IOptionalSync, Optional, Res, ValidationRequest } from '../utils';
 
 export class Controller {
-  protected req: Request | null = null;
-
-  network(req: Request) {
-    this.req = req;
-    return this;
-  }
-
   user(req: Request): IOptionalSync<UserData> {
     return Optional.sync(req.user);
   }

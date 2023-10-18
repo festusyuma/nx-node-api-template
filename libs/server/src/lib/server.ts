@@ -1,7 +1,5 @@
-import { expireItem, getItem } from '@backend-template/cache';
 import { UserData } from '@backend-template/types';
 import express, { Application, Router } from 'express';
-import { DateTime } from 'luxon';
 
 import {
   authorizer,
@@ -9,7 +7,6 @@ import {
   postRequestHandler,
   preRequestHandler,
   reqLogger,
-  Res,
   SecurityBuilder,
 } from '../utils';
 

@@ -3,20 +3,20 @@ import { IOptional, Optional } from '@backend-template/server';
 import { DB, User } from '@backend-template/types';
 import { Kysely } from 'kysely';
 
-import { DefaultRepo } from '../defaultRepo';
+import { UserRepo } from '../userRepo';
 
-export class DefaultRepoImpl implements DefaultRepo {
+export class UserRepoImpl implements UserRepo {
   readonly #client: Kysely<DB>;
 
   constructor(client: Kysely<DB> = getKyselyClient()) {
     this.#client = client;
   }
 
-  fetchUser(email: string): IOptional<User> {
+  findById(id: string): IOptional<User> {
     return Optional.of(
       this.#client
         .selectFrom('User')
-        .where('email', '=', email)
+        .where('id', '=', id)
         .selectAll()
         .executeTakeFirst()
     );

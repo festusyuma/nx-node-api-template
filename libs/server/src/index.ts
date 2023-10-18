@@ -14,6 +14,7 @@ declare global {
   }
 }
 
+export { appHandler } from './lib/appHandler';
 export { Controller } from './lib/controller';
 export { route } from './lib/route';
 export { server } from './lib/server';

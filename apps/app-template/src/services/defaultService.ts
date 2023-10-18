@@ -1,5 +1,6 @@
-import { User } from '@backend-template/types';
+import { Pagination } from '@backend-template/server';
+import { User, UserData } from '@backend-template/types';
 
 export interface DefaultService {
-  getUser(): Promise<User>;
+  getUser(pagination: Pagination, user: UserData | null): Promise<User>;
 }

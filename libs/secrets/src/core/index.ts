@@ -1,0 +1,1 @@
+export { getSecretClient } from './secretClient';

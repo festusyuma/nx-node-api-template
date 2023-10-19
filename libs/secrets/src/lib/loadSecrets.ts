@@ -11,7 +11,7 @@ export const loadSecrets = async <
   schema: TS,
   secretNames: string[]
 ): Promise<z.infer<TS> | undefined> => {
-  if (!initialized || initialized < DateTime.now().minus({ minutes: 30 })) {
+  if (!initialized || initialized < DateTime.now().minus({ minutes: 10 })) {
     initialized = DateTime.now();
     const secrets: Record<string, unknown> = {};
 

@@ -11,8 +11,8 @@ export interface HttpEvent {
 }
 
 export type LambdaEventRecord =
-  | ({ eventSource: LambdaEventSource.S3 } & S3EventBody)
-  | ({ eventSource: LambdaEventSource.SQS } & SQSEventBody);
+  | ({ eventSource: 'aws:s3' } & S3EventBody)
+  | ({ eventSource: 'aws:sqs' } & SQSEventBody);
 
 export interface GatewayRequestContext {
   http: GatewayHttpData;
@@ -22,11 +22,6 @@ export interface GatewayRequestContext {
 export interface GatewayHttpData {
   method: HTTPMethod;
   path: string;
-}
-
-export enum LambdaEventSource {
-  S3 = 'aws:s3',
-  SQS = 'aws:sqs',
 }
 
 export interface SQSEventBody {

@@ -1,2 +1,2 @@
-export { sesHandler } from './sesHandler';
-export { sqsHandler } from './sqsHandler';
+export { eventHandler } from './eventHandler';
+export { scheduleHandler } from './scheduleHandler';

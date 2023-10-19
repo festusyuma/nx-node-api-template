@@ -1,4 +1,13 @@
+import type { ScheduleType, SQSBody } from '@backend-template/types';
+import type { Application } from 'express';
+
 import { HttpStatusCode } from './controller';
+
+export type AppHandlerTypes = {
+  app?: Application;
+  eventHandler?: (event: SQSBody) => Promise<IRes>;
+  scheduleHandler?: (scheduleType: ScheduleType) => Promise<IRes>;
+};
 
 export interface IRes<T = unknown> {
   message: string;

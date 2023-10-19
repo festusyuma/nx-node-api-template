@@ -1,25 +1,29 @@
 import type { ScheduleType, SQSBody } from '@backend-template/types';
 import serverless from '@vendia/serverless-express';
-import { Application } from 'express';
 
-import type { IRes, LambdaEvent } from '../utils';
+import type { AppHandlerTypes, LambdaEvent } from '../utils';
+import { Res } from '../utils';
 
 export async function appHandler(
   event: LambdaEvent,
-  app: Application,
-  sqsHandler?: (event: SQSBody) => Promise<IRes>,
-  sesHandler?: (scheduleType: ScheduleType) => Promise<IRes>
+  handlers: AppHandlerTypes
 ) {
   console.log('event: ', event);
 
   if ('Records' in event) {
     for (const record of event.Records) {
       if (record.eventSource === 'aws:sqs')
-        console.log(await sqsHandler?.(JSON.parse(record.body) as SQSBody));
+        console.log(
+          await handlers.eventHandler?.(JSON.parse(record.body) as SQSBody)
+        );
     }
+
+    return Res.success();
   } else if ('scheduleType' in event) {
-    console.log(await sesHandler?.(event.scheduleType as ScheduleType));
+    return handlers.scheduleHandler?.(event.scheduleType as ScheduleType);
   } else {
-    return serverless({ app })(event);
+    return handlers.app
+      ? serverless({ app: handlers.app })(event)
+      : Res.failed('no handler for this event');
   }
 }

@@ -13,6 +13,90 @@ datasource db {
 }
 
 model User {
-  id    String @id @default(uuid())
-  email String @unique
+  id       String @id @default(uuid())
+  username String @unique
+  email    String @unique
+  password String
+  roleId   String
+
+  agent Agent?
+  role  Role   @relation(fields: [roleId], references: [id])
+}
+
+model Role {
+  id   String @id @default(uuid())
+  name String
+  key  String @unique
+
+  users User[]
+}
+
+model Agency {
+  id   String @id @default(uuid())
+  name String
+
+  agents Agent[]
+}
+
+model Agent {
+  id        String @id @default(uuid())
+  lastName  String
+  firstName String
+  userId    String @unique
+  agencyId  String
+
+  user              User               @relation(fields: [userId], references: [id])
+  agency            Agency             @relation(fields: [agencyId], references: [id])
+  businessLocations BusinessLocation[]
+}
+
+model Business {
+  id             String @id @default(uuid())
+  name           String
+  phoneNumber    String
+  email          String
+  additionalData Json   @default("{}")
+
+  locations BusinessLocation[]
+  documents BusinessDocument[]
+}
+
+model BusinessDocument {
+  id             String                 @id @default(uuid())
+  type           String
+  files          String[]
+  reasonRejected String?
+  status         BusinessDocumentStatus @default(PENDING)
+  businessId     String
+
+  business Business @relation(fields: [businessId], references: [id])
+}
+
+model BusinessLocation {
+  id            String                 @id @default(uuid())
+  images        String[]
+  latitude      Decimal
+  longitude     Decimal
+  streetAddress String
+  city          String
+  state         String
+  country       String
+  businessId    String
+  agentId       String?
+  status        BusinessLocationStatus @default(UNVERIFIED)
+
+  business Business @relation(fields: [businessId], references: [id])
+  agent    Agent?   @relation(fields: [agentId], references: [id])
+}
+
+enum BusinessLocationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+}
+
+enum BusinessDocumentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
 }

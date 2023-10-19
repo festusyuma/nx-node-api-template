@@ -4,10 +4,77 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export const BusinessLocationStatus = {
+  UNVERIFIED: 'UNVERIFIED',
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+} as const;
+export type BusinessLocationStatus =
+  typeof BusinessLocationStatus[keyof typeof BusinessLocationStatus];
+export const BusinessDocumentStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED',
+} as const;
+export type BusinessDocumentStatus =
+  typeof BusinessDocumentStatus[keyof typeof BusinessDocumentStatus];
+export type Agency = {
+  id: string;
+  name: string;
+};
+export type Agent = {
+  id: string;
+  lastName: string;
+  firstName: string;
+  userId: string;
+  agencyId: string;
+};
+export type Business = {
+  id: string;
+  name: string;
+  phoneNumber: string;
+  email: string;
+  additionalData: Generated<unknown>;
+};
+export type BusinessDocument = {
+  id: string;
+  type: string;
+  files: string[];
+  reasonRejected: string | null;
+  status: Generated<BusinessDocumentStatus>;
+  businessId: string;
+};
+export type BusinessLocation = {
+  id: string;
+  images: string[];
+  latitude: string;
+  longitude: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  country: string;
+  businessId: string;
+  agentId: string | null;
+  status: Generated<BusinessLocationStatus>;
+};
+export type Role = {
+  id: string;
+  name: string;
+  key: string;
+};
 export type User = {
   id: string;
+  username: string;
   email: string;
+  password: string;
+  roleId: string;
 };
 export type DB = {
+  Agency: Agency;
+  Agent: Agent;
+  Business: Business;
+  BusinessDocument: BusinessDocument;
+  BusinessLocation: BusinessLocation;
+  Role: Role;
   User: User;
 };

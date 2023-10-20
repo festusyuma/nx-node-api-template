@@ -1,13 +1,13 @@
 import { IRes, Pagination } from '@backend-template/server';
 import { Res } from '@backend-template/server';
-import { User, UserData } from '@backend-template/types';
+import { generateToken } from '@backend-template/token';
+import { UserData } from '@backend-template/types';
+import bcrypt from 'bcryptjs';
 import * as console from 'console';
 
 import { UserRepo } from '../../repo';
-import { UserRepoImpl } from '../../repo/impl/UserRepoImpl';
+import { UserRepoImpl } from '../../repo/impl/userRepoImpl';
 import { AuthService } from '../authService';
-import bcrypt from 'bcryptjs';
-import { generateToken } from '@backend-template/token';
 export class AuthServiceImpl implements AuthService {
   readonly #userRepo: UserRepo;
 

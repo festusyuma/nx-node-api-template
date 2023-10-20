@@ -1,6 +1,6 @@
 import { getKyselyClient } from '@backend-template/database';
 import { IOptional, Optional } from '@backend-template/server';
-import { DB, User, UserData } from '@backend-template/types';
+import { DB, User } from '@backend-template/types';
 import { Kysely } from 'kysely';
 
 import { UserRepo } from '../userRepo';

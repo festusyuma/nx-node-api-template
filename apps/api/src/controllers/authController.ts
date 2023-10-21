@@ -1,7 +1,13 @@
-import { Controller } from '@backend-template/server';
+import { Controller, Res } from '@backend-template/server';
+import {
+  forgotPasswordSchema,
+  loginSchema,
+  recoverUsernameSchema,
+} from '@backend-template/types';
+import { Request } from 'express';
+
 import { AuthService } from '../services/authService';
 import { AuthServiceImpl } from '../services/impl/authServiceImpl';
-import { Request } from 'express';
 
 export class AuthController extends Controller {
   readonly #authService: AuthService;
@@ -12,17 +18,27 @@ export class AuthController extends Controller {
   }
 
   async login(req: Request) {
-    const { username, password } = req.body;
-    return this.#authService.login(username, password);
+    const { username, password } = this.validate(
+      { schema: loginSchema },
+      req.body
+    );
+    const data = await this.#authService.login(username, password);
+
+    return Res.success(data);
   }
 
   async recoverUsername(req: Request) {
-    const { email } = req.body;
-    return await this.#authService.recoverUsername(email);
+    const { email } = this.validate(
+      { schema: recoverUsernameSchema },
+      req.body
+    );
+    const data = await this.#authService.recoverUsername(email);
+    return Res.success(data);
   }
 
   async forgotPassword(req: Request) {
-    const { email } = req.body;
-    return await this.#authService.forgotPassword(email);
+    const { email } = this.validate({ schema: forgotPasswordSchema }, req.body);
+    const data = await this.#authService.forgotPassword(email);
+    return Res.success(data);
   }
 }

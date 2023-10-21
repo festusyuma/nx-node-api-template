@@ -1,13 +1,12 @@
-import { IRes, Pagination } from '@backend-template/server';
-import { Res } from '@backend-template/server';
-import { generateToken } from '@backend-template/token';
-import { UserData } from '@backend-template/types';
+import { Pagination, Res } from '@backend-template/server';
+import { User, UserData } from '@backend-template/types';
 import bcrypt from 'bcryptjs';
 import * as console from 'console';
 
 import { UserRepo } from '../../repo';
 import { UserRepoImpl } from '../../repo/impl/userRepoImpl';
 import { AuthService } from '../authService';
+
 export class AuthServiceImpl implements AuthService {
   readonly #userRepo: UserRepo;
 
@@ -28,7 +27,7 @@ export class AuthServiceImpl implements AuthService {
   async forgotPassword(
     email: string,
     verification_type: 'phone' | 'email' = 'email'
-  ): Promise<IRes> {
+  ): Promise<User> {
     const user = await this.#userRepo
       .findByEmail(email)
       .unwrapOrThrow(Res.unauthorized());
@@ -36,32 +35,22 @@ export class AuthServiceImpl implements AuthService {
     //send_email function
     console.log(user.email, 'reset_password', 'token');
 
-    return Res.success('OTP sent');
+    return user;
   }
 
-  async login(username: string, password: string): Promise<IRes> {
-    // check username
+  async login(username: string, password: string) {
     const user = await this.#userRepo
       .findByUsername(username)
-      .unwrapOrThrow(Res.unauthorized('username or password incorrect'));
+      .unwrapOrThrow(Res.unauthorized('Incorrect username or password'));
 
-    //check password
-    const isPassword = bcrypt.compare(password, user.password);
-    if (!isPassword) return Res.unauthorized('username or password incorrect');
+    const isPassword = await bcrypt.compare(password, user.password);
 
-    const payload = {
-      id: user.id,
-      username: user.username,
-      role: user.roleId,
-      email: user.email,
-    };
+    if (isPassword) return user;
 
-    //generate token
-    const token = await generateToken(payload, `user_${user.id}_token`);
-    return Res.success({ user: payload, token: token });
+    return null;
   }
 
-  async recoverUsername(email: string): Promise<IRes> {
+  async recoverUsername(email: string): Promise<User> {
     const user = await this.#userRepo
       .findByEmail(email)
       .unwrapOrThrow(Res.unauthorized());
@@ -69,6 +58,6 @@ export class AuthServiceImpl implements AuthService {
     //send_email function
     console.log(user.email, 'reset_password', user.username);
 
-    return Res.success('OTP sent');
+    return user;
   }
 }

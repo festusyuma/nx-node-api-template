@@ -15,7 +15,7 @@ export class AgencyRepoImpl implements AgencyRepo {
     return Optional.of(
       this.#client
         .insertInto('Agency')
-        .values({ ...data })
+        .values(data)
         .returningAll()
         .executeTakeFirst()
     );
@@ -39,7 +39,7 @@ export class AgencyRepoImpl implements AgencyRepo {
     return Optional.of(
       this.#client
         .updateTable('Agency')
-        .set({ ...data })
+        .set(data)
         .where('id', '=', id)
         .returningAll()
         .executeTakeFirst()

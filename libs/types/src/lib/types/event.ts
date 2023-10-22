@@ -1,7 +1,7 @@
 import { NotificationData } from './notification';
 
 export type MessageBody = {
-  action: 'SEND_NOTIFICATION';
+  action: 'NOTIFICATION';
   body: NotificationData;
 };
 

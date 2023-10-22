@@ -8,7 +8,7 @@ export async function eventHandler(
   notificationService: NotificationService = new NotificationServiceImpl()
 ): Promise<void> {
   switch (event.action) {
-    case 'SEND_NOTIFICATION':
+    case 'NOTIFICATION':
       return notificationService.send(event.body);
     default:
       return;

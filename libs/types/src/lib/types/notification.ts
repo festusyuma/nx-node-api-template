@@ -6,7 +6,7 @@ type NotificationDataValue =
   | number[]
   | boolean[];
 
-interface NotificationTemplateData {
+export interface NotificationTemplateData {
   [x: string]: NotificationDataValue | NotificationTemplateData;
 }
 

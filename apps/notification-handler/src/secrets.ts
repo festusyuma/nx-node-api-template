@@ -2,8 +2,7 @@ import { loadSecrets } from '@backend-template/secrets';
 import { z } from 'zod';
 
 const secretsSchema = z.object({
-  BASE_ROUTE: z.string().optional(),
-  PORT: z.number().optional(),
+  MAIL_FROM: z.string(),
 });
 
 export let secrets: z.infer<typeof secretsSchema>;

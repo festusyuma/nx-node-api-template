@@ -15,7 +15,7 @@
         "bundle": true,
         "main": "apps/notification-handler/src/main.ts",
         "tsConfig": "apps/notification-handler/tsconfig.app.json",
-        "assets": ["apps/notification-handler/src/assets"],
+        "assets": ["apps/notification-handler/src/assets/*"],
         "generatePackageJson": true,
         "thirdParty": true,
         "external": ["@aws-sdk/*"],

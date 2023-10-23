@@ -1,7 +1,12 @@
 import { getKyselyClient } from '@backend-template/database';
 import { IOptional, Optional } from '@backend-template/server';
-import { DB, User } from '@backend-template/types';
-import { Kysely } from 'kysely';
+import {
+  CreateUserData,
+  DB,
+  UpdateUserData,
+  User,
+} from '@backend-template/types';
+import { Kysely, Selectable } from 'kysely';
 
 import { UserRepo } from '../userRepo';
 
@@ -12,7 +17,17 @@ export class UserRepoImpl implements UserRepo {
     this.#client = client;
   }
 
-  findById(id: string): IOptional<User> {
+  create(data: CreateUserData): IOptional<Selectable<User>> {
+    return Optional.of(
+      this.#client
+        .insertInto('User')
+        .values(data)
+        .returningAll()
+        .executeTakeFirst()
+    );
+  }
+
+  findById(id: string): IOptional<Selectable<User>> {
     return Optional.of(
       this.#client
         .selectFrom('User')
@@ -22,7 +37,7 @@ export class UserRepoImpl implements UserRepo {
     );
   }
 
-  findByUsername(username: string): IOptional<User> {
+  findByUsername(username: string): IOptional<Selectable<User>> {
     return Optional.of(
       this.#client
         .selectFrom('User')
@@ -32,7 +47,7 @@ export class UserRepoImpl implements UserRepo {
     );
   }
 
-  findByEmail(email: string): IOptional<User> {
+  findByEmail(email: string): IOptional<Selectable<User>> {
     return Optional.of(
       this.#client
         .selectFrom('User')
@@ -42,11 +57,11 @@ export class UserRepoImpl implements UserRepo {
     );
   }
 
-  updateById(id: string, data: User): IOptional<User> {
+  updateById(id: string, data: UpdateUserData): IOptional<Selectable<User>> {
     return Optional.of(
       this.#client
         .updateTable('User')
-        .set({ ...data })
+        .set(data)
         .where('id', '=', id)
         .returningAll()
         .executeTakeFirst()

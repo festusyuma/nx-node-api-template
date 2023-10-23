@@ -1,4 +1,5 @@
-import { Agency } from '@backend-template/types';
+import { Agency, CreateAgencyData } from '@backend-template/types';
+import { Selectable, Updateable } from 'kysely';
 
 import { AgencyRepo } from '../../../repo/agencyRepo';
 import { AgencyRepoImpl } from '../../../repo/impl/agencyRepoImpl';
@@ -11,19 +12,19 @@ export class AgencyServiceImpl implements AgencyService {
     this.#agencyRepo = agencyRepo;
   }
 
-  create(data: Agency): Promise<Agency> {
+  create(data: CreateAgencyData): Promise<Selectable<Agency>> {
     return this.#agencyRepo.create(data).unwrapOrThrow();
   }
 
-  findAll(): Promise<Agency[]> {
+  findAll(): Promise<Selectable<Agency>[]> {
     return this.#agencyRepo.findAll().unwrapOrThrow();
   }
 
-  findById(id: string): Promise<Agency> {
+  findById(id: string): Promise<Selectable<Agency>> {
     return this.#agencyRepo.findById(id).unwrapOrThrow();
   }
 
-  update(id: string, data: Agency): Promise<Agency> {
+  update(id: string, data: Agency): Promise<Updateable<Agency>> {
     return this.#agencyRepo.updateById(id, data).unwrapOrThrow();
   }
 }

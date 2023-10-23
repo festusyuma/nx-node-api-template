@@ -2,6 +2,7 @@ import { Pagination, Res } from '@backend-template/server';
 import { User, UserData } from '@backend-template/types';
 import bcrypt from 'bcryptjs';
 import * as console from 'console';
+import { Selectable } from 'kysely';
 
 import { UserRepo } from '../../repo';
 import { UserRepoImpl } from '../../repo/impl/userRepoImpl';
@@ -27,7 +28,7 @@ export class AuthServiceImpl implements AuthService {
   async forgotPassword(
     email: string,
     verification_type: 'phone' | 'email' = 'email'
-  ): Promise<User> {
+  ): Promise<Selectable<User>> {
     const user = await this.#userRepo
       .findByEmail(email)
       .unwrapOrThrow(Res.unauthorized());
@@ -50,7 +51,7 @@ export class AuthServiceImpl implements AuthService {
     return null;
   }
 
-  async recoverUsername(email: string): Promise<User> {
+  async recoverUsername(email: string): Promise<Selectable<User>> {
     const user = await this.#userRepo
       .findByEmail(email)
       .unwrapOrThrow(Res.unauthorized());

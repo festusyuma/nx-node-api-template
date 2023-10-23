@@ -13,18 +13,18 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   username String @unique
   email    String @unique
   password String
-  roleId   String
+  roleId   String @db.Uuid
 
   agent Agent?
   role  Role   @relation(fields: [roleId], references: [id])
 }
 
 model Role {
-  id   String @id @default(uuid())
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name String
   key  String @unique
 
@@ -32,18 +32,18 @@ model Role {
 }
 
 model Agency {
-  id   String @id @default(uuid())
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name String
 
   agents Agent[]
 }
 
 model Agent {
-  id        String @id @default(uuid())
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   lastName  String
   firstName String
-  userId    String @unique
-  agencyId  String
+  userId    String @unique @db.Uuid
+  agencyId  String @db.Uuid
 
   user              User               @relation(fields: [userId], references: [id])
   agency            Agency             @relation(fields: [agencyId], references: [id])
@@ -51,7 +51,7 @@ model Agent {
 }
 
 model Business {
-  id             String @id @default(uuid())
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name           String
   phoneNumber    String
   email          String
@@ -62,18 +62,18 @@ model Business {
 }
 
 model BusinessDocument {
-  id             String                 @id @default(uuid())
+  id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   type           String
   files          String[]
   reasonRejected String?
   status         BusinessDocumentStatus @default(PENDING)
-  businessId     String
+  businessId     String                 @db.Uuid
 
   business Business @relation(fields: [businessId], references: [id])
 }
 
 model BusinessLocation {
-  id            String                 @id @default(uuid())
+  id            String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   images        String[]
   latitude      Decimal
   longitude     Decimal
@@ -81,8 +81,8 @@ model BusinessLocation {
   city          String
   state         String
   country       String
-  businessId    String
-  agentId       String?
+  businessId    String                 @db.Uuid
+  agentId       String?                @db.Uuid
   status        BusinessLocationStatus @default(UNVERIFIED)
 
   business Business @relation(fields: [businessId], references: [id])

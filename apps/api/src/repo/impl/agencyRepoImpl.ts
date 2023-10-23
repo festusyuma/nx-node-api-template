@@ -1,7 +1,8 @@
 import { getKyselyClient } from '@backend-template/database';
-import { IOptional, Optional, Pagination } from '@backend-template/server';
-import { DB, Agency, User } from '@backend-template/types';
-import { Kysely } from 'kysely';
+import { IOptional, Optional } from '@backend-template/server';
+import { Agency, CreateAgencyData, DB } from '@backend-template/types';
+import { Kysely, Selectable } from 'kysely';
+
 import { AgencyRepo } from '../agencyRepo';
 
 export class AgencyRepoImpl implements AgencyRepo {
@@ -11,7 +12,7 @@ export class AgencyRepoImpl implements AgencyRepo {
     this.#client = client;
   }
 
-  create(data: Agency): IOptional<Agency> {
+  create(data: CreateAgencyData): IOptional<Selectable<Agency>> {
     return Optional.of(
       this.#client
         .insertInto('Agency')
@@ -21,11 +22,11 @@ export class AgencyRepoImpl implements AgencyRepo {
     );
   }
 
-  findAll(): IOptional<Agency[]> {
+  findAll(): IOptional<Selectable<Agency>[]> {
     return Optional.of(this.#client.selectFrom('Agency').selectAll().execute());
   }
 
-  findById(id: string): IOptional<Agency> {
+  findById(id: string): IOptional<Selectable<Agency>> {
     return Optional.of(
       this.#client
         .selectFrom('Agency')
@@ -35,7 +36,10 @@ export class AgencyRepoImpl implements AgencyRepo {
     );
   }
 
-  updateById(id: string, data: Agency): IOptional<Agency> {
+  updateById(
+    id: string,
+    data: CreateAgencyData
+  ): IOptional<Selectable<Agency>> {
     return Optional.of(
       this.#client
         .updateTable('Agency')

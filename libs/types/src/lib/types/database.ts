@@ -19,25 +19,25 @@ export const BusinessDocumentStatus = {
 export type BusinessDocumentStatus =
   typeof BusinessDocumentStatus[keyof typeof BusinessDocumentStatus];
 export type Agency = {
-  id: string;
+  id: Generated<string>;
   name: string;
 };
 export type Agent = {
-  id: string;
+  id: Generated<string>;
   lastName: string;
   firstName: string;
   userId: string;
   agencyId: string;
 };
 export type Business = {
-  id: string;
+  id: Generated<string>;
   name: string;
   phoneNumber: string;
   email: string;
   additionalData: Generated<unknown>;
 };
 export type BusinessDocument = {
-  id: string;
+  id: Generated<string>;
   type: string;
   files: string[];
   reasonRejected: string | null;
@@ -45,7 +45,7 @@ export type BusinessDocument = {
   businessId: string;
 };
 export type BusinessLocation = {
-  id: string;
+  id: Generated<string>;
   images: string[];
   latitude: string;
   longitude: string;
@@ -58,12 +58,12 @@ export type BusinessLocation = {
   status: Generated<BusinessLocationStatus>;
 };
 export type Role = {
-  id: string;
+  id: Generated<string>;
   name: string;
   key: string;
 };
 export type User = {
-  id: string;
+  id: Generated<string>;
   username: string;
   email: string;
   password: string;

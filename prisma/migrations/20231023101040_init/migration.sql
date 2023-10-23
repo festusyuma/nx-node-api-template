@@ -6,18 +6,18 @@ CREATE TYPE "BusinessDocumentStatus" AS ENUM ('PENDING', 'VERIFIED', 'REJECTED')
 
 -- CreateTable
 CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "roleId" TEXT NOT NULL,
+    "roleId" UUID NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Role" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "key" TEXT NOT NULL,
 
@@ -26,7 +26,7 @@ CREATE TABLE "Role" (
 
 -- CreateTable
 CREATE TABLE "Agency" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
 
     CONSTRAINT "Agency_pkey" PRIMARY KEY ("id")
@@ -34,18 +34,18 @@ CREATE TABLE "Agency" (
 
 -- CreateTable
 CREATE TABLE "Agent" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "lastName" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "agencyId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
+    "agencyId" UUID NOT NULL,
 
     CONSTRAINT "Agent_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Business" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "phoneNumber" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -56,19 +56,19 @@ CREATE TABLE "Business" (
 
 -- CreateTable
 CREATE TABLE "BusinessDocument" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "type" TEXT NOT NULL,
     "files" TEXT[],
     "reasonRejected" TEXT,
     "status" "BusinessDocumentStatus" NOT NULL DEFAULT 'PENDING',
-    "businessId" TEXT NOT NULL,
+    "businessId" UUID NOT NULL,
 
     CONSTRAINT "BusinessDocument_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "BusinessLocation" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "images" TEXT[],
     "latitude" DECIMAL(65,30) NOT NULL,
     "longitude" DECIMAL(65,30) NOT NULL,
@@ -76,8 +76,8 @@ CREATE TABLE "BusinessLocation" (
     "city" TEXT NOT NULL,
     "state" TEXT NOT NULL,
     "country" TEXT NOT NULL,
-    "businessId" TEXT NOT NULL,
-    "agentId" TEXT,
+    "businessId" UUID NOT NULL,
+    "agentId" UUID,
     "status" "BusinessLocationStatus" NOT NULL DEFAULT 'UNVERIFIED',
 
     CONSTRAINT "BusinessLocation_pkey" PRIMARY KEY ("id")

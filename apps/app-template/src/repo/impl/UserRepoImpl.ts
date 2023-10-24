@@ -1,7 +1,7 @@
 import { getKyselyClient } from '@backend-template/database';
 import { IOptional, Optional } from '@backend-template/server';
 import { DB, User } from '@backend-template/types';
-import { Kysely } from 'kysely';
+import { Kysely, Selectable } from 'kysely';
 
 import { UserRepo } from '../userRepo';
 
@@ -12,7 +12,7 @@ export class UserRepoImpl implements UserRepo {
     this.#client = client;
   }
 
-  findById(id: string): IOptional<User> {
+  findById(id: string): IOptional<Selectable<User>> {
     return Optional.of(
       this.#client
         .selectFrom('User')

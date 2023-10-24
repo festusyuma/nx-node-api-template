@@ -2,16 +2,19 @@ import { getKyselyClient } from '@backend-template/database';
 
 const data = [
   {
+    id: '559f6c03-ff5a-4fcb-bbca-cf6e7e562dcd',
+    name: 'Admin',
+    key: 'admin',
+  },
+  {
+    id: 'ad0499c5-e718-47e4-9b95-c656aa771d74',
     name: 'Agency',
     key: 'agency',
   },
   {
+    id: '6e4c307c-8b6f-497a-a6b0-7773b5908fac',
     name: 'Agent',
     key: 'agent',
-  },
-  {
-    name: 'Admin',
-    key: 'admin',
   },
 ];
 
@@ -20,10 +23,11 @@ const RolesSeeder = {
     await getKyselyClient()
       .transaction()
       .execute(async () => {
-        data.map(({ name, key }) =>
+        data.map(({ name, key, id }) =>
           getKyselyClient()
             .insertInto('Role')
             .values({
+              id: id,
               name: name,
               key: key,
             })

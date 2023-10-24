@@ -25,14 +25,8 @@
         }
       },
       "configurations": {
-        "development": {},
-        "production": {
-          "esbuildOptions": {
-            "sourcemap": false,
-            "outExtension": {
-              ".js": ".js"
-            }
-          }
+        "seed": {
+          "main": "apps/scripts/src/seed.ts"
         }
       }
     },
@@ -56,6 +50,13 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["apps/scripts/**/*.ts"]
+      }
+    },
+    "seed": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "scripts:build:seed",
+        "watch": false
       }
     }
   },

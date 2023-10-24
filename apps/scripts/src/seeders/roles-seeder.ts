@@ -31,6 +31,7 @@ const RolesSeeder = {
               name: name,
               key: key,
             })
+            .onConflict((oc) => oc.column('id').doNothing())
             .execute()
         );
       });

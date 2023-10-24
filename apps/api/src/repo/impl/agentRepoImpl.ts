@@ -3,10 +3,8 @@ import { IOptional, Optional } from '@backend-template/server';
 import {
   Agent,
   CreateAgentData,
-  CreateUserData,
   DB,
   UpdateAgentData,
-  User,
 } from '@backend-template/types';
 import { Kysely, Selectable, Updateable } from 'kysely';
 

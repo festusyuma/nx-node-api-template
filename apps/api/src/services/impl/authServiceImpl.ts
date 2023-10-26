@@ -1,6 +1,6 @@
-import { Optional, Pagination, Res } from '@backend-template/server';
+import { Optional, Res } from '@backend-template/server';
 import { generateToken } from '@backend-template/token';
-import { User, UserData } from '@backend-template/types';
+import { User } from '@backend-template/types';
 import bcrypt from 'bcryptjs';
 import * as console from 'console';
 import { Selectable } from 'kysely';
@@ -14,16 +14,6 @@ export class AuthServiceImpl implements AuthService {
 
   constructor(userRepo: UserRepo = new UserRepoImpl()) {
     this.#userRepo = userRepo;
-  }
-
-  async getUser(pagination: Pagination, userData: UserData | null) {
-    const user = await this.#userRepo
-      .findByEmail('festusyuma@gmail.com')
-      .unwrapOrThrow();
-
-    console.log({ userData, pagination });
-
-    return user;
   }
 
   async forgotPassword(
@@ -49,7 +39,7 @@ export class AuthServiceImpl implements AuthService {
       .unwrapOrThrow(Res.unauthorized('Incorrect username or password'));
 
     const isPassword = await Optional.of(
-      bcrypt.compare(password, user.password!)
+      bcrypt.compare(password, user.password)
     ).unwrapOrThrow(Res.unauthorized('Incorrect username or password'));
 
     const token = await generateToken(user, `user_${user.id}_token`);

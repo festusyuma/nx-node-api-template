@@ -1,5 +1,5 @@
 import { getKyselyClient } from '@backend-template/database';
-import { IOptional, Optional } from '@backend-template/server';
+import { IOptional, Optional, Pagination } from '@backend-template/server';
 import {
   CreateUserData,
   DB,
@@ -18,12 +18,25 @@ export class UserRepoImpl implements UserRepo {
   }
 
   create(data: CreateUserData): IOptional<Selectable<User>> {
+    console.log(data);
     return Optional.of(
       this.#client
         .insertInto('User')
         .values(data)
         .returningAll()
         .executeTakeFirst()
+    );
+  }
+
+  findAll(pagination: Pagination): IOptional<Selectable<User>[]> {
+    const { page, size } = pagination;
+    return Optional.of(
+      this.#client
+        .selectFrom('User')
+        .selectAll()
+        .offset((page - 1) * size)
+        .limit(size)
+        .execute()
     );
   }
 

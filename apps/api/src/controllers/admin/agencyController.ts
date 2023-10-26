@@ -15,8 +15,14 @@ export class AgencyController extends Controller {
 
   async create(req: Request) {
     const data = this.validate({ schema: CreateAgencySchema }, req.body);
-    const result = this.#agencyService.create(data);
+    const result = await this.#agencyService.create(data);
 
     return Res.success(result);
+  }
+
+  async findAll(req: Request) {
+    const pagination = this.pagination(req);
+    const result = await this.#agencyService.findAll(pagination);
+    return Res.success({ result: result, pagination: pagination });
   }
 }

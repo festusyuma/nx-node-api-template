@@ -16,12 +16,15 @@ export class AgentController extends Controller {
   async create(req: Request) {
     const data = this.validate({ schema: CreateAgentSchema }, req.body);
 
-    const user = await this.#agentService.createAgentUser(data);
-
-    data.userId = user.id;
-
-    const result = this.#agentService.create(data);
+    const result = await this.#agentService.create(data);
 
     return Res.success(result);
+  }
+
+  async findAll(req: Request) {
+    const pagination = this.pagination(req);
+
+    const result = await this.#agentService.findAll(pagination);
+    return Res.success({ result: result, pagination: pagination });
   }
 }

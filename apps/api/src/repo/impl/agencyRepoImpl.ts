@@ -1,5 +1,5 @@
 import { getKyselyClient } from '@backend-template/database';
-import { IOptional, Optional } from '@backend-template/server';
+import { IOptional, Optional, Pagination } from '@backend-template/server';
 import { Agency, CreateAgencyData, DB } from '@backend-template/types';
 import { Kysely, Selectable } from 'kysely';
 
@@ -22,8 +22,16 @@ export class AgencyRepoImpl implements AgencyRepo {
     );
   }
 
-  findAll(): IOptional<Selectable<Agency>[]> {
-    return Optional.of(this.#client.selectFrom('Agency').selectAll().execute());
+  findAll(pagination: Pagination): IOptional<Selectable<Agency>[]> {
+    const { page, size } = pagination;
+    return Optional.of(
+      this.#client
+        .selectFrom('Agency')
+        .selectAll()
+        .offset((page - 1) * size)
+        .limit(size)
+        .execute()
+    );
   }
 
   findById(id: string): IOptional<Selectable<Agency>> {

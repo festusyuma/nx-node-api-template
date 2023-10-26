@@ -1,3 +1,4 @@
+import { Pagination } from '@backend-template/server';
 import {
   Agent,
   CreateAgentData,
@@ -19,8 +20,8 @@ export class AgencyServiceImpl implements AgencyService {
     return this.#agentRepo.create(data).unwrapOrThrow();
   }
 
-  findAll(): Promise<Selectable<Agent>[]> {
-    return this.#agentRepo.findAll().unwrapOrThrow();
+  findAll(pagination: Pagination): Promise<Selectable<Agent>[]> {
+    return this.#agentRepo.findAll(pagination).unwrapOrThrow();
   }
 
   findById(id: string): Promise<Selectable<Agent>> {

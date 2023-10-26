@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
 export const CreateAgentSchema = z.object({
-  username: z.string(),
-  password: z.string(),
-  email: z.string().email(),
-  roleId: z.string().uuid(),
   lastName: z.string(),
   firstName: z.string(),
   userId: z.string().uuid(),

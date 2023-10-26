@@ -6,5 +6,6 @@ import { AgentController } from '../../controllers';
 const router = Router();
 
 router.post('/', route(AgentController, 'create'));
+router.get('/', route(AgentController, 'findAll'));
 
 export default router;

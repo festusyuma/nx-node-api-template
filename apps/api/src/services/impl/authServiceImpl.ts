@@ -1,4 +1,5 @@
-import { Pagination, Res } from '@backend-template/server';
+import { Optional, Pagination, Res } from '@backend-template/server';
+import { generateToken } from '@backend-template/token';
 import { User, UserData } from '@backend-template/types';
 import bcrypt from 'bcryptjs';
 import * as console from 'console';
@@ -39,15 +40,21 @@ export class AuthServiceImpl implements AuthService {
     return user;
   }
 
-  async login(username: string, password: string) {
+  async login(
+    username: string,
+    password: string
+  ): Promise<{ user: Selectable<User>; token: string | null } | null> {
     const user = await this.#userRepo
       .findByUsername(username)
       .unwrapOrThrow(Res.unauthorized('Incorrect username or password'));
 
-    const isPassword = await bcrypt.compare(password, user.password);
+    const isPassword = await Optional.of(
+      bcrypt.compare(password, user.password!)
+    ).unwrapOrThrow(Res.unauthorized('Incorrect username or password'));
 
-    if (isPassword) return user;
+    const token = await generateToken(user, `user_${user.id}_token`);
 
+    if (isPassword) return { user, token };
     return null;
   }
 

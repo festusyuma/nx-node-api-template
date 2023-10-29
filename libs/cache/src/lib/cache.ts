@@ -1,4 +1,6 @@
-import {redisClient} from "../core";
+import Redis from 'ioredis';
+
+import { redisClient } from '../core';
 
 export const setItem = (key: string, val: string | number) =>
   redisClient().set(key, val);
@@ -25,3 +27,18 @@ export const getSetItems = (
   start: number | string,
   end: number | string
 ) => redisClient().zrangebyscore(key, start, end);
+
+interface CacheManager {
+  set<T>(key: string, value: T, expiration: number): Promise<void>;
+  get<T>(key: string): Promise<T>;
+  delete(key: string): Promise<void>;
+  getList<T>(key: string): Promise<Array<T>>;
+}
+
+export class Cache {
+  private readonly redis: Redis;
+
+  constructor(redisUrl: string) {
+    this.redis = new Redis(redisUrl);
+  }
+}

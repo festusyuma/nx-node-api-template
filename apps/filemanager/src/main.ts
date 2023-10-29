@@ -1,31 +1,39 @@
-import { HttpEvent, Res, S3EventBody } from '@backend-template/server';
+import {
+  awsBootstrap,
+  awsService,
+  AwsTransporter,
+} from '@backend-template/microservice';
+import { httpBootstrap } from '@backend-template/server';
+import awsLambdaFastify, { CallbackHandler } from '@fastify/aws-lambda';
+import { APIGatewayProxyEvent, Handler, SNSEvent, SQSEvent } from 'aws-lambda';
+import { firstValueFrom, ReplaySubject } from 'rxjs';
 
-import { eventHandler, httpHandler } from './handlers';
-import { getSecrets } from './secrets';
+import { AppModule } from './app.module';
 
-export async function handler(event: HttpEvent | { Records: S3EventBody[] }) {
-  await getSecrets();
-  console.log('event: ', JSON.stringify(event));
+const microserviceSubject = new ReplaySubject<AwsTransporter>();
+awsBootstrap(AppModule).then((transporter) =>
+  microserviceSubject.next(transporter)
+);
 
-  try {
-    if ('Records' in event) {
-      const responses: Array<Promise<unknown>> = [];
-      for (const i in event.Records) {
-        responses.push(
-          eventHandler(event.Records[i]?.eventName, event.Records[i]?.s3.object)
-        );
-      }
+const serverSubject = new ReplaySubject<CallbackHandler>();
+httpBootstrap(AppModule, '').then((transporter) => {
+  serverSubject.next(
+    awsLambdaFastify(transporter.getHttpAdapter().getInstance())
+  );
+});
 
-      await Promise.allSettled(responses);
-      return Res.success();
-    } else if ('body' in event) {
-      return httpHandler(event);
-    }
+export const handler: Handler = async (
+  event: APIGatewayProxyEvent | SQSEvent | SNSEvent,
+  context,
+  callback
+) => {
+  console.log('event :: ', JSON.stringify(event));
 
-    return Res.failed('no handler for this event');
-  } catch (e: unknown) {
-    console.error(`http error :: `, e);
-    if (e instanceof Res) return e;
-    else return Res.serverError();
+  if ('requestContext' in event) {
+    const server = await firstValueFrom(serverSubject);
+    return server(event, context, callback);
+  } else {
+    const transporter = await firstValueFrom(microserviceSubject);
+    await awsService(event, context, transporter);
   }
-}
+};

@@ -18,6 +18,7 @@
     "@nestjs/platform-express": "10.2.7",
     "@nestjs/platform-fastify": "10.2.7",
     "@nx/devkit": "16.10.0",
+    "@prisma/client": "^5.1.1",
     "@swc/helpers": "~0.5.3",
     "@vendia/serverless-express": "^4.10.4",
     "aws-cdk-lib": "^2.102.0",

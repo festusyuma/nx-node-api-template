@@ -16,20 +16,6 @@ export class AuthServiceImpl implements AuthService {
     this.#userRepo = userRepo;
   }
 
-  async forgotPassword(
-    email: string,
-    verification_type: 'phone' | 'email' = 'email'
-  ): Promise<Selectable<User>> {
-    const user = await this.#userRepo
-      .findByEmail(email)
-      .unwrapOrThrow(Res.unauthorized());
-
-    //send_email function
-    console.log(user.email, 'reset_password', 'token');
-
-    return user;
-  }
-
   async login(
     username: string,
     password: string
@@ -48,10 +34,44 @@ export class AuthServiceImpl implements AuthService {
     return null;
   }
 
-  async recoverUsername(email: string): Promise<Selectable<User>> {
+  async forgotPassword(
+    email: string,
+    verification_type: 'phone' | 'email' = 'email'
+  ): Promise<Selectable<User>> {
     const user = await this.#userRepo
       .findByEmail(email)
       .unwrapOrThrow(Res.unauthorized());
+
+    //send_email function
+    switch (verification_type) {
+      case 'email':
+        console.log('sent OTP to email');
+        break;
+      case 'phone':
+        console.log('sent OTP to phone');
+        break;
+    }
+    console.log(user.email, 'reset_password', 'token');
+
+    return user;
+  }
+
+  async recoverUsername(
+    email: string,
+    verification_type: 'email' | 'phone' = 'email'
+  ): Promise<Selectable<User>> {
+    const user = await this.#userRepo
+      .findByEmail(email)
+      .unwrapOrThrow(Res.unauthorized());
+
+    switch (verification_type) {
+      case 'email':
+        console.log('sent OTP to email');
+        break;
+      case 'phone':
+        console.log('sent OTP to phone');
+        break;
+    }
 
     //send_email function
     console.log(user.email, 'reset_password', user.username);

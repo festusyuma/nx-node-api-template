@@ -6,4 +6,6 @@ export type {
   LoginData,
   recoverUsernameData,
 } from './authSchema';
+export type { CreateBusinessLocationData } from './businessLocationSchema';
+export type { CreateBusinessData, UpdateBusinessData } from './businessSchema';
 export type { CreateUserData, UpdateUserData } from './userSchema';

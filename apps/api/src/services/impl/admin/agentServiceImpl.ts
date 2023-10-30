@@ -2,28 +2,19 @@ import { Pagination } from '@backend-template/server';
 import {
   Agent,
   CreateAgentData,
-  CreateUserData,
   UpdateAgentData,
-  User,
 } from '@backend-template/types';
 import { Selectable, Updateable } from 'kysely';
 
-import { UserRepo } from '../../../repo';
 import { AgentRepo } from '../../../repo/agentRepo';
 import { AgentRepoImpl } from '../../../repo/impl/agentRepoImpl';
-import { UserRepoImpl } from '../../../repo/impl/userRepoImpl';
 import { AgentService } from '../../admin/agentService';
 
 export class AgentServiceImpl implements AgentService {
   readonly #agentRepo: AgentRepo;
-  readonly #userRepo: UserRepo;
 
-  constructor(
-    agentRepo: AgentRepo = new AgentRepoImpl(),
-    userRepo: UserRepo = new UserRepoImpl()
-  ) {
+  constructor(agentRepo: AgentRepo = new AgentRepoImpl()) {
     this.#agentRepo = agentRepo;
-    this.#userRepo = userRepo;
   }
   create(data: CreateAgentData): Promise<Selectable<Agent>> {
     return this.#agentRepo.create(data).unwrapOrThrow();

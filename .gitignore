@@ -39,3 +39,8 @@ testem.log
 Thumbs.db
 
 .env
+cdk.out
+cdk.context.json
+#**/*.pem
+
+env.json

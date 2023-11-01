@@ -40,6 +40,21 @@ export class BusinessLocationRepoImpl implements BusinessLocationRepo {
         .execute()
     );
   }
+  findAllByAgentId(
+    user: UserData,
+    pagination: Pagination
+  ): IOptional<Selectable<BusinessLocation>[]> {
+    const { page, size } = pagination;
+    return Optional.of(
+      this.#client
+        .selectFrom('BusinessLocation')
+        .where('agentId', '=', user.id)
+        .selectAll()
+        .offset((page - 1) * size)
+        .limit(size)
+        .execute()
+    );
+  }
 
   findAgentRegisteredBusinessCount(
     user: UserData

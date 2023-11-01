@@ -1,0 +1,55 @@
+{
+  "name": "filemanager",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/filemanager/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/filemanager",
+        "main": "apps/filemanager/src/main.ts",
+        "tsConfig": "apps/filemanager/tsconfig.app.json",
+        "assets": [],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/filemanager/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "main": "apps/filemanager/src/server.ts"
+        },
+        "production": {
+          "sourceMap": false,
+          "generatePackageJson": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "filemanager:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "filemanager:build:development"
+        },
+        "production": {
+          "buildTarget": "filemanager:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/filemanager/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

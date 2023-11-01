@@ -37,3 +37,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+.env
+cdk.out
+cdk.context.json
+#**/*.pem
+
+env.json

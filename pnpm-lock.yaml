@@ -75,6 +75,9 @@ dependencies:
     version: 3.22.4
 
 devDependencies:
+  '@aws-appsync/utils':
+    specifier: ^1.5.0
+    version: 1.5.0
   '@aws-cdk/aws-apigatewayv2-alpha':
     specifier: 2.104.0-alpha.0
     version: 2.104.0-alpha.0(aws-cdk-lib@2.102.0)(constructs@10.3.0)
@@ -361,6 +364,10 @@ packages:
   /@antfu/ni@0.21.8:
     resolution: {integrity: sha512-90X8pU2szlvw0AJo9EZMbYc2eQKkmO7mAdC4tD4r5co2Mm56MT37MIG8EyB7p4WRheuzGxuLDxJ63mF6+Zajiw==}
     hasBin: true
+    dev: true
+
+  /@aws-appsync/utils@1.5.0:
+    resolution: {integrity: sha512-mkXUxbzUW3vBVev2+EBpkfidl98RymTX4mH71OHIgfsbTLEKmqAYF2LrwtSUYetD7D3YMIQI28UqfOacoJyxVw==}
     dev: true
 
   /@aws-cdk/asset-awscli-v1@2.2.201:

@@ -1,0 +1,97 @@
+type Channel {
+  id: ID!
+  name: String!
+  access: ChannelAccess!
+}
+
+type Message {
+  id: ID!
+  message: String!
+  channelId: ID!
+  channel: Channel!
+  senderId: ID!
+  sender: ChannelMember!
+}
+
+type Profile {
+  id: ID!
+  displayName: String!
+  profileImage: String
+}
+
+type ChannelMember {
+  id: ID!
+  profileId: ID!
+  profile: Profile!
+  channelId: ID!
+  channel: Channel!
+  role: ChannelMemberRole
+}
+
+type PaginatedChannelMembers {
+  members: [ChannelMember!]
+  nextToken: String
+}
+
+type PaginatedProfileChannels {
+  channels: [ChannelMember!]
+  nextToken: String
+}
+
+type PaginatedChannelMessages {
+  messages: [Message!]
+  nextToken: String
+}
+
+
+input NewChannel {
+  name: String!
+  access: ChannelAccess
+}
+
+input NewMessage {
+  message: String!
+  channelId: String!
+  senderId: String!
+}
+
+input NewProfile {
+  displayName: String!
+  profileImage: String
+}
+
+input NewChannelMember {
+  profileId: ID!
+  channelId: ID!
+  role: ChannelMemberRole!
+}
+
+enum ChannelMemberRole {
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+enum ChannelAccess {
+  PUBLIC
+  PRIVATE
+}
+
+type Query {
+  getMessagesByChannel(channelId: ID!, limit: Int, nextToken: String): PaginatedChannelMessages!
+  getChannelsByProfile(profileId: ID!, limit: Int, nextToken: String): PaginatedProfileChannels!
+  getMembersByChannel(channelId: ID, limit: Int, nextToken: String): PaginatedChannelMembers!
+  getChannel(id: ID): Channel
+}
+
+type Mutation {
+  createChannel(input: NewChannel!): Channel
+  createProfile(input: NewProfile): Profile
+  createChannelMember(input: NewChannelMember): ChannelMember
+  createMessage(input: NewMessage!): Message
+}
+
+type Subscription {
+  newMessage: Message
+  @aws_subscribe(mutations: ["createMessage"])
+}

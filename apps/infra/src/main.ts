@@ -8,6 +8,7 @@ import * as process from 'process';
 import { ApiStack } from './api-stack';
 import { AppStack } from './app-stack';
 import { AuthStack } from './auth-stack';
+import { ChatStack } from './chat-stack';
 import { DependencyStack } from './dependency-stack';
 import { FileManagerStack } from './file-manager-stack';
 import { NotificationStack } from './notification-stack';
@@ -50,4 +51,6 @@ getSecrets().then(() => {
     stackName: `${appName}-notification`,
     env,
   });
+
+  new ChatStack(app, 'chat', { stackName: `${appName}-chat`, env });
 });

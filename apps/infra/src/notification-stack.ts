@@ -8,6 +8,7 @@ import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
+import { Constants } from './constants';
 import { layerVersionParam, secrets } from './secrets';
 
 export class NotificationStack extends cdk.Stack {
@@ -50,7 +51,7 @@ export class NotificationStack extends cdk.Stack {
 
     const topicArn = ssm.StringParameter.valueForStringParameter(
       this,
-      `/${appName}/TopicArn`
+      `/${appName}/${Constants.AppTopicArn}`
     );
 
     const topic = sns.Topic.fromTopicArn(this, 'AppTopic', topicArn);

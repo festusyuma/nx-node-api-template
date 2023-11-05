@@ -5,7 +5,6 @@ import * as cdk from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
-import process from 'process';
 
 import { Constants } from './constants';
 import { secrets } from './secrets';
@@ -50,7 +49,9 @@ export class ApiStack extends cdk.Stack {
 
     const authorizer = new gatewayAuthorizer.HttpJwtAuthorizer(
       `${appName}-CognitoAuthorizer`,
-      `https://cognito-idp.${process.env.CDK_DEFAULT_REGION}.amazonaws.com/${userPoolId}`,
+      `https://cognito-idp.${
+        cdk.Stack.of(this).region
+      }.amazonaws.com/${userPoolId}`,
       {
         identitySource: ['$request.header.Authorization'],
         jwtAudience: [userPoolClientId],

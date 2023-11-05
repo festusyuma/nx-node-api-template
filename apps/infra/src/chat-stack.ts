@@ -3,6 +3,7 @@ import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as dynamoDb from 'aws-cdk-lib/aws-dynamodb';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
+import * as sns from 'aws-cdk-lib/aws-sns';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
@@ -14,12 +15,18 @@ export class ChatStack extends Stack {
     super(scope, id, props);
 
     const appName = `${secrets.APP_NAME}-${secrets.ENV}`;
+    const region = Stack.of(this).region;
 
     /** Get parameters from SSM. ****/
 
     const userPoolId = ssm.StringParameter.valueForStringParameter(
       this,
       `/${appName}/${Constants.UserPoolId}`
+    );
+
+    const topicArn = ssm.StringParameter.valueForStringParameter(
+      this,
+      `/${appName}/${Constants.AppTopicArn}`
     );
 
     /******************************************/
@@ -114,6 +121,21 @@ export class ChatStack extends Stack {
       channelMemberTable
     );
 
+    const appTopic = sns.Topic.fromTopicArn(this, 'AppTopic', topicArn);
+
+    const snsDatSource = api.addHttpDataSource(
+      'SnsDataSource',
+      `https://sns.${region}.amazonaws.com`,
+      {
+        authorizationConfig: {
+          signingRegion: region,
+          signingServiceName: 'sns',
+        },
+      }
+    );
+
+    appTopic.grantPublish(snsDatSource);
+
     /*******************************/
 
     /*************** Resolvers **************/
@@ -136,13 +158,43 @@ export class ChatStack extends Stack {
       ),
     });
 
-    messageDataSource.createResolver('CreateMessageResolver', {
+    const createMessageFunction = messageDataSource.createFunction(
+      'CreateMessageFunction',
+      {
+        name: 'CreateMessageFunction',
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        code: appsync.Code.fromAsset(
+          'dist/apps/chat/resolvers/create-type.resolver.js'
+        ),
+      }
+    );
+
+    const publishMessageFunction = snsDatSource.createFunction(
+      'PublishMessageFunction',
+      {
+        name: 'PublishMessageFunction',
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        code: appsync.Code.fromAsset(
+          'dist/apps/chat/resolvers/publish-message.resolver.js'
+        ),
+      }
+    );
+
+    const publishArgs = JSON.stringify({ topicArn });
+    api.createResolver('CreateMessageResolver', {
       typeName: 'Mutation',
       fieldName: 'createMessage',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset(
-        'dist/apps/chat/resolvers/create-type.resolver.js'
-      ),
+      pipelineConfig: [publishMessageFunction, createMessageFunction],
+      code: appsync.Code.fromInline(`
+          export function request(ctx) {
+            return ${publishArgs}
+          }
+
+          export function response(ctx) {
+            return ctx.prev.result
+          }
+      `),
     });
 
     channelMemberDataSource.createResolver('CreateChannelMemberResolver', {

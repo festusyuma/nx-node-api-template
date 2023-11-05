@@ -18,8 +18,8 @@ export class AppService {
     await this.cacheManager.get('key');
 
     await this.messaging.send({
-      action: 'NOTIFICATION',
-      body: {
+      pattern: 'NOTIFICATION',
+      data: {
         templateId: 'otp',
         templateData: { value: '12345' },
       },

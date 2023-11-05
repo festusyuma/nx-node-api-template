@@ -15,7 +15,7 @@
         "bundle": false,
         "main": "apps/chat/src/main.ts",
         "tsConfig": "apps/chat/tsconfig.app.json",
-        "assets": ["apps/chat/src/assets", "apps/chat/src/schema/*"],
+        "assets": ["apps/chat/src/schema/*"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,

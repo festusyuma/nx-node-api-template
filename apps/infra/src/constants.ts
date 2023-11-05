@@ -3,4 +3,5 @@ export class Constants {
   static AuthFunctionArn = 'AuthFunction';
   static UserPoolId = 'UserPool';
   static UserPoolClientId = 'UserPoolClient';
+  static AppTopicArn = 'AppTopic';
 }

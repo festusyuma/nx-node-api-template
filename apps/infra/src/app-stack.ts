@@ -40,7 +40,7 @@ export class AppStack extends cdk.Stack {
 
     new ssm.StringParameter(this, 'TopicArn', {
       stringValue: topic.topicArn,
-      parameterName: `/${appName}/TopicArn`,
+      parameterName: `/${appName}/${Constants.AppTopicArn}`,
     });
 
     new ssm.StringParameter(this, 'AppFunctionArn', {

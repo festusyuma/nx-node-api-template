@@ -19,5 +19,5 @@ export function request(ctx: Context) {
 }
 
 export function response(ctx: Context) {
-  return;
+  return ctx.prev.result;
 }

@@ -3,7 +3,7 @@
 
 generator kysely {
   provider = "prisma-kysely"
-  output   = "../libs/types/src/lib/types"
+  output   = "../src/utils/types"
   fileName = "database.ts"
 }
 

@@ -3,7 +3,11 @@ import { Optional } from '@backend-template/helpers';
 import { DB } from '@backend-template/types';
 import { Injectable } from '@nestjs/common';
 
-import { CreateAgencyData } from '../utils/schema/agencySchema';
+import {
+  CreateAgencyData,
+  UpdateAgencyData,
+} from '../utils/schema/agencySchema';
+import { UpdateAgentData } from '../utils/schema/agentSchema';
 
 @Injectable()
 export class AgencyRepo {
@@ -42,7 +46,7 @@ export class AgencyRepo {
     );
   }
 
-  updateById(id: string, data: CreateAgencyData) {
+  updateById(id: string, data: UpdateAgencyData) {
     return Optional.of(
       this.client
         .updateTable('Agency')

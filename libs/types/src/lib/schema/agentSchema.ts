@@ -10,6 +10,8 @@ export const CreateAgentSchema = z.object({
 export const UpdateAgentSchema = z.object({
   lastName: z.string(),
   firstName: z.string(),
+  userId: z.string().uuid(),
+  agencyId: z.string().uuid(),
 });
 
 export type CreateAgentData = z.infer<typeof CreateAgentSchema>;

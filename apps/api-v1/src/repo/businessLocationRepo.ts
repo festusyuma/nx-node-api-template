@@ -28,12 +28,12 @@ export class BusinessLocationRepo {
         .execute()
     );
   }
-  findAllByAgentId(user: UserData) {
+  findAllByAgentId(id: string) {
     const { page, size } = { page: 1, size: 10 };
     return Optional.of(
       this.client
         .selectFrom('BusinessLocation')
-        .where('agentId', '=', user.id)
+        .where('agentId', '=', id)
         .selectAll()
         .offset((page - 1) * size)
         .limit(size)
@@ -41,11 +41,11 @@ export class BusinessLocationRepo {
     );
   }
 
-  findAgentRegisteredBusinessCount(user: UserData) {
+  findAgentRegisteredBusinessCount(id: string) {
     return Optional.of(
       this.client
         .selectFrom('BusinessLocation')
-        .where('agentId', '=', user.id)
+        .where('agentId', '=', id)
         .select((eb) =>
           eb.fn.countAll<number>().as('AgentRegisteredBusinessCount')
         )

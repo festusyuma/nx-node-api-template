@@ -1,4 +1,4 @@
-export { CreateAgencySchema } from './agencySchema';
+export { CreateAgencySchema, UpdateAgencySchema } from './agencySchema';
 export { CreateAgentSchema, UpdateAgentSchema } from './agentSchema';
 export {
   changePasswordSchema,

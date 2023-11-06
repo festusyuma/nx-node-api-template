@@ -1,4 +1,4 @@
-export type { CreateAgencyData } from './agencySchema';
+export type { CreateAgencyData, UpdateAgencyData } from './agencySchema';
 export type {} from './agentSchema';
 export type { CreateAgentData, UpdateAgentData } from './agentSchema';
 export type {

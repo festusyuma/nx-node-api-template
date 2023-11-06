@@ -1,0 +1,41 @@
+import { ZodValidationPipe } from '@backend-template/helpers';
+import { CreateAgentData, UpdateAgentData } from '@backend-template/types';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UsePipes,
+} from '@nestjs/common';
+
+import { CreateAgentSchema, UpdateAgentSchema } from '../../utils/schema';
+import { AgentService } from './agent.service';
+
+@Controller('admin/agent')
+export class AgentController {
+  constructor(private agentService: AgentService) {}
+
+  @Post()
+  @UsePipes(new ZodValidationPipe(CreateAgentSchema))
+  async create(@Body() data: CreateAgentData) {
+    return this.agentService.create(data);
+  }
+
+  @Get()
+  async findAll() {
+    return this.agentService.findAll();
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string) {
+    return this.agentService.findById(id);
+  }
+
+  @Patch()
+  @UsePipes(new ZodValidationPipe(UpdateAgentSchema))
+  async update(@Param('id') id: string, @Body() data: UpdateAgentData) {
+    return this.agentService.update(id, data);
+  }
+}

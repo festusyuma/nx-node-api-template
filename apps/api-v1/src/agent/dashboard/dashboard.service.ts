@@ -1,5 +1,4 @@
 import { CreateBusinessData } from '@backend-template/types';
-import { UserData } from 'aws-cdk-lib/aws-ec2';
 
 import { BusinessLocationRepo } from '../../repo/businessLocationRepo';
 import { BusinessRepo } from '../../repo/businessRepo';

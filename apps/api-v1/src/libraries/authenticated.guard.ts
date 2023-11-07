@@ -1,7 +1,17 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+} from '@nestjs/common';
+import jwt from 'jsonwebtoken';
+
+import { SecretsService } from '../secrets/secrets.service';
+import { UserData } from '../utils/schema/auth';
 
 @Injectable()
 export class AuthenticatedGuard implements CanActivate {
+  constructor(private secrets: SecretsService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
@@ -12,8 +22,14 @@ export class AuthenticatedGuard implements CanActivate {
     }
 
     try {
-      // todo validate json web token
-      request.user = {};
+      const decoded = jwt.verify(
+        request.token,
+        this.secrets.get('SECRET_KEY') as string
+      ) as UserData;
+
+      if (!decoded) throw new BadRequestException();
+
+      request.user = decoded;
     } catch (e) {
       /* empty */
     }

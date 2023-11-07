@@ -3,6 +3,7 @@ import { Optional } from '@backend-template/helpers';
 import { DB, UserData } from '@backend-template/types';
 
 import { CreateBusinessLocationData } from '../utils/schema/businessLocationSchema';
+import { PaginationData } from '../utils/schema/paginationSchema';
 
 export class BusinessLocationRepo {
   constructor(private client: KyselyService<DB>) {}
@@ -17,8 +18,8 @@ export class BusinessLocationRepo {
     );
   }
 
-  findAll() {
-    const { page, size } = { page: 1, size: 10 };
+  findAll(pagination: PaginationData) {
+    const { page, size } = pagination;
     return Optional.of(
       this.client
         .selectFrom('BusinessLocation')
@@ -28,8 +29,8 @@ export class BusinessLocationRepo {
         .execute()
     );
   }
-  findAllByAgentId(id: string) {
-    const { page, size } = { page: 1, size: 10 };
+  findAllByAgentId(id: string, pagination: PaginationData) {
+    const { page, size } = pagination;
     return Optional.of(
       this.client
         .selectFrom('BusinessLocation')

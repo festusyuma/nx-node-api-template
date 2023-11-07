@@ -3,6 +3,7 @@ import { Optional } from '@backend-template/helpers';
 import { DB } from '@backend-template/types';
 
 import { CreateBusinessDocumentData } from '../utils/schema/businessDocumentSchema';
+import { PaginationData } from '../utils/schema/paginationSchema';
 
 export class BusinessDocumentRepo {
   constructor(private client: KyselyService<DB>) {}
@@ -17,8 +18,8 @@ export class BusinessDocumentRepo {
     );
   }
 
-  findAll() {
-    const { page, size } = { page: 1, size: 10 };
+  findAll(pagination: PaginationData) {
+    const { page, size } = pagination;
     return Optional.of(
       this.client
         .selectFrom('BusinessDocument')
@@ -29,12 +30,15 @@ export class BusinessDocumentRepo {
     );
   }
 
-  findByBusinessId(id: string) {
+  findByBusinessId(id: string, pagination: PaginationData) {
+    const { page, size } = pagination;
     return Optional.of(
       this.client
         .selectFrom('BusinessDocument')
         .where('businessId', '=', id)
         .selectAll()
+        .offset((page - 1) * size)
+        .limit(size)
         .executeTakeFirst()
     );
   }

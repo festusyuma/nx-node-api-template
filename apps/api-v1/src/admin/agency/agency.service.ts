@@ -5,13 +5,14 @@ import {
   CreateAgencyData,
   UpdateAgencyData,
 } from '../../utils/schema/agencySchema';
+import { PaginationData } from '../../utils/schema/paginationSchema';
 
 @Injectable()
 export class AgencyService {
   constructor(private agencyRepo: AgencyRepo) {}
 
-  async findAll() {
-    return this.agencyRepo.findAll().elseThrow();
+  async findAll(pagination: PaginationData) {
+    return this.agencyRepo.findAll(pagination).elseThrow();
   }
   async findById(id: string) {
     return this.agencyRepo.findById(id);

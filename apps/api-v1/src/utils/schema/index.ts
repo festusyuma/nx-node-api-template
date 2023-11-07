@@ -12,4 +12,5 @@ export { CreateBusinessDocumentSchema } from './businessDocumentSchema';
 export { CreateBusinessLocationSchema } from './businessLocationSchema';
 export { CreateBusinessSchema, UpdateBusinessSchema } from './businessSchema';
 export { CreateOtpSchema } from './OtpSchema';
+export { paginationSchema } from './paginationSchema';
 export { CreateUserSchema } from './userSchema';

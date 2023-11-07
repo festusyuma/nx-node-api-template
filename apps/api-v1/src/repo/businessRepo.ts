@@ -3,6 +3,7 @@ import { Optional } from '@backend-template/helpers';
 import { DB } from '@backend-template/types';
 
 import { CreateBusinessData } from '../utils/schema/businessSchema';
+import { PaginationData } from '../utils/schema/paginationSchema';
 
 export class BusinessRepo {
   constructor(private client: KyselyService<DB>) {}
@@ -16,8 +17,8 @@ export class BusinessRepo {
     );
   }
 
-  findAll() {
-    const { page, size } = { page: 1, size: 10 };
+  findAll(pagination: PaginationData) {
+    const { page, size } = pagination;
     return Optional.of(
       this.client
         .selectFrom('Business')

@@ -12,6 +12,7 @@ export { CreateBusinessDocumentData } from './businessDocumentSchema';
 export type { CreateBusinessLocationData } from './businessLocationSchema';
 export type { CreateBusinessData, UpdateBusinessData } from './businessSchema';
 export type { CreateOtpData } from './OtpSchema';
+export type { PaginationData } from './paginationSchema';
 export type { CreateUserData, UpdateUserData } from './userSchema';
 
 export type OTPDetailsData = {

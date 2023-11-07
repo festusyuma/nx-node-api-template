@@ -3,6 +3,7 @@ import { Optional } from '@backend-template/helpers';
 import { DB } from '@backend-template/types';
 
 import { CreateAgentData, UpdateAgentData } from '../utils/schema/agentSchema';
+import { PaginationData } from '../utils/schema/paginationSchema';
 
 export class AgentRepo {
   constructor(private client: KyselyService<DB>) {}
@@ -16,8 +17,8 @@ export class AgentRepo {
     );
   }
 
-  findAll() {
-    const { page, size } = { page: 1, size: 10 };
+  findAll(pagination: PaginationData) {
+    const { page, size } = pagination;
     return Optional.of(
       this.client
         .selectFrom('Agent')
@@ -28,8 +29,8 @@ export class AgentRepo {
     );
   }
 
-  findAllByAgencyId(id: string) {
-    const { page, size } = { page: 1, size: 10 };
+  findAllByAgencyId(id: string, pagination: PaginationData) {
+    const { page, size } = pagination;
     return Optional.of(
       this.client
         .selectFrom('Agent')

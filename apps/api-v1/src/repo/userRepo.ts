@@ -3,6 +3,7 @@ import { Optional } from '@backend-template/helpers';
 import { DB } from '@backend-template/types';
 import { Injectable } from '@nestjs/common';
 
+import { PaginationData } from '../utils/schema/paginationSchema';
 import { CreateUserData, UpdateUserData } from '../utils/schema/userSchema';
 
 @Injectable()
@@ -19,8 +20,8 @@ export class UserRepo {
     );
   }
 
-  findAll() {
-    const { page, size } = { page: 1, size: 10 };
+  findAll(pagination: PaginationData) {
+    const { page, size } = pagination;
     return Optional.of(
       this.client
         .selectFrom('User')

@@ -1,3 +1,4 @@
+import { Authenticated } from '@backend-template/authorizer';
 import { CustomRes, ZodValidationPipe } from '@backend-template/helpers';
 import { CreateAgencyData } from '@backend-template/types';
 import {
@@ -10,8 +11,13 @@ import {
   UsePipes,
 } from '@nestjs/common';
 
-import { CreateAgencySchema, UpdateAgencySchema } from '../../utils/schema';
+import {
+  CreateAgencySchema,
+  paginationSchema,
+  UpdateAgencySchema,
+} from '../../utils/schema';
 import { UpdateAgencyData } from '../../utils/schema/agencySchema';
+import { PaginationData } from '../../utils/schema/paginationSchema';
 import { AgencyService } from './agency.service';
 
 @Controller('admin/agency')
@@ -25,8 +31,9 @@ export class AgencyController {
   }
 
   @Get()
-  async findAll() {
-    return CustomRes.success(await this.agencyService.findAll());
+  @UsePipes(new ZodValidationPipe(paginationSchema))
+  async findAll(@Query() pagination: PaginationData) {
+    return CustomRes.success(await this.agencyService.findAll(pagination));
   }
 
   @UsePipes(new ZodValidationPipe(UpdateAgencySchema))

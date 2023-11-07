@@ -7,10 +7,16 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UsePipes,
 } from '@nestjs/common';
 
-import { CreateAgentSchema, UpdateAgentSchema } from '../../utils/schema';
+import {
+  CreateAgentSchema,
+  paginationSchema,
+  UpdateAgentSchema,
+} from '../../utils/schema';
+import { PaginationData } from '../../utils/schema/paginationSchema';
 import { AgentService } from './agent.service';
 
 @Controller('admin/agent')
@@ -24,8 +30,9 @@ export class AgentController {
   }
 
   @Get()
-  async findAll() {
-    return this.agentService.findAll();
+  @UsePipes(new ZodValidationPipe(paginationSchema))
+  async findAll(@Query() pagination: PaginationData) {
+    return this.agentService.findAll(pagination);
   }
 
   @Get(':id')

@@ -7,6 +7,7 @@ import {
   CreateAgencyData,
   UpdateAgencyData,
 } from '../utils/schema/agencySchema';
+import { PaginationData } from '../utils/schema/paginationSchema';
 
 @Injectable()
 export class AgencyRepo {
@@ -22,9 +23,8 @@ export class AgencyRepo {
     );
   }
 
-  findAll() {
-    const page = 1;
-    const size = 10;
+  findAll(pagination: PaginationData) {
+    const { page, size } = pagination;
     return Optional.of(
       this.client
         .selectFrom('Agency')

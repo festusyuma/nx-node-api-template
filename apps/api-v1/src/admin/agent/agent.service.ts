@@ -3,6 +3,7 @@ import {
   CreateAgentData,
   UpdateAgentData,
 } from '../../utils/schema/agentSchema';
+import { PaginationData } from '../../utils/schema/paginationSchema';
 
 export class AgentService {
   constructor(private agentRepo: AgentRepo) {}
@@ -11,8 +12,8 @@ export class AgentService {
     return this.agentRepo.create(data);
   }
 
-  async findAll() {
-    return this.agentRepo.findAll();
+  async findAll(pagination: PaginationData) {
+    return this.agentRepo.findAll(pagination);
   }
 
   async findById(id: string) {

@@ -89,6 +89,16 @@ model BusinessLocation {
   agent    Agent?   @relation(fields: [agentId], references: [id])
 }
 
+model Otp {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  otp            String
+  expirationTime DateTime
+  verified       Boolean?
+  verifiedAt     DateTime?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime? @updatedAt @map("updated_at")
+}
+
 enum BusinessLocationStatus {
   UNVERIFIED
   PENDING

@@ -20,7 +20,7 @@ export class AgencyController {
 
   @UsePipes(new ZodValidationPipe(CreateAgencySchema))
   @Post()
-  async createAgent(@Body() data: CreateAgencyData) {
+  async createAgency(@Body() data: CreateAgencyData) {
     return CustomRes.success(await this.agencyService.create(data));
   }
 

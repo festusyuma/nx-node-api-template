@@ -1,19 +1,15 @@
 import { CustomRes } from '@backend-template/helpers';
 import { MESSAGE_MANAGER, Messaging } from '@backend-template/messaging';
-import {
-  generateOtp,
-  generateToken,
-  validateOtp,
-  validateToken,
-} from '@backend-template/token';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { Cache } from 'cache-manager';
-import jwt, { Secret } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
+import { OtpRepo } from '../repo/optRepo';
 import { UserRepo } from '../repo/userRepo';
 import { SecretsService } from '../secrets/secrets.service';
+import { UserData } from '../utils/schema/auth';
 import {
   changePasswordData,
   forgotPasswordData,
@@ -28,6 +24,7 @@ import {
 export class AuthService {
   constructor(
     private repo: UserRepo,
+    private otpRepo: OtpRepo,
     private secrets: SecretsService,
     @Inject(MESSAGE_MANAGER) private messaging: Messaging,
     @Inject(CACHE_MANAGER) private cacheManager: Cache
@@ -41,7 +38,18 @@ export class AuthService {
     if (!(await bcrypt.compare(data.password, user.password)))
       throw CustomRes.unauthorized('Incorrect username or password');
 
-    const token = await generateToken(user, `user_${user.id}_token`);
+    const JWTPayload: UserData = {
+      id: user.id ?? '',
+      email: user.email,
+      username: user.username,
+      role: user.role ?? '',
+    };
+
+    const token = jwt.sign(
+      JWTPayload,
+      this.secrets.get('SECRET_KEY') as string,
+      { expiresIn: 30000 }
+    );
 
     return { user, token };
   }
@@ -51,21 +59,26 @@ export class AuthService {
       .findByEmail(data.email)
       .elseThrow(CustomRes.unauthorized('Email not registered'));
 
+    const otp = await this.otpRepo
+      .create({
+        otp: Math.random().toFixed(6).slice(2),
+        expirationTime: this.addMinutesToDate(new Date(), 10).toTimeString(),
+      })
+      .elseThrow();
+
     const otpDetails: OTPDetailsData = {
-      timestamp: new Date(),
+      timestamp: otp.created_at,
       client: data.email,
       success: true,
       message: 'OTP sent to user',
-      otp: (await generateOtp(
-        `user_${user.id}_otp`,
-        VERIFY_OTP_TYPE.RESET
-      )) as string,
+      otpId: otp.otp,
       userId: user.id,
     };
 
-    const encoded = await generateToken(
+    const encoded = jwt.sign(
       otpDetails,
-      `user_${user.id}_otpDetail`
+      this.secrets.get('SECRET_KEY') as string,
+      { expiresIn: 30000 }
     );
 
     await this.messaging.send({
@@ -74,7 +87,7 @@ export class AuthService {
         templateId: 'ForgotPassword',
         templateData: {
           name: user.username,
-          otp: otpDetails.otp,
+          otp: otp.otp,
         },
       },
     });
@@ -87,30 +100,34 @@ export class AuthService {
       .findByEmail(data.email)
       .elseThrow(CustomRes.unauthorized('Email not registered'));
 
+    const otp = await this.otpRepo
+      .create({
+        otp: Math.random().toFixed(6).slice(2),
+        expirationTime: this.addMinutesToDate(new Date(), 10).toTimeString(),
+      })
+      .elseThrow();
+
     const otpDetails: OTPDetailsData = {
-      timestamp: new Date(),
+      timestamp: otp.created_at,
       client: data.email,
       success: true,
       message: 'OTP sent to user',
-      otp: (await generateOtp(
-        `user_${user.id}_otp`,
-        VERIFY_OTP_TYPE.RECOVER_USERNAME
-      )) as string,
+      otpId: otp.id,
       userId: user.id,
     };
 
-    const encoded = await generateToken(
+    const encoded = jwt.sign(
       otpDetails,
-      `user_${user.id}_otpDetail`
+      this.secrets.get('SECRET_KEY') as string,
+      { expiresIn: 30000 }
     );
-
     await this.messaging.send({
       action: 'NOTIFICATION',
       body: {
         templateId: 'RecoverUsername',
         templateData: {
           name: user.username,
-          otp: otpDetails.otp,
+          otp: otp.otp,
         },
       },
     });
@@ -118,18 +135,17 @@ export class AuthService {
     return { token: encoded };
   }
   async verifyOTP(data: verifyOTPData) {
-    const decoded = (await validateToken(data.token)) as OTPDetailsData;
+    const decoded = jwt.verify(
+      data.token,
+      this.secrets.get('SECRET_KEY') as string
+    ) as OTPDetailsData;
 
     if (!decoded) throw CustomRes.unauthorized('Invalid Token');
 
     if (data.client != decoded.client)
       throw CustomRes.unauthorized('OTP was not sent to this particular email');
 
-    const otp = await validateOtp(
-      data.otp,
-      `user_${decoded.userId}_otp`,
-      data.type
-    );
+    const otp = await this.otpRepo.findById(decoded.otpId).elseThrow();
     if (!otp)
       throw CustomRes.unauthorized(
         'OTP inputted not valid,\n' + 'kindly re-enter OTP'
@@ -158,7 +174,10 @@ export class AuthService {
   }
 
   async changePassword(data: changePasswordData) {
-    const decoded = (await validateToken(data.token)) as OTPDetailsData;
+    const decoded = jwt.verify(
+      data.token,
+      this.secrets.get('SECRET_KEY') as string
+    ) as OTPDetailsData;
 
     if (!decoded) throw CustomRes.unauthorized('Invalid Token');
 
@@ -173,4 +192,8 @@ export class AuthService {
 
     return { message: 'Password Updated' };
   }
+
+  addMinutesToDate = (date: Date, minutes: number) => {
+    return new Date(date.getTime() + minutes * 60000);
+  };
 }

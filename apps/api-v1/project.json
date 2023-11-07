@@ -14,13 +14,15 @@
         "outputPath": "dist/apps/api-v1",
         "main": "apps/api-v1/src/main.ts",
         "tsConfig": "apps/api-v1/tsconfig.app.json",
-        "assets": ["apps/api-v1/src/assets"],
         "isolatedConfig": true,
         "webpackConfig": "apps/api-v1/webpack.config.js"
       },
       "configurations": {
         "development": {},
-        "production": {}
+        "production": {},
+        "seed": {
+          "main": "apps/api-v1/src/seed/seed.ts"
+        }
       }
     },
     "serve": {
@@ -36,6 +38,13 @@
         "production": {
           "buildTarget": "api-v1:build:production"
         }
+      }
+    },
+    "seed": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "api-v1:build:seed",
+        "watch": false
       }
     },
     "lint": {

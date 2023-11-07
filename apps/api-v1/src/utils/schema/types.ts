@@ -1,5 +1,4 @@
 export type { CreateAgencyData, UpdateAgencyData } from './agencySchema';
-export type {} from './agentSchema';
 export type { CreateAgentData, UpdateAgentData } from './agentSchema';
 export type {
   changePasswordData,
@@ -12,6 +11,7 @@ export { VERIFY_OTP_TYPE } from './authSchema';
 export { CreateBusinessDocumentData } from './businessDocumentSchema';
 export type { CreateBusinessLocationData } from './businessLocationSchema';
 export type { CreateBusinessData, UpdateBusinessData } from './businessSchema';
+export type { CreateOtpData } from './OtpSchema';
 export type { CreateUserData, UpdateUserData } from './userSchema';
 
 export type OTPDetailsData = {
@@ -19,6 +19,6 @@ export type OTPDetailsData = {
   client: string;
   success: boolean;
   message: string;
-  otp: string;
+  otpId: string;
   userId: string;
 };

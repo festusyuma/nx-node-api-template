@@ -83,6 +83,19 @@ CREATE TABLE "BusinessLocation" (
     CONSTRAINT "BusinessLocation_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Otp" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "otp" TEXT NOT NULL,
+    "expirationTime" TIMESTAMP(3) NOT NULL,
+    "verified" BOOLEAN,
+    "verifiedAt" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+
+    CONSTRAINT "Otp_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 

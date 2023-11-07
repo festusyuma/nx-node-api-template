@@ -7,7 +7,6 @@ import {
   CreateAgencyData,
   UpdateAgencyData,
 } from '../utils/schema/agencySchema';
-import { UpdateAgentData } from '../utils/schema/agentSchema';
 
 @Injectable()
 export class AgencyRepo {

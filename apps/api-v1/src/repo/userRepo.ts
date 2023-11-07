@@ -45,8 +45,9 @@ export class UserRepo {
     return Optional.of(
       this.client
         .selectFrom('User')
+        .leftJoin('Role', 'Role.id', 'User.id')
+        .select(['id', 'username', 'email', 'Role.name as role', 'password'])
         .where('username', '=', username)
-        .selectAll()
         .executeTakeFirst()
     );
   }

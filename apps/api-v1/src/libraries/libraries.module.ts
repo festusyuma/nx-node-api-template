@@ -4,6 +4,7 @@ import { Global, Module } from '@nestjs/common';
 
 import { SecretsModule } from '../secrets/secrets.module';
 import { SecretsService } from '../secrets/secrets.service';
+import { AuthenticatedGuard } from './authenticated.guard';
 
 @Global()
 @Module({
@@ -24,7 +25,9 @@ import { SecretsService } from '../secrets/secrets.service';
       },
     },
     { provide: MESSAGE_MANAGER, useClass: Sns },
+
+    AuthenticatedGuard,
   ],
-  exports: [KyselyService, DynamoService, MESSAGE_MANAGER],
+  exports: [KyselyService, DynamoService, MESSAGE_MANAGER, AuthenticatedGuard],
 })
 export class LibrariesModule {}

@@ -57,6 +57,15 @@ export type BusinessLocation = {
   agentId: string | null;
   status: Generated<BusinessLocationStatus>;
 };
+export type Otp = {
+  id: Generated<string>;
+  otp: string;
+  expirationTime: Timestamp;
+  verified: boolean | null;
+  verifiedAt: Timestamp | null;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
+};
 export type Role = {
   id: Generated<string>;
   name: string;
@@ -75,6 +84,7 @@ export type DB = {
   Business: Business;
   BusinessDocument: BusinessDocument;
   BusinessLocation: BusinessLocation;
+  Otp: Otp;
   Role: Role;
   User: User;
 };

@@ -1,8 +1,8 @@
 import {
-  BadRequestException,
   CanActivate,
   ExecutionContext,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import jwt from 'jsonwebtoken';
 
@@ -22,16 +22,13 @@ export class AuthenticatedGuard implements CanActivate {
     }
 
     try {
-      const decoded = jwt.verify(
+      request.user = jwt.verify(
         request.token,
         this.secrets.get('SECRET_KEY') as string
       ) as UserData;
-
-      if (!decoded) throw new BadRequestException();
-
-      request.user = decoded;
     } catch (e) {
       /* empty */
+      throw new UnauthorizedException('Invalid Token');
     }
 
     return true;

@@ -1,4 +1,3 @@
-import { Authenticated } from '@backend-template/authorizer';
 import { CustomRes, ZodValidationPipe } from '@backend-template/helpers';
 import { CreateAgencyData } from '@backend-template/types';
 import {

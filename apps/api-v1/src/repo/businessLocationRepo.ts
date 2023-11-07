@@ -1,6 +1,6 @@
 import { KyselyService } from '@backend-template/database';
 import { Optional } from '@backend-template/helpers';
-import { DB, UserData } from '@backend-template/types';
+import { DB } from '@backend-template/types';
 
 import { CreateBusinessLocationData } from '../utils/schema/businessLocationSchema';
 import { PaginationData } from '../utils/schema/paginationSchema';

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { BusinessLocationStatus } from '../types/database';
+import { BusinessLocationStatus } from '../types';
 
 export const CreateBusinessLocationSchema = z.object({
   streetAddress: z.string(),

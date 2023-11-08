@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { BusinessDocumentStatus } from '../types/database';
+import { BusinessDocumentStatus } from '../types';
 
 export const CreateBusinessDocumentSchema = z.object({
   type: z.string(),

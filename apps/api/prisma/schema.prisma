@@ -92,7 +92,7 @@ model BusinessLocation {
 model Otp {
   id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   otp            String
-  expirationTime DateTime
+  expirationTime DateTime  @default(dbgenerated("NOW() + interval '10 minutes'"))
   verified       Boolean?
   verifiedAt     DateTime?
   createdAt      DateTime  @default(now()) @map("created_at")

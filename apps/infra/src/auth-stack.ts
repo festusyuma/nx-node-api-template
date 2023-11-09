@@ -20,6 +20,7 @@ export class AuthStack extends Stack {
     super(scope, id, props);
 
     const appName = `${secrets.APP_NAME}-${secrets.ENV}`;
+    const domain = secrets.DOMAIN;
     const secretName = `${appName}-auth-secrets`;
 
     const userPool = new cognito.UserPool(this, 'UserPool', {
@@ -29,10 +30,11 @@ export class AuthStack extends Stack {
       mfa: cognito.Mfa.OPTIONAL,
       mfaSecondFactor: { sms: false, otp: true },
       accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
-      email: cognito.UserPoolEmail.withSES({
-        fromEmail: 'noreply@festusyuma.com',
-        sesVerifiedDomain: 'festusyuma.com',
-      }),
+      email: cognito.UserPoolEmail.withCognito(`noreply@${domain}`),
+      // email: cognito.UserPoolEmail.withSES({
+      //   fromEmail: `noreply@${domain}`,
+      //   sesVerifiedDomain: domain,
+      // }), todo change to enable ses
       deletionProtection: true,
     });
 

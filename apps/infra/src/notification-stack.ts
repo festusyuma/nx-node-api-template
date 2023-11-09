@@ -26,7 +26,7 @@ export class NotificationStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(30),
       layers: [props.dependencyLayer],
       environment: {
-        MAIL_FROM: secrets.MAIL_FROM,
+        MAIL_FROM: `noreply@${secrets.DOMAIN}`,
       },
     });
 

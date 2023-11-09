@@ -6,7 +6,7 @@ const secretsSchema = {
   ENV: z.string().max(32),
   CLOUDFRONT_PUBLIC_KEY: z.string(),
   CLOUDFRONT_PRIVATE_KEY: z.string(),
-  MAIL_FROM: z.string().default('example@mail.com'),
+  DOMAIN: z.string().default('example.com'),
 };
 
 export let secrets: z.infer<ZodObject<typeof secretsSchema>>;

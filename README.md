@@ -52,3 +52,26 @@ It provides a central and efficient way to manage and access secrets within your
 export class SecretsModule {}
 ```
 
+
+```typescript
+CacheModule.registerAsync({
+  useFactory: async (secrets: SecretsService) => {
+    return {
+      isGlobal: true,
+      store: await redisStore({ url: secrets.get('REDIS_URL') }),
+    };
+  },
+  inject: [SecretsService],
+  isGlobal: true,
+})
+```
+
+```typescript
+{
+  provide: CognitoService,
+    useFactory: (secrets: SecretsService) => {
+    return new CognitoService(secrets.get('AWS_REGION'));
+  },
+    inject: [SecretsService],
+},
+```

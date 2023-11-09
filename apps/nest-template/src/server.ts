@@ -1,7 +1,7 @@
 import { httpBootstrap } from '@backend-template/server';
 import { Logger } from '@nestjs/common';
 
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 
 httpBootstrap(AppModule, 'template').then((res) => {
   const port = process.env.PORT ?? 3000;

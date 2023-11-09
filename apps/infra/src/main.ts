@@ -9,7 +9,7 @@ import { ApiStack } from './api-stack';
 import { AuthStack } from './auth-stack';
 import { BaseStack } from './base-stack';
 import { ChatStack } from './chat-stack';
-import { FileManagerStack } from './file-manager-stack';
+// import { FileManagerStack } from './file-manager-stack';
 import { NotificationStack } from './notification-stack';
 import { getSecrets, secrets } from './secrets';
 // import { ServerStack } from './server-stack';

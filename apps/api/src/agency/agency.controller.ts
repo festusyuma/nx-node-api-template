@@ -1,14 +1,24 @@
 import { Authenticated } from '@backend-template/authorizer';
 import { CustomRes, ZodValidationPipe } from '@backend-template/helpers';
 import { CreateAgentData } from '@backend-template/types';
-import { Body, Controller, Get, Post, Query, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 
+import { LoggedInGuard } from '../libraries/login.guard';
 import { CreateAgentSchema, paginationSchema } from '../utils/schema';
 import { UserData } from '../utils/schema/auth';
 import { PaginationData } from '../utils/schema/paginationSchema';
 import { AgencyService } from './agency.service';
 
 @Controller('agency')
+@UseGuards(LoggedInGuard)
 export class AgencyController {
   constructor(private agencyService: AgencyService) {}
 

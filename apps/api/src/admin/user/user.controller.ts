@@ -7,20 +7,24 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 
-import {
-  CreateUserSchema,
-  paginationSchema,
-  UpdateAgentSchema,
-} from '../../utils/schema';
+import { IsAdminGuard } from '../../libraries/admin.guard';
+import { LoggedInGuard } from '../../libraries/login.guard';
+import { CreateUserSchema, paginationSchema } from '../../utils/schema';
 import { PaginationData } from '../../utils/schema/paginationSchema';
-import { CreateUserData, UpdateUserData } from '../../utils/schema/userSchema';
+import {
+  CreateUserData,
+  UpdateUserData,
+  UpdateUserSchema,
+} from '../../utils/schema/userSchema';
 import { UserService } from './user.service';
 
 @Controller('admin/user')
+@UseGuards(LoggedInGuard, IsAdminGuard)
 export class UserController {
   constructor(private userService: UserService) {}
 
@@ -43,9 +47,11 @@ export class UserController {
     return CustomRes.success(await this.userService.findById(id));
   }
 
-  @Patch()
-  @UsePipes(new ZodValidationPipe(UpdateAgentSchema))
-  async update(@Param('id') id: string, @Body() data: UpdateUserData) {
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(UpdateUserSchema)) data: UpdateUserData
+  ) {
     return CustomRes.success(await this.userService.update(id, data));
   }
 }

@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { UserStatus } from '../types';
+
 export const CreateUserSchema = z.object({
   username: z.string(),
   email: z.string(),
@@ -10,10 +12,11 @@ export const CreateUserSchema = z.object({
 export type CreateUserData = z.infer<typeof CreateUserSchema>;
 
 export const UpdateUserSchema = z.object({
-  username: z.string(),
-  email: z.string(),
+  username: z.string().optional(),
+  email: z.string().optional(),
   password: z.string().optional(),
-  roleId: z.string().uuid(),
+  status: z.nativeEnum(UserStatus).optional(),
+  roleId: z.string().uuid().optional(),
 });
 
 export type UpdateUserData = z.infer<typeof UpdateUserSchema>;

@@ -8,9 +8,12 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 
+import { IsAdminGuard } from '../../libraries/admin.guard';
+import { LoggedInGuard } from '../../libraries/login.guard';
 import {
   CreateAgentSchema,
   paginationSchema,
@@ -20,6 +23,7 @@ import { PaginationData } from '../../utils/schema/paginationSchema';
 import { AgentService } from './agent.service';
 
 @Controller('admin/agent')
+@UseGuards(LoggedInGuard, IsAdminGuard)
 export class AgentController {
   constructor(private agentService: AgentService) {}
 

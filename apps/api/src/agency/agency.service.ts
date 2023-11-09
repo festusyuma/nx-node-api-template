@@ -34,4 +34,8 @@ export class AgencyService {
   ): Promise<Updateable<Agent>> {
     return this.agentRepo.updateById(id, data);
   }
+
+  async assignBusinessToAgent(agentId: string, businessId: string) {
+    return [];
+  }
 }

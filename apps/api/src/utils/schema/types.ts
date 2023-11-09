@@ -8,6 +8,7 @@ export type {
   verifyOTPData,
 } from './authSchema';
 export { VERIFY_OTP_TYPE } from './authSchema';
+import { VERIFY_OTP_TYPE } from './authSchema';
 export { CreateBusinessDocumentData } from './businessDocumentSchema';
 export type { CreateBusinessLocationData } from './businessLocationSchema';
 export type { CreateBusinessData, UpdateBusinessData } from './businessSchema';
@@ -21,5 +22,6 @@ export type OTPDetailsData = {
   success: boolean;
   message: string;
   otpId: string;
+  type: VERIFY_OTP_TYPE;
   userId: string;
 };

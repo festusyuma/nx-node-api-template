@@ -1,8 +1,10 @@
 import { CreateBusinessData } from '@backend-template/types';
+import { Injectable } from '@nestjs/common';
 
 import { BusinessLocationRepo } from '../../repo/businessLocationRepo';
 import { BusinessRepo } from '../../repo/businessRepo';
 
+@Injectable()
 export class DashboardService {
   constructor(
     private businessRepo: BusinessRepo,
@@ -14,6 +16,10 @@ export class DashboardService {
   }
 
   async findRegisteredBusinessCount(id: string) {
-    return this.businessLocationRepo.findAgentRegisteredBusinessCount(id);
+    return await this.businessLocationRepo.findAgentRegisteredBusinessCount(id);
+  }
+
+  async assignedTasked() {
+    return [];
   }
 }

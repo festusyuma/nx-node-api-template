@@ -18,6 +18,12 @@ export const BusinessDocumentStatus = {
 } as const;
 export type BusinessDocumentStatus =
   typeof BusinessDocumentStatus[keyof typeof BusinessDocumentStatus];
+export const UserStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  LOCKED: 'LOCKED',
+} as const;
+export type UserStatus = typeof UserStatus[keyof typeof UserStatus];
 export type Agency = {
   id: Generated<string>;
   name: string;
@@ -76,6 +82,7 @@ export type User = {
   username: string;
   email: string;
   password: string;
+  status: Generated<UserStatus>;
   roleId: string;
 };
 export type DB = {

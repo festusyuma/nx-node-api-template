@@ -1,6 +1,8 @@
 import { CustomRes } from '@backend-template/helpers';
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
+import { Cache } from 'cache-manager';
 import jwt from 'jsonwebtoken';
 
 import { OtpRepo } from '../repo/optRepo';
@@ -13,15 +15,18 @@ import {
   LoginData,
   OTPDetailsData,
   recoverUsernameData,
+  VERIFY_OTP_TYPE,
   verifyOTPData,
 } from '../utils/schema/types';
+import { UserStatus } from '../utils/types';
 
 @Injectable()
 export class AuthService {
   constructor(
     private repo: UserRepo,
     private otpRepo: OtpRepo,
-    private secrets: SecretsService //@Inject(MESSAGE_MANAGER) private messaging: Messaging
+    private secrets: SecretsService, //@Inject(MESSAGE_MANAGER) private messaging: Messaging
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
 
   async login(data: LoginData) {
@@ -29,9 +34,30 @@ export class AuthService {
       .findByUsername(data.username)
       .elseThrow(CustomRes.unauthorized('Incorrect username or password'));
 
-    if (!(await bcrypt.compare(data.password, user.password)))
-      throw CustomRes.unauthorized('Incorrect username or password');
+    if (user)
+      if (user.status in [UserStatus.LOCKED, UserStatus.INACTIVE])
+        throw CustomRes.unauthorized('Account locked, contact admin');
 
+    if (!(await bcrypt.compare(data.password, user.password))) {
+      const login_attempts = (await this.cacheManager.get(
+        `${user.id}_login_attempts`
+      )) as number;
+
+      if (!login_attempts) {
+        await this.cacheManager.set(`${user.id}_login_attempts`, 1, 10000);
+      } else {
+        await this.cacheManager.set(
+          `${user.id}_login_attempts`,
+          login_attempts + 1
+        );
+      }
+      if (login_attempts == 3) {
+        await this.repo.updateStatusById(user.id, UserStatus.LOCKED);
+        throw CustomRes.unauthorized('Account locked, contact admin');
+      }
+      throw CustomRes.unauthorized('Incorrect username or password');
+    }
+    await this.cacheManager.set(`${user.id}_login_attempts`, 0);
     const result: UserData = {
       id: user.id ?? '',
       email: user.email,
@@ -40,7 +66,7 @@ export class AuthService {
     };
 
     const token = jwt.sign(result, this.secrets.get('SECRET_KEY'), {
-      expiresIn: 30000,
+      expiresIn: 3000,
     });
 
     return { result, token };
@@ -61,25 +87,17 @@ export class AuthService {
       success: true,
       message: 'OTP sent to user',
       otpId: otp.id,
+      type: VERIFY_OTP_TYPE.RESET,
       userId: user.id,
     };
 
     const encoded = jwt.sign(otpDetails, this.secrets.get('SECRET_KEY'), {
       expiresIn: 30000,
     });
-    //
-    // await this.messaging.send({
-    //   action: 'NOTIFICATION',
-    //   body: {
-    //     templateId: 'ForgotPassword',
-    //     templateData: {
-    //       name: user.username,
-    //       otp: otp.otp,
-    //     },
-    //   },
-    // });
 
-    return { token: encoded };
+    // TODO send otp to user email
+
+    return { token: encoded, otp: otp.otp };
   }
 
   async recoverUsername(data: recoverUsernameData) {
@@ -95,24 +113,16 @@ export class AuthService {
       success: true,
       message: 'OTP sent to user',
       otpId: otp.id,
+      type: VERIFY_OTP_TYPE.RECOVER_USERNAME,
       userId: user.id,
     };
 
     const encoded = jwt.sign(otpDetails, this.secrets.get('SECRET_KEY'), {
       expiresIn: 30000,
     });
-    // await this.messaging.send({
-    //   action: 'NOTIFICATION',
-    //   body: {
-    //     templateId: 'RecoverUsername',
-    //     templateData: {
-    //       name: user.username,
-    //       otp: otp.otp,
-    //     },
-    //   },
-    // });
+    //TODO send username to user email
 
-    return { token: encoded };
+    return { token: encoded, otp: otp.otp };
   }
   async verifyOTP(data: verifyOTPData) {
     const decoded = jwt.verify(
@@ -135,29 +145,12 @@ export class AuthService {
       );
     if (otp.verified) throw CustomRes.badRequest('OTP has been used');
 
-    //const user = await this.repo.findByEmail(decoded.client).elseThrow();
-
-    // switch (data.type) {
-    //   case VERIFY_OTP_TYPE.RECOVER_USERNAME:
-    //     await this.messaging.send({
-    //       action: 'NOTIFICATION',
-    //       body: {
-    //         templateId: 'RecoverUsername',
-    //         templateData: {
-    //           name: user.username,
-    //           username: user.username,
-    //         },
-    //       },
-    //     });
-    //     break;
-    //   case VERIFY_OTP_TYPE.RESET:
-    //     break;
-    // }
-
     await this.otpRepo.update(otp.id, {
       verified: true,
       verifiedAt: new Date().toUTCString(),
     });
+
+    //TODO send username to user email or send verification token to change password
 
     return { data, otp };
   }

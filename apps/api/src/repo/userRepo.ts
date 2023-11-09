@@ -1,10 +1,10 @@
 import { KyselyService } from '@backend-template/database';
 import { Optional } from '@backend-template/helpers';
-import { DB } from '@backend-template/types';
 import { Injectable } from '@nestjs/common';
 
 import { PaginationData } from '../utils/schema/paginationSchema';
 import { CreateUserData, UpdateUserData } from '../utils/schema/userSchema';
+import { DB, UserStatus } from '../utils/types';
 
 @Injectable()
 export class UserRepo {
@@ -14,7 +14,7 @@ export class UserRepo {
     return Optional.of(
       this.client
         .insertInto('User')
-        .values(data)
+        .values({ ...data, status: UserStatus.ACTIVE })
         .returningAll()
         .executeTakeFirst()
     ).elseThrow();
@@ -51,7 +51,8 @@ export class UserRepo {
           'User.id',
           'username',
           'email',
-          'Role.name as role',
+          'status',
+          'Role.key as role',
           'password',
         ])
         .where('username', '=', username)
@@ -74,6 +75,17 @@ export class UserRepo {
       this.client
         .updateTable('User')
         .set(data)
+        .where('id', '=', id)
+        .returningAll()
+        .executeTakeFirst()
+    ).elseThrow();
+  }
+
+  updateStatusById(id: string, status: UserStatus) {
+    return Optional.of(
+      this.client
+        .updateTable('User')
+        .set({ status: status })
         .where('id', '=', id)
         .returningAll()
         .executeTakeFirst()

@@ -1,10 +1,12 @@
 import { KyselyService } from '@backend-template/database';
 import { Optional } from '@backend-template/helpers';
 import { DB } from '@backend-template/types';
+import { Injectable } from '@nestjs/common';
 
 import { CreateBusinessData } from '../utils/schema/businessSchema';
 import { PaginationData } from '../utils/schema/paginationSchema';
 
+@Injectable()
 export class BusinessRepo {
   constructor(private client: KyselyService<DB>) {}
   create(data: CreateBusinessData) {

@@ -9,7 +9,7 @@ import { ApiStack } from './api-stack';
 import { AuthStack } from './auth-stack';
 import { BaseStack } from './base-stack';
 import { ChatStack } from './chat-stack';
-// import { FileManagerStack } from './file-manager-stack';
+import { FileManagerStack } from './file-manager-stack';
 import { NotificationStack } from './notification-stack';
 import { getSecrets, secrets } from './secrets';
 // import { ServerStack } from './server-stack';
@@ -55,6 +55,7 @@ getSecrets().then(() => {
   // const file = new FileManagerStack(app, 'filemanager', {
   //   stackName: `${appName}-file`,
   //   env,
+  //   dependencyLayer: base.dependencyLayer,
   // });
 
   new ApiStack(app, 'api', {
@@ -62,6 +63,7 @@ getSecrets().then(() => {
     env,
     apps: {
       // server: { baseRoute: 'v1', function: server.appFunction },
+      // file: { baseRoute: 'file', function: file.fileFunction },
       auth: { baseRoute: 'auth', function: auth.authFunction },
       chat: { baseRoute: 'chat', function: chat.chatFunction },
     },

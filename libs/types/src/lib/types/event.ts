@@ -1,8 +1,8 @@
 import { NotificationData } from './notification';
 
 export type MessageBody = {
-  action: 'NOTIFICATION';
-  body: NotificationData;
+  pattern: 'NOTIFICATION';
+  data: NotificationData;
 };
 
 export const ScheduleType = {

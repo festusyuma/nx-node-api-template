@@ -1,4 +1,4 @@
-import { CustomRes, ZodValidationPipe } from '@backend-template/helpers';
+import { CustomRes, ZodValidationPipe } from '@backend-template/http';
 import { FileManagerData, FileManagerSchema } from '@backend-template/types';
 import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 

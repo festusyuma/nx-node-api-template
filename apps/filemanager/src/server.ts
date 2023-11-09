@@ -1,4 +1,4 @@
-import { httpBootstrap } from '@backend-template/server';
+import { httpBootstrap } from '@backend-template/http';
 
 import { AppModule } from './app.module';
 

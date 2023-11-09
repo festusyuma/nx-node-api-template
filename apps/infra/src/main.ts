@@ -12,7 +12,7 @@ import { ChatStack } from './chat-stack';
 // import { FileManagerStack } from './file-manager-stack';
 import { NotificationStack } from './notification-stack';
 import { getSecrets, secrets } from './secrets';
-import { ServerStack } from './server-stack';
+// import { ServerStack } from './server-stack';
 
 getSecrets().then(() => {
   const appName = `${secrets.APP_NAME}-${secrets.ENV}`;
@@ -25,6 +25,13 @@ getSecrets().then(() => {
   const base = new BaseStack(app, 'base', {
     stackName: `${appName}-base`,
     env,
+  });
+
+  new NotificationStack(app, 'notification', {
+    stackName: `${appName}-notification`,
+    env,
+    dependencyLayer: base.dependencyLayer,
+    topic: base.topic,
   });
 
   const auth = new AuthStack(app, 'auth', {
@@ -45,6 +52,11 @@ getSecrets().then(() => {
   //   dependencyLayer: base.dependencyLayer,
   // });
 
+  // const file = new FileManagerStack(app, 'filemanager', {
+  //   stackName: `${appName}-file`,
+  //   env,
+  // });
+
   new ApiStack(app, 'api', {
     stackName: `${appName}-api`,
     env,
@@ -54,16 +66,4 @@ getSecrets().then(() => {
       chat: { baseRoute: 'chat', function: chat.chatFunction },
     },
   });
-
-  new NotificationStack(app, 'notification', {
-    stackName: `${appName}-notification`,
-    env,
-    dependencyLayer: base.dependencyLayer,
-    topic: base.topic,
-  });
-
-  // new FileManagerStack(app, 'filemanager', {
-  //   stackName: `${appName}-file`,
-  //   env,
-  // });
 });

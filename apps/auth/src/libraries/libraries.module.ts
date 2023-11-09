@@ -1,4 +1,4 @@
-import { CognitoService } from '@backend-template/authorizer';
+import { CognitoService } from '@backend-template/http';
 import { Global, Module } from '@nestjs/common';
 
 import { SecretsModule } from '../secrets/secrets.module';

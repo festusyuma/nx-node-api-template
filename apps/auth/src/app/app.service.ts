@@ -13,8 +13,7 @@ import {
   UserNotConfirmedException,
   UserNotFoundException,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { CognitoService } from '@backend-template/authorizer';
-import { CustomRes } from '@backend-template/helpers';
+import { CognitoService, CustomRes } from '@backend-template/http';
 import { Injectable, Logger } from '@nestjs/common';
 
 import { HelperService } from '../libraries/helper.service';

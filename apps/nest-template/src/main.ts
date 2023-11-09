@@ -1,14 +1,14 @@
+import { httpBootstrap } from '@backend-template/http';
 import {
   awsBootstrap,
   awsService,
   AwsTransporter,
 } from '@backend-template/microservice';
-import { httpBootstrap } from '@backend-template/server';
 import awsLambdaFastify, { CallbackHandler } from '@fastify/aws-lambda';
 import { APIGatewayProxyEvent, Handler, SNSEvent, SQSEvent } from 'aws-lambda';
 import { firstValueFrom, ReplaySubject } from 'rxjs';
 
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 
 const serverSubject = new ReplaySubject<CallbackHandler>();
 httpBootstrap(AppModule, 'v1').then((transporter) => {

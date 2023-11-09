@@ -1,4 +1,4 @@
-import { CustomRes } from '@backend-template/helpers';
+import { CustomRes } from '@backend-template/http';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 

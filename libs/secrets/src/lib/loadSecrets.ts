@@ -2,7 +2,7 @@ import {
   GetSecretValueCommand,
   SecretsManagerClient,
 } from '@aws-sdk/client-secrets-manager';
-import { CustomRes } from '@backend-template/helpers';
+import { CustomRes } from '@backend-template/http';
 import { Logger } from '@nestjs/common';
 import { z, ZodRawShape, ZodType } from 'zod';
 

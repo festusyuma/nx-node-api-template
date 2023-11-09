@@ -8,6 +8,7 @@ export {
   UploadFileSchema,
 } from './lib/schema/filemanager';
 export * from './lib/types/database';
+export * from './lib/types/default';
 export { MessageBody, ScheduleType } from './lib/types/event';
 export {
   NotificationData,

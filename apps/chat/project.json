@@ -1,0 +1,66 @@
+{
+  "name": "chat",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/chat/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/chat",
+        "main": "apps/chat/src/main.ts",
+        "tsConfig": "apps/chat/tsconfig.app.json",
+        "assets": ["apps/chat/src/schema/"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/chat/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "main": "apps/chat/src/server.ts"
+        },
+        "production": {
+          "sourceMap": false,
+          "generatePackageJson": true
+        },
+        "types": {
+          "sourceMap": false,
+          "main": "apps/chat/src/types.ts"
+        }
+      }
+    },
+    "generate-types": {
+      "executor": "@nx/js:node",
+      "options": {
+        "watch": false,
+        "buildTarget": "chat:build:types"
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "chat:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "chat:build:development"
+        },
+        "production": {
+          "buildTarget": "chat:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/chat/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

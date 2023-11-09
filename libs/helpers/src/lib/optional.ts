@@ -1,5 +1,3 @@
-import { CustomRes } from './custom-res';
-
 export class Optional<T> {
   readonly #val: Promise<T | null | undefined>;
 
@@ -34,7 +32,7 @@ export class Optional<T> {
     }
   }
 
-  async elseThrow(error = CustomRes.serverError()) {
+  async elseThrow(error = new Error('an unknown error occurred')) {
     let val;
 
     try {
@@ -64,7 +62,7 @@ class OptionalSync<T> {
     return this.#val ?? defaultValue;
   }
 
-  elseThrow(error = CustomRes.serverError()): T {
+  elseThrow(error = new Error('an unknown error occurred')): T {
     if (this.#val) return this.#val;
     else throw error;
   }

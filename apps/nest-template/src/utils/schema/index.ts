@@ -1,1 +1,1 @@
-export { AppData, AppSchema } from './app.schema';
+export {};

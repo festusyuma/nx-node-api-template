@@ -1,54 +1,17 @@
 import * as cdk from 'aws-cdk-lib';
-import { Stack, StackProps } from 'aws-cdk-lib';
-import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as dynamoDb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as sns from 'aws-cdk-lib/aws-sns';
-import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
-import { Constants } from './constants';
-import { layerVersionParam, secrets } from './secrets';
+interface ChatStackProps extends cdk.StackProps {
+  dependencyLayer: lambda.LayerVersion;
+}
 
-export class ChatStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+export class ChatStack extends cdk.Stack {
+  public readonly chatFunction: lambda.Function;
+
+  constructor(scope: Construct, id: string, props: ChatStackProps) {
     super(scope, id, props);
-
-    const appName = `${secrets.APP_NAME}-${secrets.ENV}`;
-    const region = Stack.of(this).region;
-
-    /** Get parameters from SSM. ****/
-
-    const userPoolId = ssm.StringParameter.valueForStringParameter(
-      this,
-      `/${appName}/${Constants.UserPoolId}`
-    );
-
-    const topicArn = ssm.StringParameter.valueForStringParameter(
-      this,
-      `/${appName}/${Constants.AppTopicArn}`
-    );
-
-    const dependencyArn = ssm.StringParameter.valueForStringParameter(
-      this,
-      `/${appName}/${layerVersionParam}`
-    );
-
-    /******************************************/
-
-    const appTopic = sns.Topic.fromTopicArn(this, 'AppTopic', topicArn);
-
-    const dependencyLayer = lambda.LayerVersion.fromLayerVersionArn(
-      this,
-      'DependencyLayer',
-      dependencyArn
-    );
-
-    const userPool = cognito.UserPool.fromUserPoolId(
-      this,
-      'AuthUserPool',
-      userPoolId
-    );
 
     /********** Datasources  ***********/
 
@@ -107,7 +70,7 @@ export class ChatStack extends Stack {
       code: lambda.Code.fromAsset('dist/apps/chat'),
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'main.handler',
-      layers: [dependencyLayer],
+      layers: [props.dependencyLayer],
       memorySize: 512,
       timeout: cdk.Duration.seconds(30),
       environment: {
@@ -118,17 +81,13 @@ export class ChatStack extends Stack {
       },
     });
 
-    const chatFunctionUrl = chatFunction.addFunctionUrl({
-      authType: lambda.FunctionUrlAuthType.NONE,
-    });
-
     messageTable.grantFullAccess(chatFunction);
     profileTable.grantFullAccess(chatFunction);
     channelTable.grantFullAccess(chatFunction);
     channelMemberTable.grantFullAccess(chatFunction);
 
-    new cdk.CfnOutput(this, 'Url', { value: chatFunctionUrl.url });
-
     /**********************************/
+
+    this.chatFunction = chatFunction;
   }
 }

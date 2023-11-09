@@ -6,13 +6,13 @@ import * as cdk from 'aws-cdk-lib';
 import * as process from 'process';
 
 import { ApiStack } from './api-stack';
-import { AppStack } from './app-stack';
 import { AuthStack } from './auth-stack';
+import { BaseStack } from './base-stack';
 import { ChatStack } from './chat-stack';
-import { DependencyStack } from './dependency-stack';
-import { FileManagerStack } from './file-manager-stack';
+// import { FileManagerStack } from './file-manager-stack';
 import { NotificationStack } from './notification-stack';
 import { getSecrets, secrets } from './secrets';
+import { ServerStack } from './server-stack';
 
 getSecrets().then(() => {
   const appName = `${secrets.APP_NAME}-${secrets.ENV}`;
@@ -22,35 +22,48 @@ getSecrets().then(() => {
     region: process.env.CDK_DEFAULT_REGION,
   };
 
-  new DependencyStack(app, 'dependency', {
-    stackName: `${appName}-dependency`,
+  const base = new BaseStack(app, 'base', {
+    stackName: `${appName}-base`,
     env,
   });
 
-  new AuthStack(app, 'auth', {
+  const auth = new AuthStack(app, 'auth', {
     stackName: `${appName}-auth`,
     env,
+    dependencyLayer: base.dependencyLayer,
   });
 
-  new AppStack(app, 'app', {
-    stackName: `${appName}-app`,
+  const chat = new ChatStack(app, 'chat', {
+    stackName: `${appName}-chat`,
     env,
+    dependencyLayer: base.dependencyLayer,
   });
+
+  // const server = new ServerStack(app, 'app', {
+  //   stackName: `${appName}-app`,
+  //   env,
+  //   dependencyLayer: base.dependencyLayer,
+  // });
 
   new ApiStack(app, 'api', {
     stackName: `${appName}-api`,
     env,
-  });
-
-  new FileManagerStack(app, 'filemanager', {
-    stackName: `${appName}-file`,
-    env,
+    apps: {
+      // server: { baseRoute: 'v1', function: server.appFunction },
+      auth: { baseRoute: 'auth', function: auth.authFunction },
+      chat: { baseRoute: 'chat', function: chat.chatFunction },
+    },
   });
 
   new NotificationStack(app, 'notification', {
     stackName: `${appName}-notification`,
     env,
+    dependencyLayer: base.dependencyLayer,
+    topic: base.topic,
   });
 
-  new ChatStack(app, 'chat', { stackName: `${appName}-chat`, env });
+  // new FileManagerStack(app, 'filemanager', {
+  //   stackName: `${appName}-file`,
+  //   env,
+  // });
 });

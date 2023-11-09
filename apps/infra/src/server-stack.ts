@@ -8,20 +8,15 @@ import { Construct } from 'constructs';
 import { Constants } from './constants';
 import { layerVersionParam, secrets } from './secrets';
 
-export class AppStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props: cdk.StackProps) {
+interface AppStackProps extends cdk.StackProps {
+  dependencyLayer: lambda.LayerVersion;
+}
+
+export class ServerStack extends cdk.Stack {
+  public readonly appFunction: lambda.Function;
+
+  constructor(scope: Construct, id: string, props: AppStackProps) {
     super(scope, id, props);
-
-    const appName = `${secrets.APP_NAME}-${secrets.ENV}`;
-
-    const dependencyLayer = lambda.LayerVersion.fromLayerVersionArn(
-      this,
-      'DependencyLayer',
-      ssm.StringParameter.valueForStringParameter(
-        this,
-        `/${appName}/${layerVersionParam}`
-      )
-    );
 
     const topic = new sns.Topic(this, 'AppTopic');
 
@@ -29,7 +24,7 @@ export class AppStack extends cdk.Stack {
       code: lambda.Code.fromAsset('dist/apps/nest-template'),
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'main.handler',
-      layers: [dependencyLayer],
+      layers: [props.dependencyLayer],
       memorySize: 512,
       timeout: cdk.Duration.seconds(30),
     });
@@ -38,14 +33,6 @@ export class AppStack extends cdk.Stack {
       new iam.ServicePrincipal('apigateway.amazonaws.com')
     );
 
-    new ssm.StringParameter(this, 'TopicArn', {
-      stringValue: topic.topicArn,
-      parameterName: `/${appName}/${Constants.AppTopicArn}`,
-    });
-
-    new ssm.StringParameter(this, 'AppFunctionArn', {
-      stringValue: appFunction.functionArn,
-      parameterName: `/${appName}/${Constants.AppFunctionArn}`,
-    });
+    this.appFunction = appFunction;
   }
 }

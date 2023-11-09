@@ -3,11 +3,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "generate-app": ". scripts/new-app.sh",
+    "generate-app": "bash scripts/new-app.sh",
     "build": "nx run-many --t build",
-    "build:dependencies": ". scripts/create-dependency-output.sh",
-    "deploy": "pnpm run build && cdk deploy chat --previous-parameters=false --asset-parallelism --outputs-file ./env.json --require-approval never",
-    "deploy:dependencies": "pnpm run build:dependencies && cdk deploy dependency --require-approval never"
+    "build:dependencies": "bash scripts/create-dependency-output.sh",
+    "deploy": "pnpm run build && cdk deploy api notification --previous-parameters=false --asset-parallelism --outputs-file ./env.json --require-approval never"
   },
   "private": true,
   "dependencies": {

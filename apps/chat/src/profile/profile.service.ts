@@ -1,5 +1,5 @@
 import { CustomRes } from '@backend-template/helpers';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { NewProfile } from '../utils/types';
 import { ProfileRepo } from './profile.repo';

@@ -6,6 +6,6 @@ import { ChannelService } from './channel.service';
 
 @Module({
   providers: [ChannelResolver, ChannelRepo, ChannelService],
-  exports: [ChannelService],
+  exports: [ChannelService, ChannelRepo],
 })
 export class ChannelModule {}

@@ -3,27 +3,24 @@ import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager';
-import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
-import { Constants } from './constants';
-import { layerVersionParam, secrets } from './secrets';
+import { secrets } from './secrets';
+
+interface AuthStackProps extends StackProps {
+  dependencyLayer: lambda.LayerVersion;
+}
 
 export class AuthStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  public readonly userPool: cognito.UserPool;
+  public readonly authFunction: lambda.Function;
+  public readonly appClient: cognito.UserPoolClient;
+
+  constructor(scope: Construct, id: string, props: AuthStackProps) {
     super(scope, id, props);
 
     const appName = `${secrets.APP_NAME}-${secrets.ENV}`;
     const secretName = `${appName}-auth-secrets`;
-
-    const dependencyLayer = lambda.LayerVersion.fromLayerVersionArn(
-      this,
-      'DependencyLayer',
-      ssm.StringParameter.valueForStringParameter(
-        this,
-        `/${appName}/${layerVersionParam}`
-      )
-    );
 
     const userPool = new cognito.UserPool(this, 'UserPool', {
       signInCaseSensitive: false,
@@ -57,7 +54,7 @@ export class AuthStack extends Stack {
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'main.handler',
       memorySize: 512,
-      layers: [dependencyLayer],
+      layers: [props.dependencyLayer],
       timeout: Duration.seconds(30),
       environment: {
         USER_POOL_ID: userPool.userPoolId,
@@ -79,19 +76,8 @@ export class AuthStack extends Stack {
 
     authSecrets.grantRead(authFunction);
 
-    new ssm.StringParameter(this, 'AuthFunctionArn', {
-      stringValue: authFunction.functionArn,
-      parameterName: `/${appName}/${Constants.AuthFunctionArn}`,
-    });
-
-    new ssm.StringParameter(this, 'UserPoolId', {
-      stringValue: userPool.userPoolId,
-      parameterName: `/${appName}/${Constants.UserPoolId}`,
-    });
-
-    new ssm.StringParameter(this, 'UserPoolClientId', {
-      stringValue: appClient.userPoolClientId,
-      parameterName: `/${appName}/${Constants.UserPoolClientId}`,
-    });
+    this.userPool = userPool;
+    this.authFunction = authFunction;
+    this.appClient = appClient;
   }
 }

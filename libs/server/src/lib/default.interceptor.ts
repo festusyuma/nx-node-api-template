@@ -1,3 +1,4 @@
+import { CustomRes } from '@backend-template/helpers';
 import {
   CallHandler,
   ExecutionContext,
@@ -6,8 +7,6 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
-
-import { CustomRes } from './custom-res';
 
 @Injectable()
 export class DefaultInterceptor implements NestInterceptor {

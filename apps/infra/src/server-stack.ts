@@ -1,7 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as sns from 'aws-cdk-lib/aws-sns';
 import { Construct } from 'constructs';
 
 interface AppStackProps extends cdk.StackProps {
@@ -13,8 +12,6 @@ export class ServerStack extends cdk.Stack {
 
   constructor(scope: Construct, id: string, props: AppStackProps) {
     super(scope, id, props);
-
-    const topic = new sns.Topic(this, 'AppTopic');
 
     const appFunction = new lambda.Function(this, 'AppFunction', {
       code: lambda.Code.fromAsset('dist/apps/nest-template'),

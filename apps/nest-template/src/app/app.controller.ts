@@ -1,4 +1,4 @@
-import { CustomRes } from '@backend-template/helpers';
+import { CustomRes } from '@backend-template/http';
 import { Controller, Get } from '@nestjs/common';
 
 import { AppService } from './app.service';

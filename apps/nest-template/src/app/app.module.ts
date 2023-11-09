@@ -1,4 +1,4 @@
-import { DefaultInterceptor } from '@backend-template/server';
+import { DefaultInterceptor } from '@backend-template/rest-server';
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 

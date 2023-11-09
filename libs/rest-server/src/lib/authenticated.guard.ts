@@ -1,6 +1,5 @@
+import { CognitoService } from '@backend-template/http';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-
-import { CognitoService } from './cognito.service';
 
 @Injectable()
 export class AuthenticatedGuard implements CanActivate {

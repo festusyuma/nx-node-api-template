@@ -1,5 +1,5 @@
-import { AuthenticatedGuard } from '@backend-template/authorizer';
-import { DefaultInterceptor } from '@backend-template/server';
+import { AuthenticatedGuard } from '@backend-template/rest-server';
+import { DefaultInterceptor } from '@backend-template/rest-server';
 import { Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 

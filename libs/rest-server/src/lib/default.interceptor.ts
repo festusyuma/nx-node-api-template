@@ -1,4 +1,4 @@
-import { CustomRes } from '@backend-template/helpers';
+import { CustomRes } from '@backend-template/http';
 import {
   CallHandler,
   ExecutionContext,

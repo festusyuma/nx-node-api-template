@@ -1,4 +1,4 @@
-import { CustomRes } from '@backend-template/helpers';
+import { CustomRes } from '@backend-template/http';
 import {
   CACHE_KEY_METADATA,
   CACHE_MANAGER,

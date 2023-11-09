@@ -1,4 +1,4 @@
-import { httpBootstrap } from '@backend-template/server';
+import { httpBootstrap } from '@backend-template/http';
 import { Logger } from '@nestjs/common';
 
 import { AppModule } from './app/app.module';

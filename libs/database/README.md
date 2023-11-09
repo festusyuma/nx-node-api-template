@@ -1,3 +1,3 @@
-# database
+# Database 
 
-This library was generated with [Nx](https://nx.dev).
+Check parent `README.md` for documentation

@@ -17,17 +17,15 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@backend-template/authorizer": ["libs/authorizer/src/index.ts"],
-      "@backend-template/cache": ["libs/cache/src/index.ts"],
       "@backend-template/database": ["libs/database/src/index.ts"],
       "@backend-template/graphql-server": ["libs/graphql-server/src/index.ts"],
       "@backend-template/helpers": ["libs/helpers/src/index.ts"],
+      "@backend-template/http": ["libs/http/src/index.ts"],
       "@backend-template/messaging": ["libs/messaging/src/index.ts"],
       "@backend-template/microservice": ["libs/microservice/src/index.ts"],
+      "@backend-template/rest-server": ["libs/rest-server/src/index.ts"],
       "@backend-template/secrets": ["libs/secrets/src/index.ts"],
-      "@backend-template/server": ["libs/server/src/index.ts"],
-      "@backend-template/types": ["libs/types/src/index.ts"],
-      "@backend-template/utils": ["libs/utils/src/index.ts"]
+      "@backend-template/types": ["libs/types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

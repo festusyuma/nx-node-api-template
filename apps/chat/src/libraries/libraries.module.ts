@@ -1,5 +1,5 @@
-import { CognitoService } from '@backend-template/authorizer';
 import { DynamoService } from '@backend-template/database';
+import { CognitoService } from '@backend-template/http';
 import { MESSAGE_MANAGER, Sns } from '@backend-template/messaging';
 import { Global, Module } from '@nestjs/common';
 

@@ -1,5 +1,5 @@
-import { Token } from '@backend-template/authorizer';
-import { CustomRes, ZodValidationPipe } from '@backend-template/helpers';
+import { CustomRes, ZodValidationPipe } from '@backend-template/http';
+import { Token } from '@backend-template/rest-server';
 import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { z } from 'zod';
 

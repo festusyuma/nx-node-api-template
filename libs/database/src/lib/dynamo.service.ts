@@ -1,8 +1,8 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { WithId } from '@backend-template/types';
-import { autoId } from '@backend-template/utils';
 import { Injectable } from '@nestjs/common';
+import { v4 as uuidV4 } from 'uuid';
 
 @Injectable()
 export class DynamoService extends DynamoDBDocument {
@@ -64,7 +64,7 @@ export class DynamoService extends DynamoDBDocument {
   ): Promise<WithId<T>> {
     const item = {
       ...input,
-      id: 'id' in input ? (input.id as string) : autoId(),
+      id: 'id' in input ? (input.id as string) : uuidV4(),
     };
 
     await this.put({

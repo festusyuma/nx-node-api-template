@@ -1,4 +1,4 @@
-import { CustomRes } from '@backend-template/helpers';
+import { CustomRes } from '@backend-template/http';
 import { Injectable } from '@nestjs/common';
 
 import { ChannelRepo } from '../channel/channel.repo';

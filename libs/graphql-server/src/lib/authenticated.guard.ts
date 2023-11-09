@@ -1,4 +1,4 @@
-import { CognitoService } from '@backend-template/authorizer';
+import { CognitoService } from '@backend-template/http';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 

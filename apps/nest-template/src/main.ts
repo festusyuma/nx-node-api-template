@@ -1,9 +1,9 @@
+import { httpBootstrap } from '@backend-template/http';
 import {
   awsBootstrap,
   awsService,
   AwsTransporter,
 } from '@backend-template/microservice';
-import { httpBootstrap } from '@backend-template/server';
 import awsLambdaFastify, { CallbackHandler } from '@fastify/aws-lambda';
 import { APIGatewayProxyEvent, Handler, SNSEvent, SQSEvent } from 'aws-lambda';
 import { firstValueFrom, ReplaySubject } from 'rxjs';

@@ -5,7 +5,7 @@ import {
   getSignedUrl as cloudfrontSignedUrl,
 } from '@aws-sdk/cloudfront-signer';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { CustomRes } from '@backend-template/helpers';
+import { CustomRes } from '@backend-template/http';
 import { UploadFileData } from '@backend-template/types';
 import { Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';

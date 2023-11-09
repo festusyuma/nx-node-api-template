@@ -1,14 +1,14 @@
 {
-  "name": "authorizer",
+  "name": "rest-server",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/authorizer/src",
+  "sourceRoot": "libs/rest-server/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/authorizer/**/*.ts"]
+        "lintFilePatterns": ["libs/rest-server/**/*.ts"]
       }
     }
   },

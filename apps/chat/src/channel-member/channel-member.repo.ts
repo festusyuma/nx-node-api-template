@@ -1,7 +1,6 @@
 import { DynamoService } from '@backend-template/database';
-import { Optional } from '@backend-template/helpers';
+import { getPromiseAttribute, Optional } from '@backend-template/helpers';
 import { WithId } from '@backend-template/types';
-import { getPromiseAttribute } from '@backend-template/utils';
 import { Injectable } from '@nestjs/common';
 
 import { SecretsService } from '../secrets/secrets.service';

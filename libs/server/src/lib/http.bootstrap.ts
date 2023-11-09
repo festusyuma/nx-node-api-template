@@ -1,4 +1,4 @@
-import { CustomResFilter, DefaultInterceptor } from '@backend-template/helpers';
+import { CustomResFilter } from '@backend-template/helpers';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -14,11 +14,7 @@ export async function httpBootstrap(module: unknown, globalPrefix: string) {
 
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalFilters(new CustomResFilter());
-  app.useGlobalInterceptors(new DefaultInterceptor());
-
   await app.init();
-
-  Logger.log(`🚀 Application is running on: http://localhost/${globalPrefix}`);
 
   return app;
 }

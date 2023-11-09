@@ -33,6 +33,6 @@ import { SecretsService } from '../secrets/secrets.service';
       inject: [SecretsService],
     },
   ],
-  exports: [KyselyService, DynamoService, MESSAGE_MANAGER],
+  exports: [KyselyService, DynamoService, CognitoService, MESSAGE_MANAGER],
 })
 export class LibrariesModule {}

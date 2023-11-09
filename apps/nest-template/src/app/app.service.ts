@@ -17,13 +17,13 @@ export class AppService {
     await this.cacheManager.set('key', 'val');
     await this.cacheManager.get('key');
 
-    await this.messaging.send({
-      pattern: 'NOTIFICATION',
-      data: {
-        templateId: 'otp',
-        templateData: { value: '12345' },
-      },
-    });
+    // await this.messaging.send({
+    //   pattern: 'NOTIFICATION',
+    //   data: {
+    //     templateId: 'otp',
+    //     templateData: { value: '12345' },
+    //   },
+    // });
 
     return { name: 'jack' };
   }

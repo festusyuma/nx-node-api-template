@@ -1,4 +1,3 @@
-import { GetUserCommand } from '@aws-sdk/client-cognito-identity-provider';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 
 import { CognitoService } from './cognito.service';
@@ -17,21 +16,9 @@ export class AuthenticatedGuard implements CanActivate {
     }
 
     try {
-      const command = new GetUserCommand({
-        AccessToken: request.token,
-      });
-
-      const res = await this.cognitoService.send(command);
-      const attributes: Record<string, unknown> = {};
-
-      for (const attribute of res.UserAttributes ?? []) {
-        const attributeName = attribute.Name;
-        if (!attributeName) continue;
-
-        attributes[attributeName] = attribute.Value;
+      if (request.token) {
+        request.user = await this.cognitoService.getUser(request.token);
       }
-
-      request.user = { email: res.Username, ...attributes };
     } catch (e) {
       /* empty */
     }

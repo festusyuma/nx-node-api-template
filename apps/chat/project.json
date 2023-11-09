@@ -5,35 +5,38 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "platform": "node",
+        "target": "node",
+        "compiler": "tsc",
         "outputPath": "dist/apps/chat",
-        "format": ["esm"],
-        "bundle": false,
         "main": "apps/chat/src/main.ts",
         "tsConfig": "apps/chat/tsconfig.app.json",
-        "assets": ["apps/chat/src/schema/*"],
-        "generatePackageJson": true,
-        "esbuildOptions": {
-          "sourcemap": true,
-          "outExtension": {
-            ".js": ".js"
-          }
-        }
+        "assets": ["apps/chat/src/schema/"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/chat/webpack.config.js"
       },
       "configurations": {
-        "development": {},
+        "development": {
+          "main": "apps/chat/src/server.ts"
+        },
         "production": {
-          "esbuildOptions": {
-            "sourcemap": false,
-            "outExtension": {
-              ".js": ".js"
-            }
-          }
+          "sourceMap": false,
+          "generatePackageJson": true
+        },
+        "types": {
+          "sourceMap": false,
+          "main": "apps/chat/src/types.ts"
         }
+      }
+    },
+    "generate-types": {
+      "executor": "@nx/js:node",
+      "options": {
+        "watch": false,
+        "buildTarget": "chat:build:types"
       }
     },
     "serve": {

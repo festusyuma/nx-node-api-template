@@ -9,18 +9,19 @@ type Message {
   message: String!
   channelId: ID!
   channel: Channel!
-  senderId: ID!
+  profileId: ID!
   sender: ChannelMember!
 }
 
 type Profile {
   id: ID!
+  email: String!
   displayName: String!
   profileImage: String
 }
 
 type ChannelMember {
-  id: ID!
+  id: String!
   profileId: ID!
   profile: Profile!
   channelId: ID!
@@ -43,8 +44,8 @@ type PaginatedChannelMessages {
   nextToken: String
 }
 
-
 input NewChannel {
+  id: ID
   name: String!
   access: ChannelAccess
 }
@@ -52,16 +53,18 @@ input NewChannel {
 input NewMessage {
   message: String!
   channelId: String!
-  senderId: String!
+  profileId: String
 }
 
 input NewProfile {
+  id: ID
+  email: String
   displayName: String!
   profileImage: String
 }
 
 input NewChannelMember {
-  profileId: ID!
+  profileId: ID
   channelId: ID!
   role: ChannelMemberRole!
 }
@@ -78,10 +81,22 @@ enum ChannelAccess {
 }
 
 type Query {
-  getMessagesByChannel(channelId: ID!, limit: Int, nextToken: String): PaginatedChannelMessages!
-  getChannelsByProfile(profileId: ID!, limit: Int, nextToken: String): PaginatedProfileChannels!
-  getMembersByChannel(channelId: ID, limit: Int, nextToken: String): PaginatedChannelMembers!
-  getChannel(id: ID): Channel
+  getMessagesByChannel(
+    channelId: ID!
+    limit: Int
+    nextToken: String
+  ): PaginatedChannelMessages!
+  getChannelsByProfile(
+    limit: Int
+    nextToken: String
+  ): PaginatedProfileChannels!
+  getMembersByChannel(
+    channelId: ID
+    limit: Int
+    nextToken: String
+  ): PaginatedChannelMembers!
+  getChannel(id: ID!): Channel
+  getProfile(id: ID): Profile
 }
 
 type Mutation {
@@ -91,7 +106,3 @@ type Mutation {
   createMessage(input: NewMessage!): Message
 }
 
-type Subscription {
-  newMessage: Message
-  @aws_subscribe(mutations: ["createMessage"])
-}

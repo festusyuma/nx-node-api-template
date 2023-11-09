@@ -2,11 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as sns from 'aws-cdk-lib/aws-sns';
-import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
-
-import { Constants } from './constants';
-import { layerVersionParam, secrets } from './secrets';
 
 interface AppStackProps extends cdk.StackProps {
   dependencyLayer: lambda.LayerVersion;

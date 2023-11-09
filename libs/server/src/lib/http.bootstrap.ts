@@ -1,5 +1,4 @@
 import { CustomResFilter } from '@backend-template/helpers';
-import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,

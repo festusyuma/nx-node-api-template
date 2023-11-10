@@ -10,12 +10,15 @@ export class LoggedInGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
 
-    const token = req.headers.authorization;
-    if (!token)
+    let token = req.headers.authorization;
+
+    if (!token) {
       throw CustomRes.unauthorized('Access Denied / Unauthorized request');
+    }
+    token = token.split(' ')[1];
 
     try {
-      req.user = jwt.verify(req.token, this.secrets.get('SECRET_KEY'));
+      req.user = jwt.verify(token, this.secrets.get('SECRET_KEY'));
     } catch (e) {
       throw CustomRes.unauthorized('Access Denied / Unauthorized request');
       /* empty */

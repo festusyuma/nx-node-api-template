@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 
+import { UserStatus } from '../../utils/types';
 import { dbClient } from '../client';
 
 const email = process.env.DEFAULT_ADMIN_USER || 'admin@admin.com';
@@ -24,6 +25,7 @@ const AdminUserSeeder = {
         roleId: '559f6c03-ff5a-4fcb-bbca-cf6e7e562dcd',
         email: email,
         password: bcrypt.hashSync('admin@password'),
+        status: UserStatus.ACTIVE,
       })
       .onConflict((oc) => oc.column('id').doNothing())
       .execute();

@@ -29,7 +29,7 @@ export class BusinessDocumentRepo {
         .offset((page - 1) * size)
         .limit(size)
         .execute()
-    ).elseNull();
+    ).elseThrow();
   }
 
   findByBusinessId(id: string, pagination: PaginationData) {
@@ -42,6 +42,6 @@ export class BusinessDocumentRepo {
         .offset((page - 1) * size)
         .limit(size)
         .executeTakeFirst()
-    ).elseNull();
+    ).elseThrow();
   }
 }

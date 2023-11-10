@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 
 import { AdminModule } from './admin/admin.module';
 import { AgencyModule } from './agency/agency.module';
 import { AgentModule } from './agent/agent.module';
 import { AuthModule } from './auth/auth.module';
-import { AuthenticatedGuard } from './libraries/authenticated.guard';
 import { LibrariesModule } from './libraries/libraries.module';
 import { RepoModule } from './repo/repo.module';
 import { SecretsModule } from './secrets/secrets.module';
@@ -20,7 +18,5 @@ import { SecretsModule } from './secrets/secrets.module';
     AgencyModule,
     AgentModule,
   ],
-
-  providers: [{ provide: APP_GUARD, useClass: AuthenticatedGuard }],
 })
 export class AppModule {}

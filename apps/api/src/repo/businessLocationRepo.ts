@@ -44,6 +44,19 @@ export class BusinessLocationRepo {
     ).elseThrow();
   }
 
+  findAllByBusinessId(id: string, pagination: PaginationData) {
+    const { page, size } = pagination;
+    return Optional.of(
+      this.client
+        .selectFrom('BusinessLocation')
+        .where('businessId', '=', id)
+        .selectAll()
+        .offset((page - 1) * size)
+        .limit(size)
+        .execute()
+    ).elseThrow();
+  }
+
   findAgentRegisteredBusinessCount(id: string) {
     return Optional.of(
       this.client

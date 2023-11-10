@@ -66,7 +66,7 @@ export class AuthService {
     };
 
     const token = jwt.sign(result, this.secrets.get('SECRET_KEY'), {
-      expiresIn: 3000,
+      expiresIn: 30000,
     });
 
     return { result, token };

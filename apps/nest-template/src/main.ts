@@ -13,7 +13,9 @@ import { AppModule } from './app/app.module';
 const serverSubject = new ReplaySubject<CallbackHandler>();
 httpBootstrap(AppModule, 'v1').then((transporter) => {
   serverSubject.next(
-    awsLambdaFastify(transporter.getHttpAdapter().getInstance())
+    awsLambdaFastify(transporter.getHttpAdapter().getInstance(), {
+      callbackWaitsForEmptyEventLoop: false,
+    })
   );
 });
 
@@ -31,9 +33,6 @@ export const handler: Handler = async (
 
   if ('requestContext' in event) {
     const server = await firstValueFrom(serverSubject);
-    const user = event.requestContext.authorizer?.jwt?.claims;
-    if (user) event.headers.user = JSON.stringify(user);
-
     return server(event, context, callback);
   } else {
     const transporter = await firstValueFrom(microserviceSubject);

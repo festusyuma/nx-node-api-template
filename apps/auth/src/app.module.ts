@@ -1,4 +1,3 @@
-import { AuthenticatedGuard } from '@backend-template/rest-server';
 import { DefaultInterceptor } from '@backend-template/rest-server';
 import { Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
@@ -13,7 +12,6 @@ import { SecretsModule } from './secrets/secrets.module';
   controllers: [AppController],
   providers: [
     AppService,
-    { provide: APP_GUARD, useClass: AuthenticatedGuard },
     { provide: APP_INTERCEPTOR, useClass: DefaultInterceptor },
   ],
 })

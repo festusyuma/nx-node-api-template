@@ -1,6 +1,13 @@
 import { CustomRes, ZodValidationPipe } from '@backend-template/http';
-import { Token } from '@backend-template/rest-server';
-import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
+import { AuthenticatedGuard, Token } from '@backend-template/rest-server';
+import {
+  Body,
+  Controller,
+  Post,
+  Query,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import { z } from 'zod';
 
 import {
@@ -55,6 +62,7 @@ export class AppController {
   }
 
   @Post('change-password')
+  @UseGuards(AuthenticatedGuard)
   async changePassword(
     @Body(new ZodValidationPipe(ChangePasswordSchema)) data: ChangePasswordData,
     @Token() token: string

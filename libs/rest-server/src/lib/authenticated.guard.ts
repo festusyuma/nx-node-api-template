@@ -1,5 +1,10 @@
-import { CognitoService } from '@backend-template/http';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CognitoService, CustomRes } from '@backend-template/http';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 
 @Injectable()
 export class AuthenticatedGuard implements CanActivate {
@@ -10,17 +15,14 @@ export class AuthenticatedGuard implements CanActivate {
 
     try {
       request.token = request.headers.authorization.split(' ')[1];
-    } catch (e) {
-      /* empty */
-    }
-
-    try {
       if (request.token) {
         request.user = await this.cognitoService.getUser(request.token);
       }
     } catch (e) {
-      /* empty */
+      Logger.error(e, 'authentication error');
     }
+
+    if (!request.user) throw CustomRes.unauthorized();
 
     return true;
   }

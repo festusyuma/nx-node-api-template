@@ -5,12 +5,13 @@ import * as lambdaEventSource from 'aws-cdk-lib/aws-lambda-event-sources';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as snsSubscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
 import { secrets } from './secrets';
 
 interface NotificationStackProps extends cdk.StackProps {
-  dependencyLayer: lambda.LayerVersion;
+  dependencyLayer: string;
   topic: sns.Topic;
 }
 
@@ -18,13 +19,23 @@ export class NotificationStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: NotificationStackProps) {
     super(scope, id, props);
 
+    const dependencyLayer = lambda.LayerVersion.fromLayerVersionArn(
+      this,
+      'DependencyLayer',
+      ssm.StringParameter.fromStringParameterName(
+        this,
+        'DependencyLayerParam',
+        props.dependencyLayer
+      ).stringValue
+    );
+
     const handler = new lambda.Function(this, 'NotificationHandler', {
       handler: 'main.sqsHandler',
       runtime: lambda.Runtime.NODEJS_18_X,
       code: lambda.Code.fromAsset('dist/apps/notification-handler'),
       memorySize: 512,
       timeout: cdk.Duration.seconds(30),
-      layers: [props.dependencyLayer],
+      layers: [dependencyLayer],
       environment: {
         MAIL_FROM: `noreply@${secrets.DOMAIN}`,
       },

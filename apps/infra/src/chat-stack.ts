@@ -1,10 +1,11 @@
 import * as cdk from 'aws-cdk-lib';
 import * as dynamoDb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
 interface ChatStackProps extends cdk.StackProps {
-  dependencyLayer: lambda.LayerVersion;
+  dependencyLayer: string;
 }
 
 export class ChatStack extends cdk.Stack {
@@ -12,6 +13,16 @@ export class ChatStack extends cdk.Stack {
 
   constructor(scope: Construct, id: string, props: ChatStackProps) {
     super(scope, id, props);
+
+    const dependencyLayer = lambda.LayerVersion.fromLayerVersionArn(
+      this,
+      'DependencyLayer',
+      ssm.StringParameter.fromStringParameterName(
+        this,
+        'DependencyLayerParam',
+        props.dependencyLayer
+      ).stringValue
+    );
 
     /********** Datasources  ***********/
 
@@ -70,7 +81,7 @@ export class ChatStack extends cdk.Stack {
       code: lambda.Code.fromAsset('dist/apps/chat'),
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'main.handler',
-      layers: [props.dependencyLayer],
+      layers: [dependencyLayer],
       memorySize: 512,
       timeout: cdk.Duration.seconds(30),
       environment: {

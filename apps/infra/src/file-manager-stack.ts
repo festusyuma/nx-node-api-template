@@ -5,12 +5,13 @@ import * as dynamoDb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as s3Notification from 'aws-cdk-lib/aws-s3-notifications';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
 import { secrets } from './secrets';
 
 interface FileManagerStackProps extends cdk.StackProps {
-  dependencyLayer: lambda.LayerVersion;
+  dependencyLayer: string;
 }
 
 export class FileManagerStack extends cdk.Stack {
@@ -18,6 +19,16 @@ export class FileManagerStack extends cdk.Stack {
 
   constructor(scope: Construct, id: string, props: FileManagerStackProps) {
     super(scope, id, props);
+
+    const dependencyLayer = lambda.LayerVersion.fromLayerVersionArn(
+      this,
+      'DependencyLayer',
+      ssm.StringParameter.fromStringParameterName(
+        this,
+        'DependencyLayerParam',
+        props.dependencyLayer
+      ).stringValue
+    );
 
     const storageBucket = new s3.Bucket(this, 'FilesStorage');
 
@@ -70,7 +81,7 @@ export class FileManagerStack extends cdk.Stack {
         handler: 'main.handler',
         memorySize: 512,
         timeout: cdk.Duration.seconds(30),
-        layers: [props.dependencyLayer],
+        layers: [dependencyLayer],
         environment: {
           BUCKET_NAME: storageBucket.bucketName,
           TABLE_NAME: filesTable.tableName,

@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
   UsePipes,
@@ -14,8 +15,12 @@ import { LoggedInGuard } from '../../../libraries/login.guard';
 import {
   CreateBusinessLocationSchema,
   paginationSchema,
+  VerifyBusinessLocationSchema,
 } from '../../../utils/schema';
-import { CreateBusinessLocationData } from '../../../utils/schema/businessLocationSchema';
+import {
+  CreateBusinessLocationData,
+  VerifyBusinessLocationData,
+} from '../../../utils/schema/businessLocationSchema';
 import { PaginationData } from '../../../utils/schema/paginationSchema';
 import { BusinessLocationService } from './businessLocation.service';
 
@@ -41,6 +46,21 @@ export class BusinessLocationController {
       await this.businessLocationService.findBusinessLocationById(
         id,
         pagination
+      )
+    );
+  }
+  @Patch(':id/location/:location_id')
+  async verifyBusinessLocation(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('location_id', ParseUUIDPipe) location_id: string,
+    @Body(new ZodValidationPipe(VerifyBusinessLocationSchema))
+    data: VerifyBusinessLocationData
+  ) {
+    return CustomRes.success(
+      await this.businessLocationService.verifyBusinessLocationById(
+        id,
+        location_id,
+        data.status
       )
     );
   }

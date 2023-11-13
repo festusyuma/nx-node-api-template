@@ -4,6 +4,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -40,9 +42,11 @@ export class AgencyController {
     return CustomRes.success(await this.agencyService.findAll(pagination));
   }
 
-  @UsePipes(new ZodValidationPipe(UpdateAgencySchema))
-  @Patch()
-  async update(@Body() data: UpdateAgencyData, @Query() id: string) {
+  @Patch(':id')
+  async update(
+    @Body(new ZodValidationPipe(UpdateAgencySchema)) data: UpdateAgencyData,
+    @Param('id', ParseUUIDPipe) id: string
+  ) {
     return CustomRes.success(await this.agencyService.update(id, data));
   }
 }

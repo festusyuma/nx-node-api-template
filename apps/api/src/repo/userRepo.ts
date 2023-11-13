@@ -25,7 +25,8 @@ export class UserRepo {
     return Optional.of(
       this.client
         .selectFrom('User')
-        .selectAll()
+        .leftJoin('Role', 'User.roleId', 'Role.id')
+        .select(['User.id', 'username', 'email', 'status', 'Role.key as role'])
         .offset((page - 1) * size)
         .limit(size)
         .execute()
@@ -36,8 +37,9 @@ export class UserRepo {
     return Optional.of(
       this.client
         .selectFrom('User')
-        .where('id', '=', id)
-        .selectAll()
+        .leftJoin('Role', 'User.roleId', 'Role.id')
+        .select(['User.id', 'username', 'email', 'status', 'Role.key as role'])
+        .where('User.id', '=', id)
         .executeTakeFirst()
     ).elseThrow();
   }

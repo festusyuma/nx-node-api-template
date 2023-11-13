@@ -9,7 +9,11 @@ export {
   verifyOTPSchema,
 } from './authSchema';
 export { CreateBusinessDocumentSchema } from './businessDocumentSchema';
-export { CreateBusinessLocationSchema } from './businessLocationSchema';
+export {
+  CreateBusinessLocationSchema,
+  UpdateBusinessLocationSchema,
+  VerifyBusinessLocationSchema,
+} from './businessLocationSchema';
 export { CreateBusinessSchema, UpdateBusinessSchema } from './businessSchema';
 export { CreateOtpSchema, UpdateOtpSchema } from './OtpSchema';
 export { paginationSchema } from './paginationSchema';

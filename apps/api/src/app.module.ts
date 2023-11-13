@@ -1,4 +1,6 @@
+import { DefaultInterceptor } from '@backend-template/helpers';
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AdminModule } from './admin/admin.module';
 import { AgencyModule } from './agency/agency.module';
@@ -17,6 +19,12 @@ import { SecretsModule } from './secrets/secrets.module';
     AdminModule,
     AgencyModule,
     AgentModule,
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: DefaultInterceptor,
+    },
   ],
 })
 export class AppModule {}

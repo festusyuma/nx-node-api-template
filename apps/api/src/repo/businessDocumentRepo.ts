@@ -1,5 +1,5 @@
 import { KyselyService } from '@backend-template/database';
-import { Optional } from '@backend-template/helpers';
+import { CustomRes, Optional } from '@backend-template/helpers';
 import { DB } from '@backend-template/types';
 import { Injectable } from '@nestjs/common';
 
@@ -29,7 +29,7 @@ export class BusinessDocumentRepo {
         .offset((page - 1) * size)
         .limit(size)
         .execute()
-    ).elseThrow();
+    ).elseThrow(CustomRes.badRequest('Not found'));
   }
 
   findByBusinessId(id: string, pagination: PaginationData) {
@@ -42,6 +42,6 @@ export class BusinessDocumentRepo {
         .offset((page - 1) * size)
         .limit(size)
         .executeTakeFirst()
-    ).elseThrow();
+    ).elseThrow(CustomRes.badRequest('Not found'));
   }
 }

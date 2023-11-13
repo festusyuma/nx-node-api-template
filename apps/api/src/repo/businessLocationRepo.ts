@@ -68,4 +68,20 @@ export class BusinessLocationRepo {
         .executeTakeFirst()
     ).elseThrow();
   }
+
+  updateStatusById(
+    id: string,
+    location_id: string,
+    status: 'UNVERIFIED' | 'PENDING' | 'VERIFIED'
+  ) {
+    return Optional.of(
+      this.client
+        .updateTable('BusinessLocation')
+        .set({ status: status })
+        .where('businessId', '=', id)
+        .where('id', '=', location_id)
+        .returningAll()
+        .executeTakeFirst()
+    ).elseThrow();
+  }
 }

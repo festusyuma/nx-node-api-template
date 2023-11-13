@@ -6,7 +6,7 @@ export const CreateBusinessDocumentSchema = z.object({
   type: z.string(),
   files: z.array(z.string()),
   reasonRejected: z.string(),
-  status: z.nativeEnum(BusinessDocumentStatus),
+  status: z.nativeEnum(BusinessDocumentStatus).optional(),
   businessId: z.string(),
 });
 

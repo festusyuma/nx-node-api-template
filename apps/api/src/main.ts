@@ -18,7 +18,9 @@ awsBootstrap(AppModule).then((transporter) =>
 const serverSubject = new ReplaySubject<CallbackHandler>();
 httpBootstrap(AppModule, 'v1').then((transporter) => {
   serverSubject.next(
-    awsLambdaFastify(transporter.getHttpAdapter().getInstance())
+    awsLambdaFastify(transporter.getHttpAdapter().getInstance(), {
+      callbackWaitsForEmptyEventLoop: false,
+    })
   );
 });
 

@@ -20,7 +20,7 @@ import { DashboardService } from './dashboard.service';
 export class DashboardController {
   constructor(private dashboardService: DashboardService) {}
 
-  @Get()
+  @Get('registered-business-count')
   async findRegisteredBusinessCount(@Authenticated() user: UserData) {
     return CustomRes.success(
       await this.dashboardService.findRegisteredBusinessCount(user.id)

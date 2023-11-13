@@ -34,9 +34,9 @@ export class AuthService {
       .findByUsername(data.username)
       .elseThrow(CustomRes.unauthorized('Incorrect username or password'));
 
-    if (user)
-      if (user.status in [UserStatus.LOCKED, UserStatus.INACTIVE])
-        throw CustomRes.unauthorized('Account locked, contact admin');
+    if (user.status in [UserStatus.LOCKED, UserStatus.INACTIVE]) {
+      throw CustomRes.unauthorized('Account locked, contact admin');
+    }
 
     if (!(await bcrypt.compare(data.password, user.password))) {
       const login_attempts = (await this.cacheManager.get(

@@ -15,4 +15,16 @@ export class BusinessLocationService {
   async findBusinessLocationById(id: string, pagination: PaginationData) {
     return await this.businessLocationRepo.findAllByBusinessId(id, pagination);
   }
+
+  async verifyBusinessLocationById(
+    id: string,
+    locationId: string,
+    status: 'UNVERIFIED' | 'PENDING' | 'VERIFIED'
+  ) {
+    return await this.businessLocationRepo.updateStatusById(
+      id,
+      locationId,
+      status
+    );
+  }
 }

@@ -1,10 +1,10 @@
 import { KyselyService } from '@backend-template/database';
 import { Optional } from '@backend-template/helpers';
-import { DB } from '@backend-template/types';
 import { Injectable } from '@nestjs/common';
 
 import { CreateBusinessLocationData } from '../utils/schema/businessLocationSchema';
 import { PaginationData } from '../utils/schema/paginationSchema';
+import { BusinessLocationStatus, DB } from '../utils/types';
 
 @Injectable()
 export class BusinessLocationRepo {
@@ -25,6 +25,7 @@ export class BusinessLocationRepo {
     return Optional.of(
       this.client
         .selectFrom('BusinessLocation')
+        .leftJoin('Business', 'Business.id', 'BusinessLocation.businessId')
         .selectAll()
         .offset((page - 1) * size)
         .limit(size)
@@ -36,10 +37,30 @@ export class BusinessLocationRepo {
     return Optional.of(
       this.client
         .selectFrom('BusinessLocation')
+        .leftJoin('Business', 'Business.id', 'BusinessLocation.businessId')
         .where('agentId', '=', id)
         .selectAll()
         .offset((page - 1) * size)
         .limit(size)
+        .execute()
+    ).elseThrow();
+  }
+
+  findAllUnVerifiedByAgentId(id: string, pagination: PaginationData) {
+    const { page, size } = pagination;
+    return Optional.of(
+      this.client
+        .selectFrom('BusinessLocation')
+        .leftJoin('Business', 'Business.id', 'BusinessLocation.businessId')
+        .where('agentId', '=', id)
+        .where('status', 'in', [
+          BusinessLocationStatus.PENDING,
+          BusinessLocationStatus.UNVERIFIED,
+        ])
+        .selectAll()
+        .offset((page - 1) * size)
+        .limit(size)
+        .orderBy('BusinessLocation.created_at desc')
         .execute()
     ).elseThrow();
   }
@@ -49,10 +70,12 @@ export class BusinessLocationRepo {
     return Optional.of(
       this.client
         .selectFrom('BusinessLocation')
+        .leftJoin('Business', 'Business.id', 'BusinessLocation.businessId')
         .where('businessId', '=', id)
         .selectAll()
         .offset((page - 1) * size)
         .limit(size)
+        .orderBy('BusinessLocation.created_at desc')
         .execute()
     ).elseThrow();
   }

@@ -5,7 +5,7 @@ import { BusinessDocumentStatus } from '../types';
 export const CreateBusinessDocumentSchema = z.object({
   type: z.string(),
   files: z.array(z.string()),
-  reasonRejected: z.string(),
+  reasonRejected: z.string().optional(),
   status: z.nativeEnum(BusinessDocumentStatus).optional(),
   businessId: z.string(),
 });

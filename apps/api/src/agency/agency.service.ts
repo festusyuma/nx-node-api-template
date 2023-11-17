@@ -1,13 +1,10 @@
-import {
-  Agent,
-  CreateAgentData,
-  UpdateAgentData,
-} from '@backend-template/types';
 import { Injectable } from '@nestjs/common';
 import { Selectable, Updateable } from 'kysely';
 
 import { AgentRepo } from '../repo/agentRepo';
+import { CreateAgentData, UpdateAgentData } from '../utils/schema/agentSchema';
 import { PaginationData } from '../utils/schema/paginationSchema';
+import { Agent } from '../utils/types';
 
 @Injectable()
 export class AgencyService {
@@ -33,9 +30,5 @@ export class AgencyService {
     data: UpdateAgentData
   ): Promise<Updateable<Agent>> {
     return this.agentRepo.updateById(id, data);
-  }
-
-  async assignBusinessToAgent(agentId: string, businessId: string) {
-    return [];
   }
 }

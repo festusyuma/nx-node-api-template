@@ -27,6 +27,8 @@ export type UserStatus = typeof UserStatus[keyof typeof UserStatus];
 export type Agency = {
   id: Generated<string>;
   name: string;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
 };
 export type Agent = {
   id: Generated<string>;
@@ -34,13 +36,18 @@ export type Agent = {
   firstName: string;
   userId: string;
   agencyId: string;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
 };
 export type Business = {
   id: Generated<string>;
   name: string;
   phoneNumber: string;
   email: string;
+  qrCode: Generated<string>;
   additionalData: Generated<unknown>;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
 };
 export type BusinessDocument = {
   id: Generated<string>;
@@ -49,6 +56,8 @@ export type BusinessDocument = {
   reasonRejected: string | null;
   status: Generated<BusinessDocumentStatus>;
   businessId: string;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
 };
 export type BusinessLocation = {
   id: Generated<string>;
@@ -62,6 +71,8 @@ export type BusinessLocation = {
   businessId: string;
   agentId: string | null;
   status: Generated<BusinessLocationStatus>;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
 };
 export type Otp = {
   id: Generated<string>;
@@ -84,6 +95,8 @@ export type User = {
   password: string;
   status: Generated<UserStatus>;
   roleId: string;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
 };
 export type DB = {
   Agency: Agency;

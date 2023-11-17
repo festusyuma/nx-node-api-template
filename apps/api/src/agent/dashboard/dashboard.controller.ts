@@ -6,13 +6,15 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
 
 import { LoggedInGuard } from '../../libraries/login.guard';
-import { CreateBusinessSchema } from '../../utils/schema';
+import { CreateBusinessSchema, paginationSchema } from '../../utils/schema';
 import { UserData } from '../../utils/schema/auth';
+import { PaginationData } from '../../utils/schema/paginationSchema';
 import { DashboardService } from './dashboard.service';
 
 @Controller('agent/dashboard')
@@ -23,7 +25,17 @@ export class DashboardController {
   @Get('registered-business-count')
   async findRegisteredBusinessCount(@Authenticated() user: UserData) {
     return CustomRes.success(
-      await this.dashboardService.findRegisteredBusinessCount(user.id)
+      await this.dashboardService.findRegisteredBusinessCount(user.agentId)
+    );
+  }
+
+  @Get('business-todo')
+  async business_todo(
+    @Authenticated() user: UserData,
+    @Query(new ZodValidationPipe(paginationSchema)) pagination: PaginationData
+  ) {
+    return CustomRes.success(
+      await this.dashboardService.business_todo(user.agentId, pagination)
     );
   }
 

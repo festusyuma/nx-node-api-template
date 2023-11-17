@@ -60,6 +60,7 @@ export class AuthService {
     await this.cacheManager.set(`${user.id}_login_attempts`, 0);
     const result: UserData = {
       id: user.id ?? '',
+      agentId: user.agentId ?? '',
       email: user.email,
       username: user.username,
       role: user.role ?? '',

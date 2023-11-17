@@ -1,10 +1,10 @@
 import { KyselyService } from '@backend-template/database';
 import { Optional } from '@backend-template/helpers';
-import { DB } from '@backend-template/types';
 import { Injectable } from '@nestjs/common';
 
 import { CreateAgentData, UpdateAgentData } from '../utils/schema/agentSchema';
 import { PaginationData } from '../utils/schema/paginationSchema';
+import { DB } from '../utils/types';
 
 @Injectable()
 export class AgentRepo {

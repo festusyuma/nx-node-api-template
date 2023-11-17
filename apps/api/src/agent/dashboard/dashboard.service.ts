@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { BusinessLocationRepo } from '../../repo/businessLocationRepo';
 import { BusinessRepo } from '../../repo/businessRepo';
+import { PaginationData } from '../../utils/schema/paginationSchema';
 
 @Injectable()
 export class DashboardService {
@@ -17,6 +18,13 @@ export class DashboardService {
 
   async findRegisteredBusinessCount(id: string) {
     return await this.businessLocationRepo.findAgentRegisteredBusinessCount(id);
+  }
+
+  async business_todo(id: string, pagination: PaginationData) {
+    return await this.businessLocationRepo.findAllUnVerifiedByAgentId(
+      id,
+      pagination
+    );
   }
 
   async assignedTasked() {

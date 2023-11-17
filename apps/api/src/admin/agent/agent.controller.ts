@@ -1,10 +1,10 @@
 import { CustomRes, ZodValidationPipe } from '@backend-template/helpers';
-import { CreateAgentData, UpdateAgentData } from '@backend-template/types';
 import {
   Body,
   Controller,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -19,6 +19,10 @@ import {
   paginationSchema,
   UpdateAgentSchema,
 } from '../../utils/schema';
+import {
+  CreateAgentData,
+  UpdateAgentData,
+} from '../../utils/schema/agentSchema';
 import { PaginationData } from '../../utils/schema/paginationSchema';
 import { AgentService } from './agent.service';
 
@@ -44,9 +48,11 @@ export class AgentController {
     return CustomRes.success(await this.agentService.findById(id));
   }
 
-  @Patch()
-  @UsePipes(new ZodValidationPipe(UpdateAgentSchema))
-  async update(@Param('id') id: string, @Body() data: UpdateAgentData) {
+  @Patch(':id')
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(UpdateAgentSchema)) data: UpdateAgentData
+  ) {
     return CustomRes.success(await this.agentService.update(id, data));
   }
 }

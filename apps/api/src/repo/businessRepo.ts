@@ -1,6 +1,5 @@
 import { KyselyService } from '@backend-template/database';
 import { Optional } from '@backend-template/helpers';
-import { DB } from '@backend-template/types';
 import { Injectable } from '@nestjs/common';
 
 import {
@@ -8,6 +7,7 @@ import {
   UpdateBusinessData,
 } from '../utils/schema/businessSchema';
 import { PaginationData } from '../utils/schema/paginationSchema';
+import { DB } from '../utils/types';
 
 @Injectable()
 export class BusinessRepo {
@@ -30,6 +30,7 @@ export class BusinessRepo {
         .selectAll()
         .offset((page - 1) * size)
         .limit(size)
+        .orderBy('created_at desc')
         .execute()
     ).elseThrow();
   }
@@ -40,7 +41,17 @@ export class BusinessRepo {
         .selectFrom('Business')
         .where('id', '=', id)
         .selectAll()
-        .execute()
+        .executeTakeFirst()
+    ).elseThrow();
+  }
+
+  findByQrCode(id: string) {
+    return Optional.of(
+      this.client
+        .selectFrom('Business')
+        .where('qrCode', '=', id)
+        .selectAll()
+        .executeTakeFirst()
     ).elseThrow();
   }
 

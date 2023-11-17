@@ -32,6 +32,16 @@ export class BusinessController {
     return CustomRes.success(await this.businessService.findBusinessById(id));
   }
 
+  @Get(':id/qr-code-url')
+  async qr_code_url(@Param('id', ParseUUIDPipe) id: string) {
+    return CustomRes.success(await this.businessService.qr_code_url(id));
+  }
+
+  @Get('qr-code/:id')
+  async qr_code(@Param('id', ParseUUIDPipe) id: string) {
+    return CustomRes.success(await this.businessService.qr_code(id));
+  }
+
   @Patch(':id')
   async updateBusiness(
     @Param('id', ParseUUIDPipe) id: string,

@@ -13,12 +13,14 @@ datasource db {
 }
 
 model User {
-  id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username String     @unique
-  email    String     @unique
-  password String
-  status   UserStatus @default(INACTIVE)
-  roleId   String     @db.Uuid
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username  String     @unique
+  email     String     @unique
+  password  String
+  status    UserStatus @default(INACTIVE)
+  roleId    String     @db.Uuid
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime?  @updatedAt @map("updated_at")
 
   agent Agent?
   role  Role   @relation(fields: [roleId], references: [id])
@@ -33,18 +35,22 @@ model Role {
 }
 
 model Agency {
-  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name String
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   agents Agent[]
 }
 
 model Agent {
-  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   lastName  String
   firstName String
-  userId    String @unique @db.Uuid
-  agencyId  String @db.Uuid
+  userId    String    @unique @db.Uuid
+  agencyId  String    @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   user              User               @relation(fields: [userId], references: [id])
   agency            Agency             @relation(fields: [agencyId], references: [id])
@@ -52,11 +58,14 @@ model Agent {
 }
 
 model Business {
-  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name           String
   phoneNumber    String
   email          String
-  additionalData Json   @default("{}")
+  qrCode         String    @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  additionalData Json      @default("{}")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime? @updatedAt @map("updated_at")
 
   locations BusinessLocation[]
   documents BusinessDocument[]
@@ -69,6 +78,8 @@ model BusinessDocument {
   reasonRejected String?
   status         BusinessDocumentStatus @default(PENDING)
   businessId     String                 @db.Uuid
+  createdAt      DateTime               @default(now()) @map("created_at")
+  updatedAt      DateTime?              @updatedAt @map("updated_at")
 
   business Business @relation(fields: [businessId], references: [id])
 }
@@ -76,8 +87,8 @@ model BusinessDocument {
 model BusinessLocation {
   id            String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   images        String[]
-  latitude      Decimal
-  longitude     Decimal
+  latitude      Decimal                @db.Decimal(10, 5)
+  longitude     Decimal                @db.Decimal(10, 5)
   streetAddress String
   city          String
   state         String
@@ -85,6 +96,8 @@ model BusinessLocation {
   businessId    String                 @db.Uuid
   agentId       String?                @db.Uuid
   status        BusinessLocationStatus @default(UNVERIFIED)
+  createdAt     DateTime               @default(now()) @map("created_at")
+  updatedAt     DateTime?              @updatedAt @map("updated_at")
 
   business Business @relation(fields: [businessId], references: [id])
   agent    Agent?   @relation(fields: [agentId], references: [id])

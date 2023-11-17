@@ -49,12 +49,14 @@ export class UserRepo {
       this.client
         .selectFrom('User')
         .leftJoin('Role', 'User.roleId', 'Role.id')
+        .leftJoin('Agent', 'User.id', 'Agent.userId')
         .select([
           'User.id',
           'username',
           'email',
           'status',
           'Role.key as role',
+          'Agent.id as agentId',
           'password',
         ])
         .where('username', '=', username)

@@ -7,7 +7,6 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
-  Query,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
@@ -15,7 +14,8 @@ import bcrypt from 'bcryptjs';
 
 import { IsAdminGuard } from '../../libraries/admin.guard';
 import { LoggedInGuard } from '../../libraries/login.guard';
-import { CreateUserSchema, paginationSchema } from '../../utils/schema';
+import { Pagination } from '../../libraries/pagination.decorator';
+import { CreateUserSchema } from '../../utils/schema';
 import { PaginationData } from '../../utils/schema/paginationSchema';
 import {
   CreateUserData,
@@ -37,10 +37,13 @@ export class UserController {
   }
 
   @Get()
-  async findAll(
-    @Query(new ZodValidationPipe(paginationSchema)) pagination: PaginationData
-  ) {
+  async findAll(@Pagination() pagination: PaginationData) {
     return CustomRes.success(await this.userService.findAll(pagination));
+  }
+
+  @Get('roles')
+  async findAllRoles() {
+    return CustomRes.success(await this.userService.findAllRoles());
   }
 
   @Get(':id')

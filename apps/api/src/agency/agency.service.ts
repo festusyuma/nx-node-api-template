@@ -21,7 +21,7 @@ export class AgencyService {
     return await this.agentRepo.findAllByAgencyId(id, pagination);
   }
 
-  async findAgentById(id: string): Promise<Selectable<Agent>> {
+  async findAgentById(id: string) {
     return this.agentRepo.findById(id);
   }
 

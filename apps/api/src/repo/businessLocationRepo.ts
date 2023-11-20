@@ -32,6 +32,19 @@ export class BusinessLocationRepo {
         .execute()
     ).elseThrow();
   }
+
+  findById(id: string, locationId: string) {
+    return Optional.of(
+      this.client
+        .selectFrom('BusinessLocation')
+        .leftJoin('Business', 'Business.id', 'BusinessLocation.businessId')
+        .where('Business.id', '=', id)
+        .where('BusinessLocation.id', '=', locationId)
+        .selectAll()
+        .executeTakeFirst()
+    ).elseThrow();
+  }
+
   findAllByAgentId(id: string, pagination: PaginationData) {
     const { page, size } = pagination;
     return Optional.of(
@@ -39,7 +52,15 @@ export class BusinessLocationRepo {
         .selectFrom('BusinessLocation')
         .leftJoin('Business', 'Business.id', 'BusinessLocation.businessId')
         .where('agentId', '=', id)
-        .selectAll()
+        .select([
+          'BusinessLocation.id',
+          'Business.name',
+          'BusinessLocation.status',
+          'Business.additionalData',
+          'BusinessLocation.streetAddress',
+          'BusinessLocation.created_at',
+          'BusinessLocation.updated_at',
+        ])
         .offset((page - 1) * size)
         .limit(size)
         .execute()
@@ -57,7 +78,15 @@ export class BusinessLocationRepo {
           BusinessLocationStatus.PENDING,
           BusinessLocationStatus.UNVERIFIED,
         ])
-        .selectAll()
+        .select([
+          'BusinessLocation.id',
+          'Business.id as business_id',
+          'Business.name',
+          'BusinessLocation.status',
+          'BusinessLocation.streetAddress',
+          'BusinessLocation.created_at',
+          'BusinessLocation.updated_at',
+        ])
         .offset((page - 1) * size)
         .limit(size)
         .orderBy('BusinessLocation.created_at desc')
@@ -72,7 +101,14 @@ export class BusinessLocationRepo {
         .selectFrom('BusinessLocation')
         .leftJoin('Business', 'Business.id', 'BusinessLocation.businessId')
         .where('businessId', '=', id)
-        .selectAll()
+        .select([
+          'BusinessLocation.id',
+          'Business.name',
+          'BusinessLocation.status',
+          'BusinessLocation.streetAddress',
+          'BusinessLocation.created_at',
+          'BusinessLocation.updated_at',
+        ])
         .offset((page - 1) * size)
         .limit(size)
         .orderBy('BusinessLocation.created_at desc')

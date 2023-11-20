@@ -6,10 +6,10 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  Query,
 } from '@nestjs/common';
 
-import { paginationSchema, UpdateBusinessSchema } from '../../utils/schema';
+import { Pagination } from '../../libraries/pagination.decorator';
+import { UpdateBusinessSchema } from '../../utils/schema';
 import { UpdateBusinessData } from '../../utils/schema/businessSchema';
 import { PaginationData } from '../../utils/schema/paginationSchema';
 import { BusinessService } from './business.service';
@@ -19,9 +19,7 @@ export class BusinessController {
   constructor(private businessService: BusinessService) {}
 
   @Get()
-  async findBusiness(
-    @Query(new ZodValidationPipe(paginationSchema)) pagination: PaginationData
-  ) {
+  async findBusiness(@Pagination() pagination: PaginationData) {
     return CustomRes.success(
       await this.businessService.findBusiness(pagination)
     );

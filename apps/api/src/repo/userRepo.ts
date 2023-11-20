@@ -15,7 +15,14 @@ export class UserRepo {
       this.client
         .insertInto('User')
         .values({ ...data, status: UserStatus.ACTIVE })
-        .returningAll()
+        .returning([
+          'id',
+          'username',
+          'email',
+          'status',
+          'roleId',
+          'created_at',
+        ])
         .executeTakeFirst()
     ).elseThrow();
   }

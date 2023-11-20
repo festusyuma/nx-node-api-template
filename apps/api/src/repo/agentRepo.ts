@@ -24,7 +24,16 @@ export class AgentRepo {
     return Optional.of(
       this.client
         .selectFrom('Agent')
-        .selectAll()
+        .innerJoin('User', 'User.id', 'Agent.userId')
+        .innerJoin('Agency', 'Agency.id', 'Agent.agencyId')
+        .select([
+          'Agent.id as id',
+          'User.username',
+          'Agent.firstName',
+          'Agent.lastName',
+          'User.status',
+          'Agency.name as agency',
+        ])
         .offset((page - 1) * size)
         .limit(size)
         .execute()
@@ -48,8 +57,18 @@ export class AgentRepo {
     return Optional.of(
       this.client
         .selectFrom('Agent')
-        .where('id', '=', id)
-        .selectAll()
+        .leftJoin('User', 'User.id', 'Agent.userId')
+        .leftJoin('Role', 'Role.id', 'User.roleId')
+        .leftJoin('Agency', 'Agency.id', 'Agent.agencyId')
+        .where('Agent.id', '=', id)
+        .select([
+          'Agent.id',
+          'Agent.lastName',
+          'Agent.firstName',
+          'User.username',
+          'User.status',
+          'Agency.name as agency',
+        ])
         .executeTakeFirst()
     ).elseThrow();
   }

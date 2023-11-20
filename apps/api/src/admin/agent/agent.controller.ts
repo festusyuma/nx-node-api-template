@@ -7,18 +7,14 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
-  Query,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
 
 import { IsAdminGuard } from '../../libraries/admin.guard';
 import { LoggedInGuard } from '../../libraries/login.guard';
-import {
-  CreateAgentSchema,
-  paginationSchema,
-  UpdateAgentSchema,
-} from '../../utils/schema';
+import { Pagination } from '../../libraries/pagination.decorator';
+import { CreateAgentSchema, UpdateAgentSchema } from '../../utils/schema';
 import {
   CreateAgentData,
   UpdateAgentData,
@@ -38,8 +34,7 @@ export class AgentController {
   }
 
   @Get()
-  @UsePipes(new ZodValidationPipe(paginationSchema))
-  async findAll(@Query() pagination: PaginationData) {
+  async findAll(@Pagination() pagination: PaginationData) {
     return CustomRes.success(await this.agentService.findAll(pagination));
   }
 

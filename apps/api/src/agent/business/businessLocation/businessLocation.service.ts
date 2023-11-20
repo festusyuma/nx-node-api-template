@@ -12,8 +12,15 @@ export class BusinessLocationService {
     return await this.businessLocationRepo.create(data);
   }
 
-  async findBusinessLocationById(id: string, pagination: PaginationData) {
+  async findBusinessLocationByBusinessId(
+    id: string,
+    pagination: PaginationData
+  ) {
     return await this.businessLocationRepo.findAllByBusinessId(id, pagination);
+  }
+
+  async findById(id: string, locationId: string) {
+    return await this.businessLocationRepo.findById(id, locationId);
   }
 
   async verifyBusinessLocationById(

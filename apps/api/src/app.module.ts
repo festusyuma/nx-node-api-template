@@ -6,6 +6,7 @@ import { AdminModule } from './admin/admin.module';
 import { AgencyModule } from './agency/agency.module';
 import { AgentModule } from './agent/agent.module';
 import { AuthModule } from './auth/auth.module';
+import { BusinessModule } from './business/business.module';
 import { LibrariesModule } from './libraries/libraries.module';
 import { RepoModule } from './repo/repo.module';
 import { SecretsModule } from './secrets/secrets.module';
@@ -19,6 +20,7 @@ import { SecretsModule } from './secrets/secrets.module';
     AdminModule,
     AgencyModule,
     AgentModule,
+    BusinessModule,
   ],
   providers: [
     {

@@ -6,7 +6,7 @@ export const CreateUserSchema = z.object({
   username: z.string(),
   email: z.string(),
   password: z.string(),
-  roleId: z.string().uuid(),
+  roleId: z.string(),
 });
 
 export type CreateUserData = z.infer<typeof CreateUserSchema>;

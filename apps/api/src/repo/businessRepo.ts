@@ -27,7 +27,14 @@ export class BusinessRepo {
     return Optional.of(
       this.client
         .selectFrom('Business')
-        .selectAll()
+        .select([
+          'id',
+          'name',
+          'phoneNumber',
+          'email',
+          'created_at',
+          'updated_at',
+        ])
         .offset((page - 1) * size)
         .limit(size)
         .orderBy('created_at desc')

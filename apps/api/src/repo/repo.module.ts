@@ -6,6 +6,7 @@ import { BusinessDocumentRepo } from './businessDocumentRepo';
 import { BusinessLocationRepo } from './businessLocationRepo';
 import { BusinessRepo } from './businessRepo';
 import { OtpRepo } from './optRepo';
+import { RoleRepo } from './roleRepo';
 import { UserRepo } from './userRepo';
 
 @Global()
@@ -18,6 +19,7 @@ import { UserRepo } from './userRepo';
     BusinessRepo,
     UserRepo,
     OtpRepo,
+    RoleRepo,
   ],
   exports: [
     AgencyRepo,
@@ -27,6 +29,7 @@ import { UserRepo } from './userRepo';
     BusinessRepo,
     UserRepo,
     OtpRepo,
+    RoleRepo,
   ],
 })
 export class RepoModule {}

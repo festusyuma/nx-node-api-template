@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
+import { BusinessService as MainBusinessService } from '../../business/business.service';
 import { BusinessRepo } from '../../repo/businessRepo';
-import { SecretsService } from '../../secrets/secrets.service';
 import { UpdateBusinessData } from '../../utils/schema/businessSchema';
 import { PaginationData } from '../../utils/schema/paginationSchema';
 
@@ -9,7 +9,7 @@ import { PaginationData } from '../../utils/schema/paginationSchema';
 export class BusinessService {
   constructor(
     private businessRepo: BusinessRepo,
-    private secrets: SecretsService
+    private businessService: MainBusinessService
   ) {}
 
   async findBusiness(pagination: PaginationData) {
@@ -21,12 +21,7 @@ export class BusinessService {
   }
 
   async qr_code_url(id: string) {
-    const business = await this.businessRepo.findById(id);
-
-    return `${
-      this.secrets.get('BASEURL') ??
-      `http://localhost:${this.secrets.get('PORT') ?? '8000'}`
-    }/agent/business/qr-code/${business.qrCode}`;
+    return await this.businessService.findBusinessQrCode(id);
   }
 
   async qr_code(id: string) {

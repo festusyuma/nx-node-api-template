@@ -6,15 +6,12 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 
 import { LoggedInGuard } from '../../../libraries/login.guard';
-import {
-  CreateBusinessDocumentSchema,
-  paginationSchema,
-} from '../../../utils/schema';
+import { Pagination } from '../../../libraries/pagination.decorator';
+import { CreateBusinessDocumentSchema } from '../../../utils/schema';
 import { CreateBusinessDocumentData } from '../../../utils/schema/businessDocumentSchema';
 import { PaginationData } from '../../../utils/schema/paginationSchema';
 import { BusinessDocumentService } from './businessDocument.service';
@@ -34,7 +31,7 @@ export class BusinessDocumentController {
   @Get(':id/document')
   async findBusinessLocationByBusinessId(
     @Param('id', ParseUUIDPipe) id: string,
-    @Query(new ZodValidationPipe(paginationSchema)) pagination: PaginationData
+    @Pagination() pagination: PaginationData
   ) {
     return CustomRes.success(
       await this.businessDocumentService.findBusinessDocumentById(

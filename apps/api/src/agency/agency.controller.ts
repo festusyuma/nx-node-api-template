@@ -6,13 +6,13 @@ import {
   Controller,
   Get,
   Post,
-  Query,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
 
 import { LoggedInGuard } from '../libraries/login.guard';
-import { CreateAgentSchema, paginationSchema } from '../utils/schema';
+import { Pagination } from '../libraries/pagination.decorator';
+import { CreateAgentSchema } from '../utils/schema';
 import { UserData } from '../utils/schema/auth';
 import { PaginationData } from '../utils/schema/paginationSchema';
 import { AgencyService } from './agency.service';
@@ -31,7 +31,7 @@ export class AgencyController {
   @Get('agent')
   async findAll(
     @Authenticated() user: UserData,
-    @Query(new ZodValidationPipe(paginationSchema)) pagination: PaginationData
+    @Pagination() pagination: PaginationData
   ) {
     return CustomRes.success(
       await this.agencyService.findAllAgent(user.id, pagination)

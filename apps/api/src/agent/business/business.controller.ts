@@ -6,7 +6,9 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
 } from '@nestjs/common';
+import { z } from 'zod';
 
 import { Pagination } from '../../libraries/pagination.decorator';
 import { UpdateBusinessSchema } from '../../utils/schema';
@@ -48,6 +50,18 @@ export class BusinessController {
   ) {
     return CustomRes.success(
       await this.businessService.updateBusinessById(id, data)
+    );
+  }
+
+  @Post('verify')
+  async verifyBusinessStatus(
+    @Body(new ZodValidationPipe(z.object({ businessId: z.string().uuid() })))
+    data: {
+      businessId: string;
+    }
+  ) {
+    return CustomRes.success(
+      await this.businessService.verifyBusinessStatus(data.businessId)
     );
   }
 }

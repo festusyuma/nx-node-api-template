@@ -11,6 +11,13 @@ export const BusinessLocationStatus = {
 } as const;
 export type BusinessLocationStatus =
   typeof BusinessLocationStatus[keyof typeof BusinessLocationStatus];
+export const BusinessStatus = {
+  UNVERIFIED: 'UNVERIFIED',
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED',
+} as const;
+export type BusinessStatus = typeof BusinessStatus[keyof typeof BusinessStatus];
 export const BusinessDocumentStatus = {
   PENDING: 'PENDING',
   VERIFIED: 'VERIFIED',
@@ -45,6 +52,7 @@ export type Business = {
   phoneNumber: string;
   email: string;
   qrCode: Generated<string>;
+  status: Generated<BusinessStatus>;
   additionalData: Generated<unknown>;
   created_at: Generated<Timestamp>;
   updated_at: Timestamp | null;

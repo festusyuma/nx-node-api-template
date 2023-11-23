@@ -41,7 +41,16 @@ export class BusinessDocumentRepo {
         .selectAll()
         .offset((page - 1) * size)
         .limit(size)
-        .executeTakeFirst()
+        .execute()
     ).elseThrow(CustomRes.badRequest('Not found'));
+  }
+  findByBusinessIdWithoutPagination(id: string) {
+    return Optional.of(
+      this.client
+        .selectFrom('BusinessDocument')
+        .where('businessId', '=', id)
+        .selectAll()
+        .execute()
+    ).elseThrow();
   }
 }

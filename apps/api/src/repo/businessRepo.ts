@@ -32,6 +32,7 @@ export class BusinessRepo {
           'name',
           'phoneNumber',
           'email',
+          'status',
           'created_at',
           'updated_at',
         ])
@@ -68,7 +69,8 @@ export class BusinessRepo {
         .updateTable('Business')
         .set(data)
         .where('id', '=', id)
-        .execute()
+        .returningAll()
+        .executeTakeFirst()
     ).elseThrow();
   }
 }

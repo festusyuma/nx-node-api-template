@@ -1,14 +1,20 @@
+import { CustomRes } from '@backend-template/helpers';
 import { Injectable } from '@nestjs/common';
 
 import { BusinessService as MainBusinessService } from '../../business/business.service';
+import { BusinessDocumentRepo } from '../../repo/businessDocumentRepo';
+import { BusinessLocationRepo } from '../../repo/businessLocationRepo';
 import { BusinessRepo } from '../../repo/businessRepo';
 import { UpdateBusinessData } from '../../utils/schema/businessSchema';
 import { PaginationData } from '../../utils/schema/paginationSchema';
+import { BusinessStatus } from '../../utils/types';
 
 @Injectable()
 export class BusinessService {
   constructor(
     private businessRepo: BusinessRepo,
+    private businessLocationRepo: BusinessLocationRepo,
+    private businessDocumentRepo: BusinessDocumentRepo,
     private businessService: MainBusinessService
   ) {}
 
@@ -30,5 +36,18 @@ export class BusinessService {
 
   async updateBusinessById(id: string, data: UpdateBusinessData) {
     return await this.businessRepo.updateById(id, data);
+  }
+
+  async verifyBusinessStatus(businessId: string) {
+    const documents =
+      await this.businessDocumentRepo.findByBusinessIdWithoutPagination(
+        businessId
+      );
+
+    if (documents.length == 0) throw CustomRes.failed('Upload Document');
+
+    return await this.businessRepo.updateById(businessId, {
+      status: BusinessStatus.VERIFIED,
+    });
   }
 }

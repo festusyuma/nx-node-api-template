@@ -58,14 +58,15 @@ model Agent {
 }
 
 model Business {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name           String
   phoneNumber    String
   email          String
-  qrCode         String    @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  additionalData Json      @default("{}")
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime? @updatedAt @map("updated_at")
+  qrCode         String         @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status         BusinessStatus @default(UNVERIFIED)
+  additionalData Json           @default("{}")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime?      @updatedAt @map("updated_at")
 
   locations BusinessLocation[]
   documents BusinessDocument[]
@@ -117,6 +118,13 @@ enum BusinessLocationStatus {
   UNVERIFIED
   PENDING
   VERIFIED
+}
+
+enum BusinessStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
 }
 
 enum BusinessDocumentStatus {

@@ -6,6 +6,7 @@ export const UserSchema = z.object({
   username: z.string(),
   role: z.string(),
   agentId: z.string().uuid(),
+  agencyId: z.string().uuid(),
 });
 
 export type UserData = z.infer<typeof UserSchema>;

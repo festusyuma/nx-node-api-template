@@ -18,6 +18,15 @@ export type {
 export type { CreateBusinessData, UpdateBusinessData } from './businessSchema';
 export type { CreateOtpData, UpdateOtpData } from './OtpSchema';
 export type { PaginationData } from './paginationSchema';
+export type {
+  CreatePaymentTypeData,
+  UpdatePaymentTypeData,
+} from './paymentTypeSchema';
+export type {
+  CreateTransactionData,
+  TransactionStatusData,
+  UpdateTransactionData,
+} from './transactionSchema';
 export type { CreateUserData, UpdateUserData } from './userSchema';
 
 export type OTPDetailsData = {

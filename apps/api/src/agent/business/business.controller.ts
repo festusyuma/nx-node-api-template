@@ -64,4 +64,21 @@ export class BusinessController {
       await this.businessService.verifyBusinessStatus(data.businessId)
     );
   }
+
+  @Post('reject')
+  async rejectBusinessStatus(
+    @Body(
+      new ZodValidationPipe(
+        z.object({ businessId: z.string().uuid(), reasonRejected: z.string() })
+      )
+    )
+    data: {
+      businessId: string;
+      reasonRejected: string;
+    }
+  ) {
+    return CustomRes.success(
+      await this.businessService.rejectBusinessStatus(data.businessId, data)
+    );
+  }
 }

@@ -31,9 +31,18 @@ export const UserStatus = {
   LOCKED: 'LOCKED',
 } as const;
 export type UserStatus = typeof UserStatus[keyof typeof UserStatus];
+export const TransactionStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELED: 'CANCELED',
+} as const;
+export type TransactionStatus =
+  typeof TransactionStatus[keyof typeof TransactionStatus];
 export type Agency = {
   id: Generated<string>;
   name: string;
+  paymentLink: string | null;
   created_at: Generated<Timestamp>;
   updated_at: Timestamp | null;
 };
@@ -53,6 +62,7 @@ export type Business = {
   email: string;
   qrCode: Generated<string>;
   status: Generated<BusinessStatus>;
+  reasonRejected: string | null;
   additionalData: Generated<unknown>;
   created_at: Generated<Timestamp>;
   updated_at: Timestamp | null;
@@ -91,10 +101,25 @@ export type Otp = {
   created_at: Generated<Timestamp>;
   updated_at: Timestamp | null;
 };
+export type PaymentType = {
+  id: Generated<string>;
+  agencyId: string;
+  name: string;
+  amount: number;
+};
 export type Role = {
   id: Generated<string>;
   name: string;
   key: string;
+};
+export type Transaction = {
+  id: Generated<string>;
+  paymentTypeId: string;
+  businessId: string;
+  reference: string;
+  status: Generated<TransactionStatus>;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
 };
 export type User = {
   id: Generated<string>;
@@ -113,6 +138,8 @@ export type DB = {
   BusinessDocument: BusinessDocument;
   BusinessLocation: BusinessLocation;
   Otp: Otp;
+  PaymentType: PaymentType;
   Role: Role;
+  Transaction: Transaction;
   User: User;
 };

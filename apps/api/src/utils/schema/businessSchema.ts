@@ -15,6 +15,7 @@ export const UpdateBusinessSchema = z.object({
   email: z.string().email().optional(),
   additionalData: z.any().optional(),
   status: z.nativeEnum(BusinessStatus).optional(),
+  reasonRejected: z.string().optional(),
 });
 export type CreateBusinessData = z.infer<typeof CreateBusinessSchema>;
 export type UpdateBusinessData = z.infer<typeof UpdateBusinessSchema>;

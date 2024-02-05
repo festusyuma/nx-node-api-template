@@ -5,6 +5,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseUUIDPipe,
   Post,
   UseGuards,
   UsePipes,
@@ -12,9 +14,10 @@ import {
 
 import { LoggedInGuard } from '../libraries/login.guard';
 import { Pagination } from '../libraries/pagination.decorator';
-import { CreateAgentSchema } from '../utils/schema';
+import { CreateAgentSchema, createPaymentTypeSchema } from '../utils/schema';
 import { UserData } from '../utils/schema/auth';
 import { PaginationData } from '../utils/schema/paginationSchema';
+import { CreatePaymentTypeData } from '../utils/schema/paymentTypeSchema';
 import { AgencyService } from './agency.service';
 
 @Controller('agency')
@@ -35,6 +38,24 @@ export class AgencyController {
   ) {
     return CustomRes.success(
       await this.agencyService.findAllAgent(user.id, pagination)
+    );
+  }
+
+  @Post('payment-type')
+  async createPaymentType(
+    @Body(new ZodValidationPipe(createPaymentTypeSchema))
+    data: CreatePaymentTypeData
+  ) {
+    return CustomRes.success(await this.agencyService.createPaymentType(data));
+  }
+
+  @Get('payment-type/:id')
+  async paymentType(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Pagination() pagination: PaginationData
+  ) {
+    return CustomRes.success(
+      await this.agencyService.paymentType(id, pagination)
     );
   }
 }

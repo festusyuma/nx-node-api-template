@@ -17,4 +17,12 @@ export {
 export { CreateBusinessSchema, UpdateBusinessSchema } from './businessSchema';
 export { CreateOtpSchema, UpdateOtpSchema } from './OtpSchema';
 export { paginationSchema } from './paginationSchema';
+export {
+  createPaymentTypeSchema,
+  updatePaymentTypeSchema,
+} from './paymentTypeSchema';
+export {
+  createTransactionSchema,
+  updateTransactionSchema,
+} from './transactionSchema';
 export { CreateUserSchema } from './userSchema';

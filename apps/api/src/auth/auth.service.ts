@@ -61,6 +61,7 @@ export class AuthService {
     const result: UserData = {
       id: user.id ?? '',
       agentId: user.agentId ?? '',
+      agencyId: user.agencyId ?? '',
       email: user.email,
       username: user.username,
       role: user.role ?? '',

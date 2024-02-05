@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 import { CreateBusinessLocationData } from '../utils/schema/businessLocationSchema';
 import { PaginationData } from '../utils/schema/paginationSchema';
-import { BusinessLocationStatus, DB } from '../utils/types';
+import { BusinessLocationStatus, BusinessStatus, DB } from '../utils/types';
 
 @Injectable()
 export class BusinessLocationRepo {
@@ -74,7 +74,8 @@ export class BusinessLocationRepo {
         .selectFrom('BusinessLocation')
         .leftJoin('Business', 'Business.id', 'BusinessLocation.businessId')
         .where('agentId', '=', id)
-        .where('status', 'in', [
+        .where('Business.status', 'not in', [BusinessStatus.REJECTED])
+        .where('BusinessLocation.status', 'in', [
           BusinessLocationStatus.PENDING,
           BusinessLocationStatus.UNVERIFIED,
         ])

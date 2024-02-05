@@ -57,6 +57,7 @@ export class UserRepo {
         .selectFrom('User')
         .leftJoin('Role', 'User.roleId', 'Role.id')
         .leftJoin('Agent', 'User.id', 'Agent.userId')
+        .leftJoin('Agency', 'Agent.agencyId', 'Agency.id')
         .select([
           'User.id',
           'username',
@@ -64,6 +65,7 @@ export class UserRepo {
           'status',
           'Role.key as role',
           'Agent.id as agentId',
+          'Agency.id as agencyId',
           'password',
         ])
         .where('username', '=', username)

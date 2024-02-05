@@ -23,7 +23,7 @@ export class DefaultInterceptor implements NestInterceptor {
         })
       );
     } catch (e) {
-      Logger.error('cache interceptor error :: ', e);
+      Logger.error(e, 'cache interceptor error :: ');
     }
 
     return next.handle();

@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator kysely {
+  provider = "prisma-kysely"
+  output   = "../src/utils/types"
+  fileName = "database.ts"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username  String     @unique
+  email     String     @unique
+  password  String
+  status    UserStatus @default(INACTIVE)
+  roleId    String     @db.Uuid
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime?  @updatedAt @map("updated_at")
+
+  agent Agent?
+  role  Role   @relation(fields: [roleId], references: [id])
+}
+
+model Role {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  key  String @unique
+
+  users User[]
+}
+
+model Agency {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  paymentLink String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  agents      Agent[]
+  PaymentType PaymentType[]
+}
+
+model Agent {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lastName  String
+  firstName String
+  userId    String    @unique @db.Uuid
+  agencyId  String    @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  user              User               @relation(fields: [userId], references: [id])
+  agency            Agency             @relation(fields: [agencyId], references: [id])
+  businessLocations BusinessLocation[]
+}
+
+model Business {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name           String
+  phoneNumber    String
+  email          String
+  qrCode         String         @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status         BusinessStatus @default(UNVERIFIED)
+  reasonRejected String?
+  additionalData Json           @default("{}")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime?      @updatedAt @map("updated_at")
+
+  locations   BusinessLocation[]
+  documents   BusinessDocument[]
+  Transaction Transaction[]
+}
+
+model BusinessDocument {
+  id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type           String
+  files          String[]
+  reasonRejected String?
+  status         BusinessDocumentStatus @default(PENDING)
+  businessId     String                 @db.Uuid
+  createdAt      DateTime               @default(now()) @map("created_at")
+  updatedAt      DateTime?              @updatedAt @map("updated_at")
+
+  business Business @relation(fields: [businessId], references: [id])
+}
+
+model BusinessLocation {
+  id            String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  images        String[]
+  latitude      Decimal                @db.Decimal(10, 5)
+  longitude     Decimal                @db.Decimal(10, 5)
+  streetAddress String
+  city          String
+  state         String
+  country       String
+  businessId    String                 @db.Uuid
+  agentId       String?                @db.Uuid
+  status        BusinessLocationStatus @default(UNVERIFIED)
+  createdAt     DateTime               @default(now()) @map("created_at")
+  updatedAt     DateTime?              @updatedAt @map("updated_at")
+
+  business Business  @relation(fields: [businessId], references: [id])
+  agent    Agent?    @relation(fields: [agentId], references: [id])
+  Signage  Signage[]
+}
+
+model Otp {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  otp            String
+  expirationTime DateTime  @default(dbgenerated("NOW() + interval '10 minutes'"))
+  verified       Boolean?
+  verifiedAt     DateTime?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime? @updatedAt @map("updated_at")
+}
+
+model Transaction {
+  id            String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  paymentTypeId String            @db.Uuid
+  businessId    String            @db.Uuid
+  reference     String
+  status        TransactionStatus @default(PENDING)
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime?         @updatedAt @map("updated_at")
+
+  paymentType PaymentType @relation(fields: [paymentTypeId], references: [id])
+  business    Business    @relation(fields: [businessId], references: [id])
+}
+
+model PaymentType {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agencyId    String        @db.Uuid
+  name        String
+  amount      Int
+  agency      Agency        @relation(fields: [agencyId], references: [id])
+  transaction Transaction[]
+}
+
+model Signage {
+  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  BusinessLocation   BusinessLocation? @relation(fields: [businessLocationId], references: [id])
+  businessLocationId String?           @db.Uuid
+}
+
+enum BusinessLocationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+}
+
+enum BusinessStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum BusinessDocumentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  LOCKED
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELED
+}

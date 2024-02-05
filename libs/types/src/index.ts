@@ -1,3 +1,6 @@
+export * from './lib/schema';
+export * from './lib/schema/types';
+export * from './lib/schema/filemanager';
 export { UserData, UserSchema } from './lib/schema/auth';
 export {
   FileManagerData,

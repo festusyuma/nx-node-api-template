@@ -74,6 +74,7 @@ model Business {
   locations   BusinessLocation[]
   documents   BusinessDocument[]
   Transaction Transaction[]
+  Signage     Signage[]
 }
 
 model BusinessDocument {
@@ -104,9 +105,8 @@ model BusinessLocation {
   createdAt     DateTime               @default(now()) @map("created_at")
   updatedAt     DateTime?              @updatedAt @map("updated_at")
 
-  business Business  @relation(fields: [businessId], references: [id])
-  agent    Agent?    @relation(fields: [agentId], references: [id])
-  Signage  Signage[]
+  business Business @relation(fields: [businessId], references: [id])
+  agent    Agent?   @relation(fields: [agentId], references: [id])
 }
 
 model Otp {
@@ -142,9 +142,22 @@ model PaymentType {
 }
 
 model Signage {
-  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  BusinessLocation   BusinessLocation? @relation(fields: [businessLocationId], references: [id])
-  businessLocationId String?           @db.Uuid
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type          SignageType
+  size          Int
+  size_type     SignageSizeType @default(INCH)
+  zone          SignageZone     @default(NORMAL)
+  latitude      Decimal         @db.Decimal(10, 5)
+  longitude     Decimal         @db.Decimal(10, 5)
+  streetAddress String
+  city          String?
+  state         String?
+  country       String?
+  businessId    String          @db.Uuid
+  business      Business        @relation(fields: [businessId], references: [id])
+  status        SignageStatus   @default(PENDING)
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime?       @updatedAt @map("updated_at")
 }
 
 enum BusinessLocationStatus {
@@ -177,4 +190,37 @@ enum TransactionStatus {
   COMPLETED
   FAILED
   CANCELED
+}
+
+enum SignageType {
+  FLAT_SIZE
+  LED
+  DIRECTIONAL_SIGN
+  SKY_SIGN
+  CANOPY_SIGN
+  NEON
+  STREET_LAMP_POLE
+  BOUNDARY_WALL_SIGN
+  PROJECTING_SIGN
+  ROOF_SIGN
+  NON_PROFIT_SIGN
+  FREE_STANDING
+  OTHERS
+}
+
+enum SignageSizeType {
+  INCH
+  SQM
+}
+
+enum SignageStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum SignageZone {
+  NORMAL
+  RESTRICTIVE
+  HIGH_STREET
 }

@@ -1,0 +1,29 @@
+import { Injectable } from '@nestjs/common';
+
+import { SignageRepo } from '../../../repo/signageRepo';
+import { PaginationData } from '../../../utils/schema/paginationSchema';
+import {
+  CreateSignageData,
+  UpdateSignageData,
+} from '../../../utils/schema/signageSchema';
+
+@Injectable()
+export class SignageService {
+  constructor(private signageRepo: SignageRepo) {}
+
+  async create(data: CreateSignageData) {
+    return await this.signageRepo.create(data);
+  }
+
+  async findById(id: string) {
+    return await this.signageRepo.findById(id);
+  }
+
+  async findByBusinessId(id: string, pagination: PaginationData) {
+    return await this.signageRepo.findByBusinessId(id, pagination);
+  }
+
+  async updateById(id: string, data: UpdateSignageData) {
+    return await this.signageRepo.updateById(id, data);
+  }
+}

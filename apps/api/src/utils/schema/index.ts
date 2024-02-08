@@ -21,6 +21,10 @@ export {
   createPaymentTypeSchema,
   updatePaymentTypeSchema,
 } from './paymentTypeSchema';
+export {
+  createSignagePermitSchema,
+  updateSignagePermitSchema,
+} from './signagePermitSchema';
 export { createSignageSchema, updateSignageSchema } from './signageSchema';
 export {
   createTransactionSchema,

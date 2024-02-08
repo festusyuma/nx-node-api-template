@@ -45,21 +45,24 @@ export class SignageController {
     );
   }
 
-  @Get('signage/:id')
+  @Get(':business_id/signage/:id')
   async findById(
     @Param('id', ParseUUIDPipe) id: string,
-    @Pagination() pagination: PaginationData
+    @Param('business_id', ParseUUIDPipe) business_id: string
   ) {
     return CustomRes.success(
-      await this.signageService.findByBusinessId(id, pagination)
+      await this.signageService.findByBusinessSignage(id, business_id)
     );
   }
 
-  @Put('signage/:id')
+  @Put(':business_id/signage/:id')
   async updateById(
     @Param('id', ParseUUIDPipe) id: string,
+    @Param('business_id', ParseUUIDPipe) business_id: string,
     @Body(new ZodValidationPipe(updateSignageSchema)) data: UpdateSignageData
   ) {
-    return CustomRes.success(await this.signageService.updateById(id, data));
+    return CustomRes.success(
+      await this.signageService.updateById(id, business_id, data)
+    );
   }
 }

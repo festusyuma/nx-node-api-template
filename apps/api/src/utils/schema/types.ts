@@ -22,6 +22,10 @@ export type {
   CreatePaymentTypeData,
   UpdatePaymentTypeData,
 } from './paymentTypeSchema';
+export type {
+  CreateSignagePermitData,
+  UpdateSignagePermitData,
+} from './signagePermitSchema';
 export type { CreateSignageData, UpdateSignageData } from './signageSchema';
 export type {
   CreateTransactionData,

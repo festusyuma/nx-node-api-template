@@ -23,7 +23,15 @@ export class SignageService {
     return await this.signageRepo.findByBusinessId(id, pagination);
   }
 
-  async updateById(id: string, data: UpdateSignageData) {
-    return await this.signageRepo.updateById(id, data);
+  async findByBusinessSignage(id: string, business_id: string) {
+    return await this.signageRepo.findBusinessSignageById(id, business_id);
+  }
+
+  async updateById(id: string, business_id: string, data: UpdateSignageData) {
+    return await this.signageRepo.updateBusinessSignageId(
+      id,
+      business_id,
+      data
+    );
   }
 }

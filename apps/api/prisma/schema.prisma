@@ -128,17 +128,19 @@ model Transaction {
   createdAt     DateTime          @default(now()) @map("created_at")
   updatedAt     DateTime?         @updatedAt @map("updated_at")
 
-  paymentType PaymentType @relation(fields: [paymentTypeId], references: [id])
-  business    Business    @relation(fields: [businessId], references: [id])
+  paymentType   PaymentType    @relation(fields: [paymentTypeId], references: [id])
+  business      Business       @relation(fields: [businessId], references: [id])
+  SignagePermit SignagePermit?
 }
 
 model PaymentType {
-  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  agencyId    String        @db.Uuid
-  name        String
-  amount      Int
-  agency      Agency        @relation(fields: [agencyId], references: [id])
-  transaction Transaction[]
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agencyId      String          @db.Uuid
+  name          String
+  amount        Int
+  agency        Agency          @relation(fields: [agencyId], references: [id])
+  transaction   Transaction[]
+  SignagePermit SignagePermit[]
 }
 
 model Signage {
@@ -158,6 +160,21 @@ model Signage {
   status        SignageStatus   @default(PENDING)
   createdAt     DateTime        @default(now()) @map("created_at")
   updatedAt     DateTime?       @updatedAt @map("updated_at")
+  Permit        SignagePermit[]
+}
+
+model SignagePermit {
+  id            String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status        SignagePermitStatus @default(NOT_APPLICABLE)
+  paymentTypeId String              @db.Uuid
+  paymentType   PaymentType         @relation(fields: [paymentTypeId], references: [id])
+  signageId     String              @db.Uuid
+  signage       Signage             @relation(fields: [signageId], references: [id])
+  expiryDate    DateTime?
+  paymentId     String              @unique @db.Uuid
+  payment       Transaction         @relation(fields: [paymentId], references: [id])
+  createdAt     DateTime            @default(now()) @map("created_at")
+  updatedAt     DateTime?           @updatedAt @map("updated_at")
 }
 
 enum BusinessLocationStatus {
@@ -206,6 +223,12 @@ enum SignageType {
   NON_PROFIT_SIGN
   FREE_STANDING
   OTHERS
+}
+
+enum SignagePermitStatus {
+  NOT_APPLICABLE
+  EXPIRED
+  ACTIVE
 }
 
 enum SignageSizeType {

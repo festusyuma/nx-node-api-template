@@ -55,6 +55,13 @@ export const SignageType = {
   OTHERS: 'OTHERS',
 } as const;
 export type SignageType = typeof SignageType[keyof typeof SignageType];
+export const SignagePermitStatus = {
+  NOT_APPLICABLE: 'NOT_APPLICABLE',
+  EXPIRED: 'EXPIRED',
+  ACTIVE: 'ACTIVE',
+} as const;
+export type SignagePermitStatus =
+  typeof SignagePermitStatus[keyof typeof SignagePermitStatus];
 export const SignageSizeType = {
   INCH: 'INCH',
   SQM: 'SQM',
@@ -163,6 +170,16 @@ export type Signage = {
   created_at: Generated<Timestamp>;
   updated_at: Timestamp | null;
 };
+export type SignagePermit = {
+  id: Generated<string>;
+  status: Generated<SignagePermitStatus>;
+  paymentTypeId: string;
+  signageId: string;
+  expiryDate: Timestamp | null;
+  paymentId: string;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
+};
 export type Transaction = {
   id: Generated<string>;
   paymentTypeId: string;
@@ -192,6 +209,7 @@ export type DB = {
   PaymentType: PaymentType;
   Role: Role;
   Signage: Signage;
+  SignagePermit: SignagePermit;
   Transaction: Transaction;
   User: User;
 };

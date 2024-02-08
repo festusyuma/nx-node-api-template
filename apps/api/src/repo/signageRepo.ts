@@ -34,6 +34,22 @@ export class SignageRepo {
     ).elseThrow();
   }
 
+  updateBusinessSignageId(
+    id: string,
+    business_id: string,
+    data: UpdateSignageData
+  ) {
+    return Optional.of(
+      this.client
+        .updateTable('Signage')
+        .where('id', '=', id)
+        .where('businessId', '=', business_id)
+        .set(data)
+        .returningAll()
+        .executeTakeFirst()
+    ).elseThrow();
+  }
+
   findById(id: string) {
     return Optional.of(
       this.client
@@ -54,6 +70,17 @@ export class SignageRepo {
         .offset((page - 1) * size)
         .limit(size)
         .execute()
+    ).elseThrow();
+  }
+
+  findBusinessSignageById(id: string, business_id: string) {
+    return Optional.of(
+      this.client
+        .selectFrom('Signage')
+        .where('businessId', '=', business_id)
+        .where('id', '=', id)
+        .selectAll()
+        .executeTakeFirst()
     ).elseThrow();
   }
 }

@@ -6,6 +6,7 @@ import { BusinessService } from './business.service';
 import { BusinessDocumentModule } from './businessDocument/businessDocument.module';
 import { BusinessLocationModule } from './businessLocation/businessLocation.module';
 import { PaymentModule } from './payment/payment.module';
+import SignageModule from './signage/signage.module';
 
 @Module({
   imports: [
@@ -13,8 +14,14 @@ import { PaymentModule } from './payment/payment.module';
     BusinessLocationModule,
     MainBusinessModule,
     PaymentModule,
+    SignageModule,
   ],
-  exports: [BusinessDocumentModule, BusinessLocationModule, PaymentModule],
+  exports: [
+    BusinessDocumentModule,
+    BusinessLocationModule,
+    PaymentModule,
+    SignageModule,
+  ],
   controllers: [BusinessController],
   providers: [BusinessService],
 })

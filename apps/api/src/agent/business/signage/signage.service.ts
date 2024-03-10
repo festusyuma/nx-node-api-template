@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { SignageRepo } from '../../../repo/signageRepo';
 import { PaginationData } from '../../../utils/schema/paginationSchema';
 import {
+  CreateBulkSignageData,
   CreateSignageData,
   UpdateSignageData,
 } from '../../../utils/schema/signageSchema';
@@ -13,6 +14,10 @@ export class SignageService {
 
   async create(data: CreateSignageData) {
     return await this.signageRepo.create(data);
+  }
+
+  async createBulk(data: CreateBulkSignageData) {
+    return await this.signageRepo.createBulk(data);
   }
 
   async findById(id: string) {

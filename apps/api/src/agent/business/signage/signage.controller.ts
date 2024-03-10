@@ -18,6 +18,8 @@ import {
 } from '../../../utils/schema';
 import { PaginationData } from '../../../utils/schema/paginationSchema';
 import {
+  CreateBulkSignageData,
+  createBulkSignageSchema,
   CreateSignageData,
   UpdateSignageData,
 } from '../../../utils/schema/signageSchema';
@@ -33,6 +35,14 @@ export class SignageController {
     @Body(new ZodValidationPipe(createSignageSchema)) data: CreateSignageData
   ) {
     return CustomRes.success(await this.signageService.create(data));
+  }
+
+  @Post('signages')
+  async createSignages(
+    @Body(new ZodValidationPipe(createBulkSignageSchema))
+    data: CreateBulkSignageData
+  ) {
+    return CustomRes.success(await this.signageService.createBulk(data));
   }
 
   @Get(':id/signage')

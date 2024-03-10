@@ -146,9 +146,10 @@ model PaymentType {
 model Signage {
   id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   type          SignageType
-  size          Int
+  size          SignageSize     @default(UP_TO_1_0)
   size_type     SignageSizeType @default(INCH)
   zone          SignageZone     @default(NORMAL)
+  imageUrl      String?
   latitude      Decimal         @db.Decimal(10, 5)
   longitude     Decimal         @db.Decimal(10, 5)
   streetAddress String
@@ -246,4 +247,17 @@ enum SignageZone {
   NORMAL
   RESTRICTIVE
   HIGH_STREET
+  RURAL
+  LOCAL_INTERNATIONAL_AIRPORT
+}
+
+enum SignageSize {
+  UP_TO_1_0
+  UP_TO_3_0
+  UP_TO_5_0
+  UP_TO_7_0
+  UP_TO_10_0
+  UP_TO_13_0
+  UP_TO_25_0
+  ABOVE_25_0
 }

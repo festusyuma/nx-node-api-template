@@ -78,8 +78,21 @@ export const SignageZone = {
   NORMAL: 'NORMAL',
   RESTRICTIVE: 'RESTRICTIVE',
   HIGH_STREET: 'HIGH_STREET',
+  RURAL: 'RURAL',
+  LOCAL_INTERNATIONAL_AIRPORT: 'LOCAL_INTERNATIONAL_AIRPORT',
 } as const;
 export type SignageZone = typeof SignageZone[keyof typeof SignageZone];
+export const SignageSize = {
+  UP_TO_1_0: 'UP_TO_1_0',
+  UP_TO_3_0: 'UP_TO_3_0',
+  UP_TO_5_0: 'UP_TO_5_0',
+  UP_TO_7_0: 'UP_TO_7_0',
+  UP_TO_10_0: 'UP_TO_10_0',
+  UP_TO_13_0: 'UP_TO_13_0',
+  UP_TO_25_0: 'UP_TO_25_0',
+  ABOVE_25_0: 'ABOVE_25_0',
+} as const;
+export type SignageSize = typeof SignageSize[keyof typeof SignageSize];
 export type Agency = {
   id: Generated<string>;
   name: string;
@@ -156,9 +169,10 @@ export type Role = {
 export type Signage = {
   id: Generated<string>;
   type: SignageType;
-  size: number;
+  size: Generated<SignageSize>;
   size_type: Generated<SignageSizeType>;
   zone: Generated<SignageZone>;
+  imageUrl: string | null;
   latitude: string;
   longitude: string;
   streetAddress: string;

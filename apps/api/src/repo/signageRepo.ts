@@ -2,6 +2,7 @@ import { KyselyService } from '@backend-template/database';
 import { Optional } from '@backend-template/helpers';
 import { Injectable } from '@nestjs/common';
 
+import { CreateBulkSignageData } from '../utils/schema/signageSchema';
 import {
   CreateSignageData,
   PaginationData,
@@ -18,6 +19,16 @@ export class SignageRepo {
       this.client
         .insertInto('Signage')
         .values(data)
+        .returningAll()
+        .executeTakeFirst()
+    ).elseThrow();
+  }
+
+  createBulk(data: CreateBulkSignageData) {
+    return Optional.of(
+      this.client
+        .insertInto('Signage')
+        .values(data.signages)
         .returningAll()
         .executeTakeFirst()
     ).elseThrow();

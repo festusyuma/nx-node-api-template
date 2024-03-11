@@ -39,6 +39,60 @@ export const TransactionStatus = {
 } as const;
 export type TransactionStatus =
   typeof TransactionStatus[keyof typeof TransactionStatus];
+export const SignageType = {
+  FLAT_SIZE: 'FLAT_SIZE',
+  LED: 'LED',
+  DIRECTIONAL_SIGN: 'DIRECTIONAL_SIGN',
+  SKY_SIGN: 'SKY_SIGN',
+  CANOPY_SIGN: 'CANOPY_SIGN',
+  NEON: 'NEON',
+  STREET_LAMP_POLE: 'STREET_LAMP_POLE',
+  BOUNDARY_WALL_SIGN: 'BOUNDARY_WALL_SIGN',
+  PROJECTING_SIGN: 'PROJECTING_SIGN',
+  ROOF_SIGN: 'ROOF_SIGN',
+  NON_PROFIT_SIGN: 'NON_PROFIT_SIGN',
+  FREE_STANDING: 'FREE_STANDING',
+  OTHERS: 'OTHERS',
+} as const;
+export type SignageType = typeof SignageType[keyof typeof SignageType];
+export const SignagePermitStatus = {
+  NOT_APPLICABLE: 'NOT_APPLICABLE',
+  EXPIRED: 'EXPIRED',
+  ACTIVE: 'ACTIVE',
+} as const;
+export type SignagePermitStatus =
+  typeof SignagePermitStatus[keyof typeof SignagePermitStatus];
+export const SignageSizeType = {
+  INCH: 'INCH',
+  SQM: 'SQM',
+} as const;
+export type SignageSizeType =
+  typeof SignageSizeType[keyof typeof SignageSizeType];
+export const SignageStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED',
+} as const;
+export type SignageStatus = typeof SignageStatus[keyof typeof SignageStatus];
+export const SignageZone = {
+  NORMAL: 'NORMAL',
+  RESTRICTIVE: 'RESTRICTIVE',
+  HIGH_STREET: 'HIGH_STREET',
+  RURAL: 'RURAL',
+  LOCAL_INTERNATIONAL_AIRPORT: 'LOCAL_INTERNATIONAL_AIRPORT',
+} as const;
+export type SignageZone = typeof SignageZone[keyof typeof SignageZone];
+export const SignageSize = {
+  UP_TO_1_0: 'UP_TO_1_0',
+  UP_TO_3_0: 'UP_TO_3_0',
+  UP_TO_5_0: 'UP_TO_5_0',
+  UP_TO_7_0: 'UP_TO_7_0',
+  UP_TO_10_0: 'UP_TO_10_0',
+  UP_TO_13_0: 'UP_TO_13_0',
+  UP_TO_25_0: 'UP_TO_25_0',
+  ABOVE_25_0: 'ABOVE_25_0',
+} as const;
+export type SignageSize = typeof SignageSize[keyof typeof SignageSize];
 export type Agency = {
   id: Generated<string>;
   name: string;
@@ -112,6 +166,34 @@ export type Role = {
   name: string;
   key: string;
 };
+export type Signage = {
+  id: Generated<string>;
+  type: SignageType;
+  size: Generated<SignageSize>;
+  size_type: Generated<SignageSizeType>;
+  zone: Generated<SignageZone>;
+  imageUrl: string | null;
+  latitude: string;
+  longitude: string;
+  streetAddress: string;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  businessId: string;
+  status: Generated<SignageStatus>;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
+};
+export type SignagePermit = {
+  id: Generated<string>;
+  status: Generated<SignagePermitStatus>;
+  paymentTypeId: string;
+  signageId: string;
+  expiryDate: Timestamp | null;
+  paymentId: string;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
+};
 export type Transaction = {
   id: Generated<string>;
   paymentTypeId: string;
@@ -140,6 +222,8 @@ export type DB = {
   Otp: Otp;
   PaymentType: PaymentType;
   Role: Role;
+  Signage: Signage;
+  SignagePermit: SignagePermit;
   Transaction: Transaction;
   User: User;
 };

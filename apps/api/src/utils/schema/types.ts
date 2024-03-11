@@ -23,12 +23,16 @@ export type {
   UpdatePaymentTypeData,
 } from './paymentTypeSchema';
 export type {
+  CreateSignagePermitData,
+  UpdateSignagePermitData,
+} from './signagePermitSchema';
+export type { CreateSignageData, UpdateSignageData } from './signageSchema';
+export type {
   CreateTransactionData,
   TransactionStatusData,
   UpdateTransactionData,
 } from './transactionSchema';
 export type { CreateUserData, UpdateUserData } from './userSchema';
-
 export type OTPDetailsData = {
   timestamp: Date;
   client: string;

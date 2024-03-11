@@ -74,6 +74,7 @@ model Business {
   locations   BusinessLocation[]
   documents   BusinessDocument[]
   Transaction Transaction[]
+  Signage     Signage[]
 }
 
 model BusinessDocument {
@@ -104,9 +105,8 @@ model BusinessLocation {
   createdAt     DateTime               @default(now()) @map("created_at")
   updatedAt     DateTime?              @updatedAt @map("updated_at")
 
-  business Business  @relation(fields: [businessId], references: [id])
-  agent    Agent?    @relation(fields: [agentId], references: [id])
-  Signage  Signage[]
+  business Business @relation(fields: [businessId], references: [id])
+  agent    Agent?   @relation(fields: [agentId], references: [id])
 }
 
 model Otp {
@@ -128,23 +128,54 @@ model Transaction {
   createdAt     DateTime          @default(now()) @map("created_at")
   updatedAt     DateTime?         @updatedAt @map("updated_at")
 
-  paymentType PaymentType @relation(fields: [paymentTypeId], references: [id])
-  business    Business    @relation(fields: [businessId], references: [id])
+  paymentType   PaymentType    @relation(fields: [paymentTypeId], references: [id])
+  business      Business       @relation(fields: [businessId], references: [id])
+  SignagePermit SignagePermit?
 }
 
 model PaymentType {
-  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  agencyId    String        @db.Uuid
-  name        String
-  amount      Int
-  agency      Agency        @relation(fields: [agencyId], references: [id])
-  transaction Transaction[]
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agencyId      String          @db.Uuid
+  name          String
+  amount        Int
+  agency        Agency          @relation(fields: [agencyId], references: [id])
+  transaction   Transaction[]
+  SignagePermit SignagePermit[]
 }
 
 model Signage {
-  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  BusinessLocation   BusinessLocation? @relation(fields: [businessLocationId], references: [id])
-  businessLocationId String?           @db.Uuid
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type          SignageType
+  size          SignageSize     @default(UP_TO_1_0)
+  size_type     SignageSizeType @default(INCH)
+  zone          SignageZone     @default(NORMAL)
+  imageUrl      String?
+  latitude      Decimal         @db.Decimal(10, 5)
+  longitude     Decimal         @db.Decimal(10, 5)
+  streetAddress String
+  city          String?
+  state         String?
+  country       String?
+  businessId    String          @db.Uuid
+  business      Business        @relation(fields: [businessId], references: [id])
+  status        SignageStatus   @default(PENDING)
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime?       @updatedAt @map("updated_at")
+  Permit        SignagePermit[]
+}
+
+model SignagePermit {
+  id            String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status        SignagePermitStatus @default(NOT_APPLICABLE)
+  paymentTypeId String              @db.Uuid
+  paymentType   PaymentType         @relation(fields: [paymentTypeId], references: [id])
+  signageId     String              @db.Uuid
+  signage       Signage             @relation(fields: [signageId], references: [id])
+  expiryDate    DateTime?
+  paymentId     String              @unique @db.Uuid
+  payment       Transaction         @relation(fields: [paymentId], references: [id])
+  createdAt     DateTime            @default(now()) @map("created_at")
+  updatedAt     DateTime?           @updatedAt @map("updated_at")
 }
 
 enum BusinessLocationStatus {
@@ -177,4 +208,56 @@ enum TransactionStatus {
   COMPLETED
   FAILED
   CANCELED
+}
+
+enum SignageType {
+  FLAT_SIZE
+  LED
+  DIRECTIONAL_SIGN
+  SKY_SIGN
+  CANOPY_SIGN
+  NEON
+  STREET_LAMP_POLE
+  BOUNDARY_WALL_SIGN
+  PROJECTING_SIGN
+  ROOF_SIGN
+  NON_PROFIT_SIGN
+  FREE_STANDING
+  OTHERS
+}
+
+enum SignagePermitStatus {
+  NOT_APPLICABLE
+  EXPIRED
+  ACTIVE
+}
+
+enum SignageSizeType {
+  INCH
+  SQM
+}
+
+enum SignageStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum SignageZone {
+  NORMAL
+  RESTRICTIVE
+  HIGH_STREET
+  RURAL
+  LOCAL_INTERNATIONAL_AIRPORT
+}
+
+enum SignageSize {
+  UP_TO_1_0
+  UP_TO_3_0
+  UP_TO_5_0
+  UP_TO_7_0
+  UP_TO_10_0
+  UP_TO_13_0
+  UP_TO_25_0
+  ABOVE_25_0
 }

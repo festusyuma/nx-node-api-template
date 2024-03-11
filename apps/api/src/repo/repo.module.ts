@@ -8,6 +8,8 @@ import { BusinessRepo } from './businessRepo';
 import { OtpRepo } from './optRepo';
 import { PaymentTypeRepo } from './paymentTypeRepo';
 import { RoleRepo } from './roleRepo';
+import { SignagePermitRepo } from './signagePermitRepo';
+import { SignageRepo } from './signageRepo';
 import { TransactionRepo } from './transactionRepo';
 import { UserRepo } from './userRepo';
 
@@ -24,6 +26,8 @@ import { UserRepo } from './userRepo';
     RoleRepo,
     PaymentTypeRepo,
     TransactionRepo,
+    SignageRepo,
+    SignagePermitRepo,
   ],
   exports: [
     AgencyRepo,
@@ -36,6 +40,8 @@ import { UserRepo } from './userRepo';
     RoleRepo,
     PaymentTypeRepo,
     TransactionRepo,
+    SignageRepo,
+    SignagePermitRepo,
   ],
 })
 export class RepoModule {}

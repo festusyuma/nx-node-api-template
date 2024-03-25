@@ -1,15 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { generateRandomString } from 'libs/helpers/src/utils';
 
 import { AgencyRepo } from '../../repo/agencyRepo';
+import { UserRepo } from '../../repo/userRepo';
+// import {} from '../../repo/'
 import {
-  CreateAgencyData,
+  CreateAgencyWithAdminData,
   UpdateAgencyData,
 } from '../../utils/schema/agencySchema';
 import { PaginationData } from '../../utils/schema/paginationSchema';
 
 @Injectable()
 export class AgencyService {
-  constructor(private agencyRepo: AgencyRepo) {}
+  constructor(
+    private agencyRepo: AgencyRepo,
+    private userRepo: UserRepo
+  ) { }
 
   async findAll(pagination: PaginationData) {
     return {
@@ -21,9 +27,16 @@ export class AgencyService {
     return this.agencyRepo.findById(id);
   }
 
-  async create(data: CreateAgencyData) {
-    return this.agencyRepo.create(data);
+
+  async create(data: CreateAgencyWithAdminData) {
+    const password = generateRandomString(10);
+    console.log({ password });
+    const agency = await this.agencyRepo.createAgencyAndAdmin({ ...data, password });
+    // TODO send email to admin of newly created account.
+    return agency
   }
+
+
   async update(id: string, data: UpdateAgencyData) {
     return this.agencyRepo.updateById(id, data);
   }

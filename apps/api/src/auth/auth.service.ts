@@ -33,7 +33,6 @@ export class AuthService {
     const user = await this.repo
       .findByUsername(data.username)
       .elseThrow(CustomRes.unauthorized('Incorrect username or password'));
-
     if (user.status in [UserStatus.LOCKED, UserStatus.INACTIVE]) {
       throw CustomRes.unauthorized('Account locked, contact admin');
     }

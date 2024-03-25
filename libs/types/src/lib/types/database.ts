@@ -69,6 +69,15 @@ export type User = {
   password: string;
   roleId: string;
 };
+
+export type AgencyAdmin = {
+  id: Generated<string>;
+  lastName: string;
+  firstName: string;
+  agencyId: string;
+  userId: string;
+};
+
 export type DB = {
   Agency: Agency;
   Agent: Agent;
@@ -77,4 +86,5 @@ export type DB = {
   BusinessLocation: BusinessLocation;
   Role: Role;
   User: User;
+  AgencyAdmin: AgencyAdmin
 };

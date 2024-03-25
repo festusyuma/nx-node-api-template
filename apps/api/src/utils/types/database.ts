@@ -100,6 +100,15 @@ export type Agency = {
   created_at: Generated<Timestamp>;
   updated_at: Timestamp | null;
 };
+export type AgencyAdmin = {
+  id: Generated<string>;
+  lastName: string;
+  firstName: string;
+  agencyId: string;
+  userId: string;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
+};
 export type Agent = {
   id: Generated<string>;
   lastName: string;
@@ -215,6 +224,7 @@ export type User = {
 };
 export type DB = {
   Agency: Agency;
+  AgencyAdmin: AgencyAdmin;
   Agent: Agent;
   Business: Business;
   BusinessDocument: BusinessDocument;

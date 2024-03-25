@@ -8,7 +8,7 @@ import { DB, UserStatus } from '../utils/types';
 
 @Injectable()
 export class UserRepo {
-  constructor(private client: KyselyService<DB>) {}
+  constructor(private client: KyselyService<DB>) { }
 
   create(data: CreateUserData) {
     return Optional.of(
@@ -57,6 +57,7 @@ export class UserRepo {
         .selectFrom('User')
         .leftJoin('Role', 'User.roleId', 'Role.id')
         .leftJoin('Agent', 'User.id', 'Agent.userId')
+        .leftJoin('AgencyAdmin', 'User.id', 'AgencyAdmin.userId')
         .leftJoin('Agency', 'Agent.agencyId', 'Agency.id')
         .select([
           'User.id',
@@ -66,6 +67,7 @@ export class UserRepo {
           'Role.key as role',
           'Agent.id as agentId',
           'Agency.id as agencyId',
+          'AgencyAdmin.agencyId as agencyId',
           'password',
         ])
         .where('username', '=', username)

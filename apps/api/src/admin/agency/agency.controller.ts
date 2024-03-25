@@ -15,8 +15,8 @@ import {
 import { IsAdminGuard } from '../../libraries/admin.guard';
 import { LoggedInGuard } from '../../libraries/login.guard';
 import { Pagination } from '../../libraries/pagination.decorator';
-import { CreateAgencySchema, UpdateAgencySchema } from '../../utils/schema';
-import { UpdateAgencyData } from '../../utils/schema/agencySchema';
+import {  UpdateAgencySchema } from '../../utils/schema';
+import { CreateAgencyWithAdminSchema, UpdateAgencyData } from '../../utils/schema/agencySchema';
 import { PaginationData } from '../../utils/schema/paginationSchema';
 import { AgencyService } from './agency.service';
 
@@ -25,7 +25,7 @@ import { AgencyService } from './agency.service';
 export class AgencyController {
   constructor(private agencyService: AgencyService) {}
 
-  @UsePipes(new ZodValidationPipe(CreateAgencySchema))
+  @UsePipes(new ZodValidationPipe(CreateAgencyWithAdminSchema))
   @Post()
   async createAgency(@Body() data: CreateAgencyData) {
     return CustomRes.success(await this.agencyService.create(data));

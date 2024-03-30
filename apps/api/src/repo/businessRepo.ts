@@ -11,8 +11,8 @@ import { DB } from '../utils/types';
 
 @Injectable()
 export class BusinessRepo {
-  constructor(private client: KyselyService<DB>) {}
-  create(data: CreateBusinessData) {
+  constructor(private client: KyselyService<DB>) { }
+  create(data: CreateBusinessData ) {
     return Optional.of(
       this.client
         .insertInto('Business')
@@ -69,6 +69,32 @@ export class BusinessRepo {
         .updateTable('Business')
         .set(data)
         .where('id', '=', id)
+        .returningAll()
+        .executeTakeFirst()
+    ).elseThrow();
+  }
+
+  findAgencyPendingBusiness(agencyId: string, pagination: PaginationData) {
+    const { page, size } = pagination;
+    return Optional.of(
+      this.client
+        .selectFrom('Business').selectAll()
+        .where('agencyId', '=', agencyId)
+        .offset((page - 1) * size)
+        .limit(size)
+        .orderBy('created_at desc')
+        .execute()
+    ).elseThrow();
+  }
+
+
+  updateAgencyBusiness({ id, agencyId, data }: { id: string, agencyId: string, data: UpdateBusinessData }) {
+    return Optional.of(
+      this.client
+        .updateTable('Business')
+        .set(data)
+        .where('id', '=', id)
+        .where('agencyId', '=', agencyId)
         .returningAll()
         .executeTakeFirst()
     ).elseThrow();

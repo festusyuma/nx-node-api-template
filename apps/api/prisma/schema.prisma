@@ -46,6 +46,7 @@ model Agency {
   agents      Agent[]
   PaymentType PaymentType[]
   agencyAdmin AgencyAdmin[]
+  Business    Business[]
 }
 
 model AgencyAdmin {
@@ -85,13 +86,16 @@ model Business {
   status         BusinessStatus @default(UNVERIFIED)
   reasonRejected String?
   additionalData Json           @default("{}")
-  createdAt      DateTime       @default(now()) @map("created_at")
-  updatedAt      DateTime?      @updatedAt @map("updated_at")
+  agencyId       String         @db.Uuid
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   locations   BusinessLocation[]
   documents   BusinessDocument[]
   Transaction Transaction[]
   Signage     Signage[]
+  Agency      Agency             @relation(fields: [agencyId], references: [id])
 }
 
 model BusinessDocument {

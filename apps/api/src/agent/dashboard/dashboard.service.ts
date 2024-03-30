@@ -10,9 +10,9 @@ export class DashboardService {
   constructor(
     private businessRepo: BusinessRepo,
     private businessLocationRepo: BusinessLocationRepo
-  ) {}
+  ) { }
 
-  async createBusiness(data: CreateBusinessData) {
+  async createBusiness(data: CreateBusinessData & { agencyId: string }) {
     return this.businessRepo.create(data);
   }
 

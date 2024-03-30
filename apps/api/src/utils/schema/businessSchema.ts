@@ -7,6 +7,7 @@ export const CreateBusinessSchema = z.object({
   phoneNumber: z.string(),
   email: z.string().email(),
   additionalData: z.any(),
+  agencyId: z.string()
 });
 
 export const UpdateBusinessSchema = z.object({

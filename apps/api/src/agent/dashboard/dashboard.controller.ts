@@ -20,7 +20,7 @@ import { DashboardService } from './dashboard.service';
 @Controller('agent/dashboard')
 @UseGuards(LoggedInGuard)
 export class DashboardController {
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService) { }
 
   @Get('registered-business-count')
   async findRegisteredBusinessCount(@Authenticated() user: UserData) {
@@ -41,7 +41,8 @@ export class DashboardController {
 
   @Post('business')
   @UsePipes(new ZodValidationPipe(CreateBusinessSchema))
-  async createBusiness(@Body() data: CreateBusinessData) {
-    return CustomRes.success(await this.dashboardService.createBusiness(data));
+  async createBusiness(@Body() data: CreateBusinessData, @Authenticated() user: UserData,
+  ) {
+    return CustomRes.success(await this.dashboardService.createBusiness({ ...data, agencyId: user.agencyId }));
   }
 }

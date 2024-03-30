@@ -11,6 +11,7 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
+import { z } from 'zod';
 
 import { LoggedInGuard } from '../libraries/login.guard';
 import { Pagination } from '../libraries/pagination.decorator';
@@ -23,7 +24,7 @@ import { AgencyService } from './agency.service';
 @Controller('agency')
 @UseGuards(LoggedInGuard)
 export class AgencyController {
-  constructor(private agencyService: AgencyService) {}
+  constructor(private agencyService: AgencyService) { }
 
   @Post('agent')
   @UsePipes(new ZodValidationPipe(CreateAgentSchema))
@@ -58,4 +59,48 @@ export class AgencyController {
       await this.agencyService.paymentType(id, pagination)
     );
   }
+
+
+  @Get('business-pending-approval')
+  async fetchBusinessesPendingApproval(
+    @Pagination() pagination: PaginationData,
+    @Authenticated() user: UserData,
+
+  ) {
+    return CustomRes.success(
+      await this.agencyService.businessPendingApproval(user.agencyId, pagination)
+    );
+  }
+
+
+  @Post('approve-business')
+  async approveAgencyBusiness(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Authenticated() user: UserData,
+
+  ) {
+    return CustomRes.success(
+      await this.agencyService.approveBusiness(id, user.agencyId,)
+    );
+  }
+
+
+  @Post('reject-business')
+  async rejectBusinessStatus(
+    @Authenticated() user: UserData,
+    @Body(
+      new ZodValidationPipe(
+        z.object({ businessId: z.string().uuid(), reasonRejected: z.string() })
+      )
+    )
+    data: {
+      businessId: string;
+      reasonRejected: string;
+    }
+  ) {
+    return CustomRes.success(
+      await this.agencyService.rejectBusinessStatus({ agencyId: user.agencyId, businessId: data.businessId, data })
+    );
+  }
+
 }

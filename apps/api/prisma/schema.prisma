@@ -47,6 +47,7 @@ model Agency {
   PaymentType PaymentType[]
   agencyAdmin AgencyAdmin[]
   Business    Business[]
+  tasks       Task[]
 }
 
 model AgencyAdmin {
@@ -75,6 +76,7 @@ model Agent {
   user              User               @relation(fields: [userId], references: [id])
   agency            Agency             @relation(fields: [agencyId], references: [id])
   businessLocations BusinessLocation[]
+  tasks             Task[]
 }
 
 model Business {
@@ -96,6 +98,7 @@ model Business {
   Transaction Transaction[]
   Signage     Signage[]
   Agency      Agency             @relation(fields: [agencyId], references: [id])
+  Task        Task[]
 }
 
 model BusinessDocument {
@@ -183,6 +186,7 @@ model Signage {
   createdAt     DateTime        @default(now()) @map("created_at")
   updatedAt     DateTime?       @updatedAt @map("updated_at")
   Permit        SignagePermit[]
+  Task          Task[]
 }
 
 model SignagePermit {
@@ -199,6 +203,24 @@ model SignagePermit {
   updatedAt     DateTime?           @updatedAt @map("updated_at")
 }
 
+model Task {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status     TaskStatus @default(PENDING)
+  agencyId   String     @db.Uuid
+  agentId    String     @db.Uuid
+  type       TaskType
+  businessId String?    @db.Uuid
+  signageId  String?    @db.Uuid
+
+  agent    Agent     @relation(fields: [agentId], references: [id])
+  agency   Agency    @relation(fields: [agencyId], references: [id])
+  business Business? @relation(fields: [businessId], references: [id])
+  signage  Signage?  @relation(fields: [signageId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+}
+
 enum BusinessLocationStatus {
   UNVERIFIED
   PENDING
@@ -208,6 +230,7 @@ enum BusinessLocationStatus {
 enum BusinessStatus {
   UNVERIFIED
   PENDING
+  PENDING_VERIFICATION
   VERIFIED
   REJECTED
 }
@@ -281,4 +304,14 @@ enum SignageSize {
   UP_TO_13_0
   UP_TO_25_0
   ABOVE_25_0
+}
+
+enum TaskType {
+  SIGNAGE_VERIFICATION
+  BUSINESS_VERIFICATION
+}
+
+enum TaskStatus {
+  PENDING
+  COMPLETED
 }

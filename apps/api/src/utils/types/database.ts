@@ -14,6 +14,7 @@ export type BusinessLocationStatus =
 export const BusinessStatus = {
   UNVERIFIED: 'UNVERIFIED',
   PENDING: 'PENDING',
+  PENDING_VERIFICATION: 'PENDING_VERIFICATION',
   VERIFIED: 'VERIFIED',
   REJECTED: 'REJECTED',
 } as const;
@@ -93,6 +94,16 @@ export const SignageSize = {
   ABOVE_25_0: 'ABOVE_25_0',
 } as const;
 export type SignageSize = typeof SignageSize[keyof typeof SignageSize];
+export const TaskType = {
+  SIGNAGE_VERIFICATION: 'SIGNAGE_VERIFICATION',
+  BUSINESS_VERIFICATION: 'BUSINESS_VERIFICATION',
+} as const;
+export type TaskType = typeof TaskType[keyof typeof TaskType];
+export const TaskStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+} as const;
+export type TaskStatus = typeof TaskStatus[keyof typeof TaskStatus];
 export type Agency = {
   id: Generated<string>;
   name: string;
@@ -204,6 +215,17 @@ export type SignagePermit = {
   created_at: Generated<Timestamp>;
   updated_at: Timestamp | null;
 };
+export type Task = {
+  id: Generated<string>;
+  status: Generated<TaskStatus>;
+  agencyId: string;
+  agentId: string;
+  type: TaskType;
+  businessId: string | null;
+  signageId: string | null;
+  created_at: Generated<Timestamp>;
+  updated_at: Timestamp | null;
+};
 export type Transaction = {
   id: Generated<string>;
   paymentTypeId: string;
@@ -235,6 +257,7 @@ export type DB = {
   Role: Role;
   Signage: Signage;
   SignagePermit: SignagePermit;
+  Task: Task;
   Transaction: Transaction;
   User: User;
 };

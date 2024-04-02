@@ -15,10 +15,11 @@ import { z } from 'zod';
 
 import { LoggedInGuard } from '../libraries/login.guard';
 import { Pagination } from '../libraries/pagination.decorator';
-import { CreateAgentSchema, createPaymentTypeSchema } from '../utils/schema';
+import {assignTaskSchema, CreateAgentSchema, createPaymentTypeSchema} from '../utils/schema';
 import { UserData } from '../utils/schema/auth';
 import { PaginationData } from '../utils/schema/paginationSchema';
 import { CreatePaymentTypeData } from '../utils/schema/paymentTypeSchema';
+import { assignTaskData } from "../utils/schema/taskSchema";
 import { AgencyService } from './agency.service';
 
 @Controller('agency')
@@ -103,4 +104,14 @@ export class AgencyController {
     );
   }
 
+  @Post('assign-task')
+  async assignTask(
+    @Authenticated() user: UserData,
+    @Body(new ZodValidationPipe(assignTaskSchema)) assignTaskPayload: assignTaskData) {
+    const task = await this.agencyService.assignTaskToAgent({
+      assignTaskPayload,
+      agencyId: user.agencyId
+    });
+    return CustomRes.created(task)
+  }
 }

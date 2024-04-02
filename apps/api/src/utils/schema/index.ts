@@ -26,6 +26,7 @@ export {
   updateSignagePermitSchema,
 } from './signagePermitSchema';
 export { createSignageSchema, updateSignageSchema } from './signageSchema';
+export { assignTaskSchema } from './taskSchema';
 export {
   createTransactionSchema,
   updateTransactionSchema,

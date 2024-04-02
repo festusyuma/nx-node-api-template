@@ -31,6 +31,10 @@ export class CustomRes<T = unknown> extends HttpException {
     return new CustomRes<T>(HttpStatus.OK, message, true, data);
   }
 
+  static created<T>(data?: T , message= successful): CustomRes<T> {
+    return new CustomRes<T>(HttpStatus.CREATED, message, true, data);
+  }
+
   static failed<T>(message: string, data?: T): CustomRes<T> {
     return new CustomRes<T>(HttpStatus.OK, message, false, data);
   }

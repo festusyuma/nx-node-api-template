@@ -6,9 +6,11 @@ import { AgentRepo } from '../repo/agentRepo';
 import { BusinessDocumentRepo } from '../repo/businessDocumentRepo';
 import { BusinessRepo } from '../repo/businessRepo';
 import { PaymentTypeRepo } from '../repo/paymentTypeRepo';
+import { TaskRepo } from "../repo/taskRepo";
 import { CreateAgentData, UpdateAgentData } from '../utils/schema/agentSchema';
 import { PaginationData } from '../utils/schema/paginationSchema';
 import { CreatePaymentTypeData } from '../utils/schema/paymentTypeSchema';
+import { assignTaskData } from "../utils/schema/taskSchema";
 import { UpdateBusinessData } from '../utils/schema/types';
 import { Agent, BusinessStatus } from '../utils/types';
 
@@ -18,7 +20,8 @@ export class AgencyService {
     private agentRepo: AgentRepo,
     private paymentTypeRepo: PaymentTypeRepo,
     private businessRepo: BusinessRepo,
-    private businessDocumentRepo: BusinessDocumentRepo
+    private businessDocumentRepo: BusinessDocumentRepo,
+    private taskRepo: TaskRepo,
   ) { }
 
   async createAgent(data: CreateAgentData): Promise<Selectable<Agent>> {
@@ -76,5 +79,9 @@ export class AgencyService {
         reasonRejected: data.reasonRejected,
       }
     });
+  }
+
+  async assignTaskToAgent({ assignTaskPayload, agencyId }: { assignTaskPayload: assignTaskData, agencyId: string }) {
+    return this.taskRepo.createTask({ ...assignTaskPayload, agencyId });
   }
 }

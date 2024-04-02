@@ -12,6 +12,7 @@ import { SignagePermitRepo } from './signagePermitRepo';
 import { SignageRepo } from './signageRepo';
 import { TransactionRepo } from './transactionRepo';
 import { UserRepo } from './userRepo';
+import { TaskRepo } from './taskRepo';
 
 @Global()
 @Module({
@@ -28,6 +29,7 @@ import { UserRepo } from './userRepo';
     TransactionRepo,
     SignageRepo,
     SignagePermitRepo,
+    TaskRepo
   ],
   exports: [
     AgencyRepo,
@@ -42,6 +44,7 @@ import { UserRepo } from './userRepo';
     TransactionRepo,
     SignageRepo,
     SignagePermitRepo,
+    TaskRepo
   ],
 })
 export class RepoModule {}

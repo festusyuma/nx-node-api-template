@@ -3,7 +3,7 @@ import { Optional } from '@backend-template/helpers';
 import { Injectable } from '@nestjs/common';
 
 import { assignTaskData } from "../utils/schema/taskSchema";
-import {DB} from '../utils/types';
+import { DB } from '../utils/types';
 
 @Injectable()
 export class TaskRepo {
@@ -18,7 +18,7 @@ export class TaskRepo {
           .returningAll()
           .executeTakeFirst()
       ).elseThrow();
-      await trx.updateTable('Business').set({status: 'PENDING_VERIFICATION'}).execute()
+      await trx.updateTable('Business').set({ status: 'PENDING_AGENT_VERIFICATION', isAssigned: true }).execute()
       return task;
     })
 

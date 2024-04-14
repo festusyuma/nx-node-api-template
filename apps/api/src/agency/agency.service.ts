@@ -54,17 +54,20 @@ export class AgencyService {
     return this.paymentTypeRepo.findByAgencyId(id, pagination);
   }
 
-  async businessPendingApproval(agencyId: string, pagination: PaginationData) {
-    return this.businessRepo.findAgencyPendingBusiness(agencyId, pagination);
+  async fetchApprovedBusinesses(agencyId: string, pagination: PaginationData) {
+    return this.businessRepo.fetchAgencyBusinessesByStatus(agencyId, pagination);
   }
 
+  async fetchPendingBusinesses(agencyId: string, pagination: PaginationData) {
+    return this.businessRepo.fetchPendingAgencyBusinesses(agencyId, pagination);
+  }
   async approveBusiness(businessId: string, agencyId: string) {
     const documents =
       await this.businessDocumentRepo.findByBusinessIdWithoutPagination(
         businessId
       );
 
-    if (!documents.length) throw CustomRes.failed('Business document not uploaded');
+    if (!documents.length) throw CustomRes.badRequest('Business document not uploaded');
     return await this.businessRepo.updateAgencyBusiness({
       id: businessId, agencyId, data: {
         status: BusinessStatus.VERIFIED,

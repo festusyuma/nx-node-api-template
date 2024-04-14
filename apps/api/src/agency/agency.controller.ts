@@ -8,22 +8,25 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { z } from 'zod';
 
+import { IsAgencyAdminGuard } from '../libraries/agency.admin.guard';
 import { LoggedInGuard } from '../libraries/login.guard';
 import { Pagination } from '../libraries/pagination.decorator';
-import {assignTaskSchema, CreateAgentSchema, createPaymentTypeSchema} from '../utils/schema';
+import { assignTaskSchema, CreateAgentSchema, createPaymentTypeSchema } from '../utils/schema';
 import { UserData } from '../utils/schema/auth';
+import { rejectBusinessData, RejectBusinessSchema } from '../utils/schema/businessSchema';
 import { PaginationData } from '../utils/schema/paginationSchema';
 import { CreatePaymentTypeData } from '../utils/schema/paymentTypeSchema';
 import { assignTaskData } from "../utils/schema/taskSchema";
 import { AgencyService } from './agency.service';
 
 @Controller('agency')
-@UseGuards(LoggedInGuard)
+@UseGuards(LoggedInGuard, IsAgencyAdminGuard)
 export class AgencyController {
   constructor(private agencyService: AgencyService) { }
 
@@ -62,45 +65,50 @@ export class AgencyController {
   }
 
 
-  @Get('business-pending-approval')
+  @Get('approved-businesses')
+  async fetchApprovedBusinesses(
+    @Pagination() pagination: PaginationData,
+    @Authenticated() user: UserData,
+  ) {
+    return CustomRes.success(
+      await this.agencyService.fetchApprovedBusinesses(user.agencyId, pagination)
+    );
+  }
+
+  @Get('pending-businesses')
   async fetchBusinessesPendingApproval(
     @Pagination() pagination: PaginationData,
     @Authenticated() user: UserData,
-
   ) {
     return CustomRes.success(
-      await this.agencyService.businessPendingApproval(user.agencyId, pagination)
+      await this.agencyService.fetchPendingBusinesses(user.agencyId, pagination)
     );
   }
 
 
-  @Post('approve-business')
+  @Post('approve-business/:id')
   async approveAgencyBusiness(
     @Param('id', ParseUUIDPipe) id: string,
     @Authenticated() user: UserData,
 
   ) {
     return CustomRes.success(
-      await this.agencyService.approveBusiness(id, user.agencyId,)
+      await this.agencyService.approveBusiness(id, user.agencyId)
     );
   }
 
 
-  @Post('reject-business')
+  @Post('reject-business/:id')
   async rejectBusinessStatus(
     @Authenticated() user: UserData,
-    @Body(
-      new ZodValidationPipe(
-        z.object({ businessId: z.string().uuid(), reasonRejected: z.string() })
-      )
-    )
-    data: {
-      businessId: string;
-      reasonRejected: string;
-    }
-  ) {
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(RejectBusinessSchema)) rejectBusinessPayload: rejectBusinessData) {
     return CustomRes.success(
-      await this.agencyService.rejectBusinessStatus({ agencyId: user.agencyId, businessId: data.businessId, data })
+      await this.agencyService.rejectBusinessStatus({
+        agencyId: user.agencyId,
+        businessId: id,
+        data: { reasonRejected: rejectBusinessPayload.reasonRejected }
+      })
     );
   }
 

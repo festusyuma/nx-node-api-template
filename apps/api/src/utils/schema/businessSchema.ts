@@ -18,5 +18,13 @@ export const UpdateBusinessSchema = z.object({
   status: z.nativeEnum(BusinessStatus).optional(),
   reasonRejected: z.string().optional(),
 });
+
+export const RejectBusinessSchema = z.object({
+  reasonRejected: z.string()
+});
+
 export type CreateBusinessData = z.infer<typeof CreateBusinessSchema>;
 export type UpdateBusinessData = z.infer<typeof UpdateBusinessSchema>;
+export type rejectBusinessData = z.infer<typeof RejectBusinessSchema>;
+
+

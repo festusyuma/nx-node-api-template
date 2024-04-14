@@ -14,7 +14,8 @@ export type BusinessLocationStatus =
 export const BusinessStatus = {
   UNVERIFIED: 'UNVERIFIED',
   PENDING: 'PENDING',
-  PENDING_VERIFICATION: 'PENDING_VERIFICATION',
+  PENDING_AGENT_VERIFICATION: 'PENDING_AGENT_VERIFICATION',
+  COMPLETE_AGENT_VERIFICATION: 'COMPLETE_AGENT_VERIFICATION',
   VERIFIED: 'VERIFIED',
   REJECTED: 'REJECTED',
 } as const;
@@ -139,6 +140,8 @@ export type Business = {
   reasonRejected: string | null;
   additionalData: Generated<unknown>;
   agencyId: string;
+  isAssigned: Generated<boolean>;
+  agentId: string | null;
   created_at: Generated<Timestamp>;
   updated_at: Timestamp | null;
 };

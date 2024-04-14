@@ -16,7 +16,7 @@ export class BusinessRepo {
     return Optional.of(
       this.client
         .insertInto('Business')
-        .values(data)
+        .values({...data, status: 'PENDING'})
         .returningAll()
         .executeTakeFirst()
     ).elseThrow();
@@ -74,12 +74,13 @@ export class BusinessRepo {
     ).elseThrow();
   }
 
-  findAgencyPendingBusiness(agencyId: string, pagination: PaginationData) {
+  fetchAgencyBusinessesByStatus(agencyId: string, pagination: PaginationData) {
     const { page, size } = pagination;
     return Optional.of(
       this.client
         .selectFrom('Business').selectAll()
         .where('agencyId', '=', agencyId)
+        .where('status', '=', 'VERIFIED')
         .offset((page - 1) * size)
         .limit(size)
         .orderBy('created_at desc')
@@ -87,6 +88,23 @@ export class BusinessRepo {
     ).elseThrow();
   }
 
+  fetchPendingAgencyBusinesses(agencyId: string, pagination: PaginationData) {
+    const { page, size } = pagination;
+    return Optional.of(
+      this.client
+        .selectFrom('Business').selectAll()
+        .where('agencyId', '=', agencyId)
+        .where((eb) => eb.or([
+          eb('status', '=', 'PENDING'),
+          eb('status', '=', 'COMPLETE_AGENT_VERIFICATION'),
+          eb('status', '=', 'PENDING_AGENT_VERIFICATION')
+        ]))        
+        .offset((page - 1) * size)
+        .limit(size)
+        .orderBy('created_at desc')
+        .execute()
+    ).elseThrow();
+  }
 
   updateAgencyBusiness({ id, agencyId, data }: { id: string, agencyId: string, data: UpdateBusinessData }) {
     return Optional.of(

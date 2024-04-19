@@ -3,6 +3,8 @@ import { z } from 'zod';
 export const CreateAgencySchema = z.object({
   name: z.string(),
   paymentLink: z.string().optional(),
+  email: z.string(),
+  phoneNumber: z.string(),
 });
 
 export const UpdateAgencySchema = z.object({
@@ -17,6 +19,7 @@ export const CreateAgencyWithAdminSchema = z.object({
   adminFirstName: z.string(),
   adminLastName: z.string(),
   email: z.string(),
+  phoneNumber: z.string(),
   username: z.string()
 });
 

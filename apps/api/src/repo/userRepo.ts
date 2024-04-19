@@ -62,7 +62,7 @@ export class UserRepo {
         .select([
           'User.id',
           'username',
-          'email',
+          'User.email',
           'status',
           'Role.key as role',
           'Agent.id as agentId',

@@ -2,6 +2,7 @@ import { CustomRes } from '@backend-template/helpers';
 import { Injectable } from '@nestjs/common';
 import { Selectable, Updateable } from 'kysely';
 
+import { AgencyRepo } from '../repo/agencyRepo';
 import { AgentRepo } from '../repo/agentRepo';
 import { BusinessDocumentRepo } from '../repo/businessDocumentRepo';
 import { BusinessRepo } from '../repo/businessRepo';
@@ -22,6 +23,7 @@ export class AgencyService {
     private businessRepo: BusinessRepo,
     private businessDocumentRepo: BusinessDocumentRepo,
     private taskRepo: TaskRepo,
+    private agencyRepo: AgencyRepo
   ) { }
 
   async createAgent(data: CreateAgentData): Promise<Selectable<Agent>> {
@@ -86,5 +88,13 @@ export class AgencyService {
 
   async assignTaskToAgent({ assignTaskPayload, agencyId }: { assignTaskPayload: assignTaskData, agencyId: string }) {
     return this.taskRepo.createTask({ ...assignTaskPayload, agencyId });
+  }
+
+  async fetchAgencyProfile(agencyId: string) {
+    return this.agencyRepo.fetchProfile(agencyId);
+  }
+
+  async fetchAgencyTeam({ agencyId, userId, pagination }: { agencyId: string; userId: string; pagination: PaginationData }) {
+    return this.agencyRepo.fetchTeam({ agencyId, userId, pagination });
   }
 }

@@ -5,7 +5,8 @@ export const CreateAgencySchema = z.object({
   adminFirstName: z.string(),
   adminLastName: z.string(),
   email: z.string(),
-  username: z.string()
+  username: z.string(),
+  phoneNumber: z.string(),
 });
 
 export type CreateAgencyData = z.infer<typeof CreateAgencySchema>;

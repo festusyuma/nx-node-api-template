@@ -109,6 +109,8 @@ export type Agency = {
   id: Generated<string>;
   name: string;
   paymentLink: string | null;
+  email: string;
+  phoneNumber: string;
   created_at: Generated<Timestamp>;
   updated_at: Timestamp | null;
 };

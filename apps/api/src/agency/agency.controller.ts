@@ -8,11 +8,9 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  Query,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { z } from 'zod';
 
 import { IsAgencyAdminGuard } from '../libraries/agency.admin.guard';
 import { LoggedInGuard } from '../libraries/login.guard';
@@ -121,5 +119,23 @@ export class AgencyController {
       agencyId: user.agencyId
     });
     return CustomRes.created(task)
+  }
+
+  @Get('profile')
+  async fetchAgencyProfile(
+    @Authenticated() user: UserData,
+  ) {
+    return CustomRes.success(
+      await this.agencyService.fetchAgencyProfile(user.agencyId));
+  }
+
+  @Get('team')
+  async fetchAgencyTeam(
+    @Pagination() pagination: PaginationData,
+    @Authenticated() user: UserData,
+  ) {
+    const { agencyId, id } = user
+    return CustomRes.success(
+      await this.agencyService.fetchAgencyTeam({ agencyId, userId: id, pagination }));
   }
 }

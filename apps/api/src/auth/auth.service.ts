@@ -27,12 +27,13 @@ export class AuthService {
     private otpRepo: OtpRepo,
     private secrets: SecretsService, //@Inject(MESSAGE_MANAGER) private messaging: Messaging
     @Inject(CACHE_MANAGER) private cacheManager: Cache
-  ) {}
+  ) { }
 
   async login(data: LoginData) {
     const user = await this.repo
       .findByUsername(data.username)
       .elseThrow(CustomRes.unauthorized('Incorrect username or password'));
+    if(!user) return
     if (user.status in [UserStatus.LOCKED, UserStatus.INACTIVE]) {
       throw CustomRes.unauthorized('Account locked, contact admin');
     }
@@ -61,7 +62,7 @@ export class AuthService {
       id: user.id ?? '',
       agentId: user.agentId ?? '',
       agencyId: user.agencyId ?? '',
-      email: user.email,
+      email: user.email ?? '',
       username: user.username,
       role: user.role ?? '',
     };

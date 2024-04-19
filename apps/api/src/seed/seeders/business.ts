@@ -5,31 +5,69 @@ import { dbClient } from '../client';
 
 const BusinessSeeds = {
   run: async () => {
-    const userId = "4b496a07-6ec1-4ca9-83a8-804c34248a38";
+    const agentUserId = "4b496a07-6ec1-4ca9-83a8-804c34248a38";
+    const agencyUserId1 = "4b496a07-6ec1-4ca9-83a8-804c34248a37";
+    const agencyUserId2 = "fc820dd8-ed9a-44e3-9030-7d29a045a885";
     const agencyRoleId = "ad0499c5-e718-47e4-9b95-c656aa771d74";
+    const agentRoleId = "6e4c307c-8b6f-497a-a6b0-7773b5908fac";
     const agencyId = "c8e42498-7742-43f1-9669-74b8f1d05678";
-    const agentId = "04c59edb-0abb-4ff5-b917-e03ed67a21bb"
+    const agentId = "04c59edb-0abb-4ff5-b917-e03ed67a21bb";
 
     await dbClient
       .insertInto('Agency')
-      .values({
+      .values([{
         id: agencyId,
+        email: 'agency_user_1@firs.com.ng',
+        phoneNumber: '080777777777',
         name: 'FIRS'
-      })
+      }])
       .onConflict((oc) => oc.column('id').doNothing())
       .execute();
 
 
     await dbClient
       .insertInto('User')
-      .values({
-        id: userId,
+      .values([{
+        id: agentUserId,
         username: 'agent007',
         email: 'agent007@agent.com',
         password: bcrypt.hashSync('password'),
         status: 'ACTIVE',
+        roleId: agentRoleId
+      }, {
+        id: agencyUserId1,
+        username: 'agencyUser1',
+        email: 'agency_user_one@firs.com.ng',
+        password: bcrypt.hashSync('password'),
+        status: 'ACTIVE',
         roleId: agencyRoleId
-      })
+      },
+      {
+        id: agencyUserId2,
+        username: 'agencyUser2',
+        email: 'agency_user_two@firs.com.ng',
+        password: bcrypt.hashSync('password'),
+        status: 'ACTIVE',
+        roleId: agencyRoleId
+      }])
+      .onConflict((oc) => oc.column('id').doNothing())
+      .execute();
+
+    await dbClient
+      .insertInto('AgencyAdmin')
+      .values([{
+        id: '890f1a99-8cec-4b5f-8c2f-9cb9f11d7a05',
+        lastName: "John",
+        firstName: "Doe",
+        userId: agencyUserId1,
+        agencyId: agencyId
+      }, {
+        id: '23e274e1-beda-45ec-869e-104f7e0f98e5',
+        lastName: "Jane",
+        firstName: "Doe",
+        userId: agencyUserId2,
+        agencyId: agencyId
+      }])
       .onConflict((oc) => oc.column('id').doNothing())
       .execute();
 
@@ -39,7 +77,7 @@ const BusinessSeeds = {
         id: agentId,
         lastName: "Bond",
         firstName: "James",
-        userId: userId,
+        userId: agentUserId,
         agencyId: agencyId
       })
       .onConflict((oc) => oc.column('id').doNothing())

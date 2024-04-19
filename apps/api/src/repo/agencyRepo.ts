@@ -63,6 +63,8 @@ export class AgencyRepo {
     return this.client.transaction().execute(async (trx) => {
       const agency = await trx.insertInto('Agency').values({
         name: data.name,
+        phoneNumber: data.phoneNumber,
+        email: data.email
       }).returning('id')
         .executeTakeFirstOrThrow()
 
@@ -90,5 +92,29 @@ export class AgencyRepo {
       }).returningAll()
         .executeTakeFirst()
     });
+  }
+
+  async fetchProfile(agencyId: string) {
+    return Optional.of(
+      this.client
+        .selectFrom('Agency')
+        .where('id', '=', agencyId)
+        .selectAll()
+        .executeTakeFirst()
+    ).elseThrow();
+  }
+
+  async fetchTeam({ agencyId, pagination, userId }: { agencyId: string; pagination: PaginationData; userId: string }) {
+    const { page, size } = pagination;
+    return Optional.of(
+      this.client
+        .selectFrom('AgencyAdmin')
+        .where('agencyId', '=', agencyId)
+        .where('userId', '!=', userId)
+        .selectAll()
+        .offset((page - 1) * size)
+        .limit(size)
+        .execute()
+    ).elseThrow();
   }
 }

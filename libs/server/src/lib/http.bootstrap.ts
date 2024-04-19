@@ -9,7 +9,8 @@ import {
 export async function httpBootstrap(module: unknown, globalPrefix: string) {
   const app = await NestFactory.create<NestFastifyApplication>(
     module,
-    new FastifyAdapter()
+    new FastifyAdapter(),
+    { cors: true }
   );
 
   app.setGlobalPrefix(globalPrefix);

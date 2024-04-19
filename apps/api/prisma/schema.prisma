@@ -91,7 +91,7 @@ model Business {
   status         BusinessStatus @default(UNVERIFIED)
   reasonRejected String?
   additionalData Json           @default("{}")
-  agencyId       String         @db.Uuid
+  agencyId       String?        @db.Uuid
   isAssigned     Boolean        @default(false)
   agentId        String?        @db.Uuid
 
@@ -102,7 +102,7 @@ model Business {
   documents   BusinessDocument[]
   Transaction Transaction[]
   Signage     Signage[]
-  Agency      Agency             @relation(fields: [agencyId], references: [id])
+  Agency      Agency?            @relation(fields: [agencyId], references: [id])
   Agent       Agent?             @relation(fields: [agentId], references: [id])
 
   Task Task[]

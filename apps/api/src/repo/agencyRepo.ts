@@ -13,7 +13,7 @@ import { DB, UserStatus } from '../utils/types';
 
 @Injectable()
 export class AgencyRepo {
-  constructor(private client: KyselyService<DB>) { }
+  constructor(private client: KyselyService<DB>) {}
 
   create(data: CreateAgencyData) {
     return Optional.of(
@@ -59,7 +59,9 @@ export class AgencyRepo {
     ).elseThrow();
   }
 
-  async createAgencyAndAdmin(data: CreateAgencyWithAdminData & { password: string }) {
+  async createAgencyAndAdmin(
+    data: CreateAgencyWithAdminData & { password: string }
+  ) {
     return this.client.transaction().execute(async (trx) => {
       const agency = await trx.insertInto('Agency').values({
         name: data.name,
@@ -71,26 +73,34 @@ export class AgencyRepo {
       const hashedPassword = await bcrypt.hash(data.password, 10);
       const agencyRole = await this.client
         .selectFrom('Role')
-        .select("id")
-        .where('key', "=", "agency")
-        .executeTakeFirstOrThrow()
+        .select('id')
+        .where('key', '=', 'agency')
+        .executeTakeFirstOrThrow();
 
-      const user = await trx.insertInto('User').values({
-        email: data.email,
-        password: hashedPassword,
-        roleId: agencyRole.id,
-        username: data.username,
-        status: UserStatus.ACTIVE,
-      }).returning('id')
-        .executeTakeFirstOrThrow()
+      const user = await trx
+        .insertInto('User')
+        .values({
+          email: data.email,
+          password: hashedPassword,
+          roleId: agencyRole.id,
+          username: data.username,
+          status: UserStatus.ACTIVE,
+        })
+        .returning(['id', 'username', 'password'])
+        .executeTakeFirstOrThrow();
 
-      return trx.insertInto('AgencyAdmin').values({
-        firstName: data.adminFirstName,
-        lastName: data.adminLastName,
-        agencyId: agency.id,
-        userId: user.id,
-      }).returningAll()
-        .executeTakeFirst()
+      await trx
+        .insertInto('AgencyAdmin')
+        .values({
+          firstName: data.adminFirstName,
+          lastName: data.adminLastName,
+          agencyId: agency.id,
+          userId: user.id,
+        })
+        .returningAll()
+        .executeTakeFirst();
+
+      return { id: user.id, username: user.username, password: data.password };
     });
   }
 

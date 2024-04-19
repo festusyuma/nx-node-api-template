@@ -141,7 +141,7 @@ export type Business = {
   status: Generated<BusinessStatus>;
   reasonRejected: string | null;
   additionalData: Generated<unknown>;
-  agencyId: string;
+  agencyId: string | null;
   isAssigned: Generated<boolean>;
   agentId: string | null;
   created_at: Generated<Timestamp>;

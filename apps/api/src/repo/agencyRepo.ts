@@ -63,12 +63,15 @@ export class AgencyRepo {
     data: CreateAgencyWithAdminData & { password: string }
   ) {
     return this.client.transaction().execute(async (trx) => {
-      const agency = await trx.insertInto('Agency').values({
-        name: data.name,
-        phoneNumber: data.phoneNumber,
-        email: data.email
-      }).returning('id')
-        .executeTakeFirstOrThrow()
+      const agency = await trx
+        .insertInto('Agency')
+        .values({
+          name: data.name,
+          email: data.email,
+          phoneNumber: data.phoneNumber
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
 
       const hashedPassword = await bcrypt.hash(data.password, 10);
       const agencyRole = await this.client

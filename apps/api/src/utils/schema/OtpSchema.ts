@@ -5,6 +5,7 @@ export const CreateOtpSchema = z.object({
   expirationTime: z.string().datetime().optional(),
   verified: z.boolean().optional(),
   verifiedAt: z.string().datetime().optional(),
+  created_at: z.string().datetime().optional(),
   updatedAt: z.string().datetime().optional(),
 });
 

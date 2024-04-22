@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { Cache } from 'cache-manager';
 import jwt from 'jsonwebtoken';
+import { DateTime } from 'luxon';
 
 import { OtpRepo } from '../repo/optRepo';
 import { UserRepo } from '../repo/userRepo';
@@ -84,7 +85,7 @@ export class AuthService {
     });
 
     const otpDetails: OTPDetailsData = {
-      timestamp: otp.created_at,
+      timestamp: otp.created_at.toISOString(),
       client: data.email,
       success: true,
       message: 'OTP sent to user',
@@ -110,7 +111,7 @@ export class AuthService {
     });
 
     const otpDetails: OTPDetailsData = {
-      timestamp: new Date(),
+      timestamp: DateTime.now().toISO() ?? '',
       client: data.email,
       success: true,
       message: 'OTP sent to user',
@@ -149,7 +150,7 @@ export class AuthService {
 
     await this.otpRepo.update(otp.id, {
       verified: true,
-      verifiedAt: new Date().toUTCString(),
+      verifiedAt: DateTime.now().toISO() ?? '',
     });
 
     //TODO send username to user email or send verification token to change password

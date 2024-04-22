@@ -34,7 +34,7 @@ export type {
 } from './transactionSchema';
 export type { CreateUserData, UpdateUserData } from './userSchema';
 export type OTPDetailsData = {
-  timestamp: Date;
+  timestamp: string;
   client: string;
   success: boolean;
   message: string;
